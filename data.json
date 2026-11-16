@@ -1,0 +1,2888 @@
+{
+ "format": "nannetwork-v1",
+ "projects": [
+  {
+   "id": "nan-demo",
+   "name": "ศูนย์เรียนรู้เกษตรนิเวศน่าน (ตัวอย่าง)",
+   "desc": "ตัวอย่างจากข้อมูล ADAPT-Nan — แก้ไข/ลบได้",
+   "created": 1763000000000,
+   "nodes": [
+    {
+     "id": "n001",
+     "name": "ความมั่นคงทางอาหาร",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000001,
+     "name_en": "Food security",
+     "role_en": "",
+     "sectors": [
+      "agri",
+      "health"
+     ]
+    },
+    {
+     "id": "n002",
+     "name": "ป่าชุมชน",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000002,
+     "name_en": "Community forest",
+     "role_en": "",
+     "sectors": [
+      "env"
+     ]
+    },
+    {
+     "id": "n003",
+     "name": "ชาวนา",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000003,
+     "name_en": "Rice farmers",
+     "role_en": "",
+     "sectors": [
+      "agri"
+     ]
+    },
+    {
+     "id": "n004",
+     "name": "เด็กและเยาวชน",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000004,
+     "name_en": "Children & youth",
+     "role_en": "",
+     "sectors": [
+      "culture"
+     ]
+    },
+    {
+     "id": "n005",
+     "name": "สุขภาวะ",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000005,
+     "name_en": "Well-being",
+     "role_en": "",
+     "sectors": [
+      "health"
+     ]
+    },
+    {
+     "id": "n006",
+     "name": "ธุรกิจชุมชน",
+     "type": "issue",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000006,
+     "name_en": "Community enterprise",
+     "role_en": "",
+     "sectors": [
+      "econ"
+     ]
+    },
+    {
+     "id": "n007",
+     "name": "ศูนย์เรียนรู้ ChTN",
+     "type": "org",
+     "role": "ฟื้นฟูดินด้วยอินทรียวัตถุและน้ำหมักสมุนไพร 7 สูตร · หลักสูตร 5 วัน · สาธิตป่า 5 ระดับ",
+     "note": "",
+     "a": null,
+     "created": 1763000000007,
+     "name_en": "ChTN learning centre",
+     "role_en": "Soil restoration with organic matter and 7 herbal ferments · 5-day course · five-level forest demo",
+     "otype": "community"
+    },
+    {
+     "id": "n008",
+     "name": "โรงสีข้าวพระราชทาน (สหกรณ์)",
+     "type": "org",
+     "role": "รับซื้อข้าวเปลือกสูงกว่าราคาตลาด 0.50–1 บาท/กก. · แบรนด์ 'ข้าวน่าน'",
+     "note": "",
+     "a": null,
+     "created": 1763000000008,
+     "name_en": "Royal Rice Mill (co-op)",
+     "role_en": "Buys paddy at 0.50–1 baht/kg above market · 'Khao Nan' brand",
+     "otype": "business"
+    },
+    {
+     "id": "n009",
+     "name": "วัดโป่งคำ",
+     "type": "org",
+     "role": "เครือข่ายพระนักพัฒนา · อนุรักษ์ป่าและส่งเสริมเกษตรผสมผสาน",
+     "note": "",
+     "a": null,
+     "created": 1763000000009,
+     "name_en": "Wat Pong Kham",
+     "role_en": "Development-monk network · forest conservation and integrated farming",
+     "otype": "religious"
+    },
+    {
+     "id": "n010",
+     "name": "PGS น่าน",
+     "type": "org",
+     "role": "ระบบรับรองแบบมีส่วนร่วม (35→46 ครัวเรือน) · แบรนด์ 'กระซิบรักษ์'",
+     "note": "",
+     "a": null,
+     "created": 1763000000010,
+     "name_en": "PGS Nan",
+     "role_en": "Participatory Guarantee System (35→46 households) · 'Krasib-Raks' brand",
+     "otype": "community"
+    },
+    {
+     "id": "n011",
+     "name": "คลัสเตอร์ OrigiNan",
+     "type": "org",
+     "role": "แปรรูปผลผลิตเกษตร 66 กลุ่ม 390 คน ใน 10 อำเภอ",
+     "note": "",
+     "a": null,
+     "created": 1763000000011,
+     "name_en": "OrigiNan cluster",
+     "role_en": "Agri-processing cluster: 66 groups, 390 people, 10 districts",
+     "otype": "business"
+    },
+    {
+     "id": "n012",
+     "name": "โรงเรียนศรัทธาศิลาเพชร",
+     "type": "org",
+     "role": "หลักสูตรข้าวที่ร่วมออกแบบกับชาวนา · นักเรียนเรียนรู้ห่วงโซ่ข้าวถึงโรงสี",
+     "note": "",
+     "a": null,
+     "created": 1763000000012,
+     "name_en": "Sattha Silaphet School",
+     "role_en": "Rice curriculum co-designed with farmers · students learn the rice chain up to the mill",
+     "otype": "academic"
+    },
+    {
+     "id": "n013",
+     "name": "มูลนิธิฮักเมืองน่าน",
+     "type": "org",
+     "role": "อนุรักษ์พันธุ์ข้าวพื้นเมือง · หนุนหลักสูตรท้องถิ่น",
+     "note": "",
+     "a": null,
+     "created": 1763000000013,
+     "name_en": "Hug Muang Nan Foundation",
+     "role_en": "Conserves local rice varieties · supports place-based curricula",
+     "otype": "ngo"
+    },
+    {
+     "id": "n014",
+     "name": "ละอ่อนน่าน",
+     "type": "org",
+     "role": "เยาวชนติดตามป่าชุมชน · ถ่ายทอดความรู้ป่าผ่านเกม",
+     "note": "",
+     "a": null,
+     "created": 1763000000014,
+     "name_en": "La-on Nan",
+     "role_en": "Youth community-forest monitoring · forest knowledge through games",
+     "otype": "community"
+    },
+    {
+     "id": "n015",
+     "name": "รพ.สต. (ตัวอย่าง)",
+     "type": "org",
+     "role": "ตรวจสารโคลีนเอสเทอเรสในเลือด · หนุนกลุ่มผักปลอดภัย",
+     "note": "",
+     "a": null,
+     "created": 1763000000015,
+     "name_en": "Sub-district health hospital (example)",
+     "role_en": "Blood cholinesterase testing · supports safe-vegetable groups",
+     "otype": "gov"
+    },
+    {
+     "id": "n016",
+     "name": "สำนักงานเกษตรอำเภอ (ตัวอย่าง)",
+     "type": "org",
+     "role": "ส่งเสริมกลุ่มผักปลอดภัยและโรงเรียนชาวนา",
+     "note": "",
+     "a": null,
+     "created": 1763000000016,
+     "name_en": "District Agriculture Office (example)",
+     "role_en": "Supports safe-vegetable groups and the Farmers' Field School",
+     "otype": "gov"
+    },
+    {
+     "id": "n017",
+     "name": "โรงเรียนชาวนา",
+     "type": "org",
+     "role": "Rice Farmer Field School · เรียนรู้ลดสารเคมี",
+     "note": "",
+     "a": null,
+     "created": 1763000000017,
+     "name_en": "Farmers' Field School",
+     "role_en": "Rice Farmer Field School · learning to cut agrochemicals",
+     "otype": "community"
+    },
+    {
+     "id": "n018",
+     "name": "Lemon Farm",
+     "type": "org",
+     "role": "ช่องทางตลาดข้าวอินทรีย์ (รับซื้อล็อตเล็ก)",
+     "note": "",
+     "a": null,
+     "created": 1763000000018,
+     "name_en": "Lemon Farm",
+     "role_en": "Organic rice market channel (buys small lots)",
+     "otype": "business"
+    },
+    {
+     "id": "n019",
+     "name": "คุณกุล",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000019,
+     "name_en": "Khun Kul",
+     "role_en": ""
+    },
+    {
+     "id": "n020",
+     "name": "พ่อจีน",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000020,
+     "name_en": "Pho Chin",
+     "role_en": ""
+    },
+    {
+     "id": "n021",
+     "name": "พระครูสมคิด",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000021,
+     "name_en": "Phrakhru Somkid",
+     "role_en": ""
+    },
+    {
+     "id": "n022",
+     "name": "ครูหลักสูตรข้าว (ตัวอย่าง)",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000022,
+     "name_en": "Rice-curriculum teacher (example)",
+     "role_en": ""
+    },
+    {
+     "id": "n023",
+     "name": "แกนนำเยาวชน (ตัวอย่าง)",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000023,
+     "name_en": "Youth leader (example)",
+     "role_en": ""
+    },
+    {
+     "id": "n024",
+     "name": "ผู้ประสานงาน PGS (ตัวอย่าง)",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000024,
+     "name_en": "PGS coordinator (example)",
+     "role_en": ""
+    },
+    {
+     "id": "n025",
+     "name": "ผู้จัดการคลัสเตอร์ (ตัวอย่าง)",
+     "type": "person",
+     "role": "",
+     "note": "",
+     "a": null,
+     "created": 1763000000025,
+     "name_en": "Cluster manager (example)",
+     "role_en": ""
+    }
+   ],
+   "links": [
+    {
+     "id": "l001",
+     "s": "n007",
+     "t": "n001",
+     "w": 4,
+     "label": "",
+     "created": 1763000001001
+    },
+    {
+     "id": "l002",
+     "s": "n007",
+     "t": "n005",
+     "w": 3,
+     "label": "",
+     "created": 1763000001002
+    },
+    {
+     "id": "l003",
+     "s": "n007",
+     "t": "n002",
+     "w": 2,
+     "label": "",
+     "created": 1763000001003
+    },
+    {
+     "id": "l004",
+     "s": "n008",
+     "t": "n003",
+     "w": 5,
+     "label": "",
+     "created": 1763000001004
+    },
+    {
+     "id": "l005",
+     "s": "n008",
+     "t": "n006",
+     "w": 4,
+     "label": "",
+     "created": 1763000001005
+    },
+    {
+     "id": "l006",
+     "s": "n009",
+     "t": "n002",
+     "w": 4,
+     "label": "",
+     "created": 1763000001006
+    },
+    {
+     "id": "l007",
+     "s": "n009",
+     "t": "n003",
+     "w": 3,
+     "label": "",
+     "created": 1763000001007
+    },
+    {
+     "id": "l008",
+     "s": "n009",
+     "t": "n001",
+     "w": 3,
+     "label": "",
+     "created": 1763000001008
+    },
+    {
+     "id": "l009",
+     "s": "n010",
+     "t": "n003",
+     "w": 4,
+     "label": "",
+     "created": 1763000001009
+    },
+    {
+     "id": "l010",
+     "s": "n010",
+     "t": "n006",
+     "w": 3,
+     "label": "",
+     "created": 1763000001010
+    },
+    {
+     "id": "l011",
+     "s": "n010",
+     "t": "n005",
+     "w": 2,
+     "label": "",
+     "created": 1763000001011
+    },
+    {
+     "id": "l012",
+     "s": "n011",
+     "t": "n006",
+     "w": 5,
+     "label": "",
+     "created": 1763000001012
+    },
+    {
+     "id": "l013",
+     "s": "n011",
+     "t": "n001",
+     "w": 2,
+     "label": "",
+     "created": 1763000001013
+    },
+    {
+     "id": "l014",
+     "s": "n012",
+     "t": "n004",
+     "w": 5,
+     "label": "",
+     "created": 1763000001014
+    },
+    {
+     "id": "l015",
+     "s": "n012",
+     "t": "n003",
+     "w": 3,
+     "label": "",
+     "created": 1763000001015
+    },
+    {
+     "id": "l016",
+     "s": "n013",
+     "t": "n001",
+     "w": 3,
+     "label": "",
+     "created": 1763000001016
+    },
+    {
+     "id": "l017",
+     "s": "n013",
+     "t": "n004",
+     "w": 3,
+     "label": "",
+     "created": 1763000001017
+    },
+    {
+     "id": "l018",
+     "s": "n013",
+     "t": "n002",
+     "w": 3,
+     "label": "",
+     "created": 1763000001018
+    },
+    {
+     "id": "l019",
+     "s": "n014",
+     "t": "n004",
+     "w": 5,
+     "label": "",
+     "created": 1763000001019
+    },
+    {
+     "id": "l020",
+     "s": "n014",
+     "t": "n002",
+     "w": 4,
+     "label": "",
+     "created": 1763000001020
+    },
+    {
+     "id": "l021",
+     "s": "n015",
+     "t": "n005",
+     "w": 5,
+     "label": "",
+     "created": 1763000001021
+    },
+    {
+     "id": "l022",
+     "s": "n015",
+     "t": "n001",
+     "w": 2,
+     "label": "",
+     "created": 1763000001022
+    },
+    {
+     "id": "l023",
+     "s": "n016",
+     "t": "n003",
+     "w": 3,
+     "label": "",
+     "created": 1763000001023
+    },
+    {
+     "id": "l024",
+     "s": "n016",
+     "t": "n001",
+     "w": 2,
+     "label": "",
+     "created": 1763000001024
+    },
+    {
+     "id": "l025",
+     "s": "n017",
+     "t": "n003",
+     "w": 4,
+     "label": "",
+     "created": 1763000001025
+    },
+    {
+     "id": "l026",
+     "s": "n017",
+     "t": "n005",
+     "w": 2,
+     "label": "",
+     "created": 1763000001026
+    },
+    {
+     "id": "l027",
+     "s": "n018",
+     "t": "n006",
+     "w": 3,
+     "label": "",
+     "created": 1763000001027
+    },
+    {
+     "id": "l028",
+     "s": "n019",
+     "t": "n007",
+     "w": 5,
+     "label": "",
+     "created": 1763000001028
+    },
+    {
+     "id": "l029",
+     "s": "n020",
+     "t": "n008",
+     "w": 5,
+     "label": "",
+     "created": 1763000001029
+    },
+    {
+     "id": "l030",
+     "s": "n020",
+     "t": "n010",
+     "w": 2,
+     "label": "",
+     "created": 1763000001030
+    },
+    {
+     "id": "l031",
+     "s": "n021",
+     "t": "n009",
+     "w": 5,
+     "label": "",
+     "created": 1763000001031
+    },
+    {
+     "id": "l032",
+     "s": "n022",
+     "t": "n012",
+     "w": 4,
+     "label": "",
+     "created": 1763000001032
+    },
+    {
+     "id": "l033",
+     "s": "n022",
+     "t": "n013",
+     "w": 2,
+     "label": "",
+     "created": 1763000001033
+    },
+    {
+     "id": "l034",
+     "s": "n023",
+     "t": "n014",
+     "w": 4,
+     "label": "",
+     "created": 1763000001034
+    },
+    {
+     "id": "l035",
+     "s": "n024",
+     "t": "n010",
+     "w": 4,
+     "label": "",
+     "created": 1763000001035
+    },
+    {
+     "id": "l036",
+     "s": "n024",
+     "t": "n018",
+     "w": 2,
+     "label": "",
+     "created": 1763000001036
+    },
+    {
+     "id": "l037",
+     "s": "n025",
+     "t": "n011",
+     "w": 4,
+     "label": "",
+     "created": 1763000001037
+    }
+   ],
+   "name_en": "Nan agroecology learning centres (example)"
+  },
+  {
+   "id": "nan-forest-organic",
+   "name": "เครือข่ายป่าชุมชน + เกษตรอินทรีย์/ปลอดภัย น่าน (ร่าง)",
+   "name_en": "Nan community forest + organic/safe farming network (draft)",
+   "desc": "สืบค้นจากเว็บสาธารณะ 15–16 พ.ย. 2569 · ทุกรายการมีรหัสหลักฐาน · ความหนาเส้นยังไม่ได้ให้คะแนน (ตั้ง 3 เท่ากันทั้งหมด) · ข้อมูลบุคคลเป็นร่าง ห้ามเผยแพร่จนกว่าจะยืนยัน",
+   "created": 1763300000000,
+   "nodes": [
+    {
+     "id": "T1",
+     "name": "ป่าชุมชน",
+     "name_en": "Community forest",
+     "type": "issue",
+     "sectors": [
+      "env"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000001
+    },
+    {
+     "id": "T2",
+     "name": "ไฟป่า / PM2.5",
+     "name_en": "Forest fire / PM2.5",
+     "type": "issue",
+     "sectors": [
+      "env",
+      "health"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000002
+    },
+    {
+     "id": "T3",
+     "name": "ลุ่มน้ำ / ฟื้นฟูป่าต้นน้ำ",
+     "name_en": "Watershed / headwater restoration",
+     "type": "issue",
+     "sectors": [
+      "env"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000003
+    },
+    {
+     "id": "T4",
+     "name": "ที่ดินทำกิน",
+     "name_en": "Land tenure",
+     "type": "issue",
+     "sectors": [
+      "env",
+      "agri"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000004
+    },
+    {
+     "id": "T5",
+     "name": "เกษตรอินทรีย์ / PGS",
+     "name_en": "Organic farming / PGS",
+     "type": "issue",
+     "sectors": [
+      "agri"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000005
+    },
+    {
+     "id": "T6",
+     "name": "ผักปลอดภัย / ตลาดสีเขียว",
+     "name_en": "Safe vegetables / green markets",
+     "type": "issue",
+     "sectors": [
+      "agri",
+      "health"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000006
+    },
+    {
+     "id": "T7",
+     "name": "ข้าวอินทรีย์ / ข้าวพื้นเมือง",
+     "name_en": "Organic & local rice",
+     "type": "issue",
+     "sectors": [
+      "agri"
+     ],
+     "status": "",
+     "a": null,
+     "created": 1763300000007
+    },
+    {
+     "id": "ORG01",
+     "name": "เครือข่ายป่าชุมชนจังหวัดน่าน",
+     "name_en": "Nan Community Forest Network",
+     "type": "org",
+     "role": "เครือข่ายองค์กรชาวบ้านดูแลป่า 4 ระดับ (ชุมชน–ลุ่มน้ำ–อำเภอ–จังหวัด) ~456 ป่า (ปี 2551); ป้อนข้อมูลให้แผนพัฒนาจังหวัด",
+     "sectors": [
+      "env"
+     ],
+     "otype": "community",
+     "level": "จังหวัด",
+     "area": "15 อำเภอ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2551)",
+     "a": null,
+     "created": 1763300000008
+    },
+    {
+     "id": "ORG02",
+     "name": "มูลนิธิฮักเมืองน่าน",
+     "name_en": "Hug Muang Nan Foundation",
+     "type": "org",
+     "role": "ต้นแบบพิธีบวชป่า สืบชะตาแม่น้ำ; ผู้จัดเวทีน่านฟอรั่ม",
+     "sectors": [
+      "env",
+      "culture"
+     ],
+     "otype": "ngo",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC12",
+     "note": "",
+     "a": null,
+     "created": 1763300000012
+    },
+    {
+     "id": "ORG03",
+     "name": "วัดอรัญญาวาส",
+     "name_en": "Wat Aranyawat",
+     "type": "org",
+     "role": "วัดของพระครูพิทักษ์นันทคุณ ผู้ก่อตั้งกลุ่มฮักเมืองน่าน",
+     "sectors": [
+      "culture",
+      "env"
+     ],
+     "otype": "religious",
+     "level": "อำเภอ",
+     "area": "อ.เมืองน่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ประวัติ)",
+     "a": null,
+     "created": 1763300000015
+    },
+    {
+     "id": "ORG04",
+     "name": "กลุ่มอนุรักษ์ป่าขุนสมุนเสมียน",
+     "name_en": "Khun Samun–Samian Forest Conservation Group",
+     "type": "org",
+     "role": "ดูแลลุ่มน้ำจากต้นถึงปลายน้ำ (ระดับที่ 2 ของเครือข่าย)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "community",
+     "level": "ลุ่มน้ำ/ตำบล",
+     "area": "ต.ถืมตอง ต.ศิลาแลง ต.นำเกี๋ยน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2551)",
+     "a": null,
+     "created": 1763300000017
+    },
+    {
+     "id": "ORG05",
+     "name": "กลุ่มอนุรักษ์ป่าอำเภอบ้านหลวง",
+     "name_en": "Ban Luang District Forest Conservation Group",
+     "type": "org",
+     "role": "ดูแลป่าร่วมกันทั้งอำเภอ (ระดับที่ 3)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "community",
+     "level": "อำเภอ",
+     "area": "อ.บ้านหลวง",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2551)",
+     "a": null,
+     "created": 1763300000020
+    },
+    {
+     "id": "ORG06",
+     "name": "กลุ่มอนุรักษ์ป่าอำเภอสันติสุข",
+     "name_en": "Santisuk District Forest Conservation Group",
+     "type": "org",
+     "role": "ดูแลป่าร่วมกันทั้งอำเภอ (ระดับที่ 3)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "community",
+     "level": "อำเภอ",
+     "area": "อ.สันติสุข",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2551)",
+     "a": null,
+     "created": 1763300000022
+    },
+    {
+     "id": "ORG07",
+     "name": "ป่าชุมชนห้วยบัง บ้านนาคำ",
+     "name_en": "Huai Bang Community Forest, Ban Na Kham",
+     "type": "org",
+     "role": "ป่า 9,000 ไร่ มีแปลงฟู้ดแบงก์ (2545) และเวรทำแนวกันไฟ",
+     "sectors": [
+      "env",
+      "agri"
+     ],
+     "otype": "community",
+     "level": "หมู่บ้าน",
+     "area": "ต.ศิลาเพชร อ.ปัว",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2551)",
+     "a": null,
+     "created": 1763300000024
+    },
+    {
+     "id": "ORG08",
+     "name": "ส่วนภาคีเครือข่ายป่าชุมชน สำนักจัดการป่าชุมชน กรมป่าไม้",
+     "name_en": "RFD Community Forest Network Division",
+     "type": "org",
+     "role": "ดูแลทะเบียน/ฐานข้อมูลสมาชิกเครือข่ายป่าชุมชน (น่าน 306 หมู่บ้าน)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC02; SRC15",
+     "note": "",
+     "a": null,
+     "created": 1763300000026
+    },
+    {
+     "id": "ORG09",
+     "name": "ศูนย์ป่าไม้น่าน (สำนักจัดการทรัพยากรป่าไม้ที่ 3 สาขาแพร่)",
+     "name_en": "Nan Forestry Centre (RFD)",
+     "type": "org",
+     "role": "หน่วยงานป่าไม้ระดับจังหวัด",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "อ.เมืองน่าน",
+     "status": "pending",
+     "evidence": "SRC15",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000028
+    },
+    {
+     "id": "ORG10",
+     "name": "สำนักงานทรัพยากรธรรมชาติและสิ่งแวดล้อมจังหวัดน่าน",
+     "name_en": "Nan Provincial Natural Resources & Environment Office",
+     "type": "org",
+     "role": "ชุดข้อมูลป่าไม้/คดี/จัดที่ดินทำกินบน GD Catalog 21 ชุด",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000031
+    },
+    {
+     "id": "ORG11",
+     "name": "สำนักงานป้องกันและบรรเทาสาธารณภัยจังหวัดน่าน",
+     "name_en": "Nan Disaster Prevention & Mitigation Office",
+     "type": "org",
+     "role": "ข้อมูลไฟป่าหมอกควันระดับหมู่บ้าน, แผนเผชิญเหตุ (29 ชุด)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000034
+    },
+    {
+     "id": "ORG12",
+     "name": "กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช",
+     "name_en": "Dept. of National Parks, Wildlife & Plant Conservation",
+     "type": "org",
+     "role": "27 ชุดข้อมูลบน GD Catalog (ส่วนใหญ่ระดับประเทศ) รวมหมู่บ้านใน สสอ.",
+     "sectors": [
+      "env",
+      "tourism"
+     ],
+     "otype": "gov",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000036
+    },
+    {
+     "id": "ORG13",
+     "name": "จังหวัดน่าน (สำนักงานจังหวัด/ผู้ว่าราชการจังหวัด)",
+     "name_en": "Nan Province (Governor's Office)",
+     "type": "org",
+     "role": "สนับสนุนงบโครงการฟื้นฟูระบบนิเวศลุ่มน้ำน่าน (2550); single command ไฟป่า",
+     "sectors": [
+      "env",
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC07; SRC08",
+     "note": "",
+     "a": null,
+     "created": 1763300000039
+    },
+    {
+     "id": "ORG14",
+     "name": "สถาบันพัฒนาองค์กรชุมชน (องค์การมหาชน) (พอช.)",
+     "name_en": "Community Organizations Development Institute (CODI)",
+     "type": "org",
+     "role": "ทุนและโครงการร่วมกับเครือข่ายป่าชุมชน (2547, 2550); MOU เกษตรอินทรีย์น่าน",
+     "sectors": [
+      "env",
+      "agri",
+      "econ"
+     ],
+     "otype": "puborg",
+     "level": "ประเทศ/ภาค",
+     "area": "ภาคเหนือ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC11; SRC12",
+     "note": "",
+     "a": null,
+     "created": 1763300000043
+    },
+    {
+     "id": "ORG15",
+     "name": "UNDP – แผนงานสนับสนุนโครงการขนาดเล็ก (SGP)",
+     "name_en": "UNDP Small Grants Programme",
+     "type": "org",
+     "role": "ทุนพัฒนาเครือข่ายป่าชุมชน 258 ป่า (2548–2549)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "intl",
+     "level": "ประเทศ",
+     "area": "ลุ่มน้ำย่าง สะเนียน แหง",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ประวัติ)",
+     "a": null,
+     "created": 1763300000046
+    },
+    {
+     "id": "ORG16",
+     "name": "ประชาคมจังหวัดน่าน",
+     "name_en": "Nan Civic Assembly",
+     "type": "org",
+     "role": "ร่วมโครงการฟื้นฟูระบบนิเวศลุ่มน้ำน่าน (2550)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "ngo",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ประวัติ)",
+     "a": null,
+     "created": 1763300000048
+    },
+    {
+     "id": "ORG17",
+     "name": "ทหารบกจังหวัดน่าน",
+     "name_en": "Nan Army unit",
+     "type": "org",
+     "role": "ร่วมโครงการฟื้นฟูระบบนิเวศลุ่มน้ำน่าน (2550)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "note": "ยืนยันจากเอกสาร (ประวัติ)",
+     "a": null,
+     "created": 1763300000050
+    },
+    {
+     "id": "ORG18",
+     "name": "องค์การบริหารส่วนจังหวัดน่าน (อบจ.)",
+     "name_en": "Nan Provincial Administrative Organisation",
+     "type": "org",
+     "role": "รองนายก อบจ. อยู่ในคณะกรรมการเครือข่ายป่าชุมชนระดับจังหวัด; ร่วมงานผักปลอดภัย อ.สันติสุข",
+     "sectors": [
+      "env",
+      "health"
+     ],
+     "otype": "local",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC05",
+     "note": "",
+     "a": null,
+     "created": 1763300000052
+    },
+    {
+     "id": "ORG19",
+     "name": "สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.)",
+     "name_en": "Thai Health Promotion Foundation (ThaiHealth)",
+     "type": "org",
+     "role": "ภาคีเวทีน่านฟอรั่ม",
+     "sectors": [
+      "health",
+      "env"
+     ],
+     "otype": "puborg",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC04; SRC12",
+     "note": "",
+     "a": null,
+     "created": 1763300000055
+    },
+    {
+     "id": "ORG20",
+     "name": "เครือข่ายสภาลมหายใจภาคเหนือ",
+     "name_en": "Northern Breath Council Network",
+     "type": "org",
+     "role": "ภาคีเวทีน่านฟอรั่ม 2569",
+     "sectors": [
+      "env",
+      "health"
+     ],
+     "otype": "ngo",
+     "level": "ภาค",
+     "area": "ภาคเหนือ",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "note": "",
+     "a": null,
+     "created": 1763300000057
+    },
+    {
+     "id": "ORG21",
+     "name": "เครือข่ายรักษ์อากาศน่าน",
+     "name_en": "Rak Akat Nan Network",
+     "type": "org",
+     "role": "ภาคีเวทีน่านฟอรั่ม 2569",
+     "sectors": [
+      "env",
+      "health"
+     ],
+     "otype": "ngo",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "note": "",
+     "a": null,
+     "created": 1763300000059
+    },
+    {
+     "id": "ORG22",
+     "name": "มูลนิธิกสิกรไทย",
+     "name_en": "KasikornThai Foundation",
+     "type": "org",
+     "role": "ภาคีเวทีน่านฟอรั่ม 2569",
+     "sectors": [
+      "env"
+     ],
+     "otype": "ngo",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "note": "",
+     "a": null,
+     "created": 1763300000061
+    },
+    {
+     "id": "ORG23",
+     "name": "สำนักงานคณะกรรมการพัฒนาระบบราชการ (ก.พ.ร.)",
+     "name_en": "Office of the Public Sector Development Commission",
+     "type": "org",
+     "role": "ภาคีเวทีน่านฟอรั่ม 2569",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "note": "",
+     "a": null,
+     "created": 1763300000063
+    },
+    {
+     "id": "ORG24",
+     "name": "มูลนิธิรักษ์ป่าน่าน / โครงการน่านแซนด์บ็อกซ์",
+     "name_en": "Rak Pa Nan Foundation / Nan Sandbox",
+     "type": "org",
+     "role": "โครงการฟื้นฟูป่าต้นน้ำและจัดที่ดินทำกิน (โครงการตามพระราชดำริ)",
+     "sectors": [
+      "env",
+      "agri"
+     ],
+     "otype": "ngo",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC06; SRC16",
+     "note": "ยืนยันจากเอกสาร (บางส่วนจากผลค้นหา)",
+     "a": null,
+     "created": 1763300000065
+    },
+    {
+     "id": "ORG25",
+     "name": "ซีพีอาสา (เครือเจริญโภคภัณฑ์)",
+     "name_en": "CP Volunteers (CP Group)",
+     "type": "org",
+     "role": "สนับสนุนอุปกรณ์/แนวกันไฟ 33 กม. 13 หมู่บ้าน (2569)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "business",
+     "level": "ภาค",
+     "area": "อ.ท่าวังผา",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "note": "",
+     "a": null,
+     "created": 1763300000068
+    },
+    {
+     "id": "ORG26",
+     "name": "ที่ว่าการอำเภอท่าวังผา",
+     "name_en": "Tha Wang Pha District Office",
+     "type": "org",
+     "role": "ประสานงานป้องกันไฟป่าในอำเภอ",
+     "sectors": [
+      "env"
+     ],
+     "otype": "gov",
+     "level": "อำเภอ",
+     "area": "อ.ท่าวังผา",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "note": "",
+     "a": null,
+     "created": 1763300000070
+    },
+    {
+     "id": "ORG27",
+     "name": "ภาคีเครือข่ายป่าชุมชนภาคเหนือ",
+     "name_en": "Northern Community Forest Partner Network",
+     "type": "org",
+     "role": "ร่วมจัดน่านฟอรั่ม ครั้งที่ 4 (พ.ย. 2568)",
+     "sectors": [
+      "env"
+     ],
+     "otype": "community",
+     "level": "ภาค",
+     "area": "ภาคเหนือ",
+     "status": "pending",
+     "evidence": "SRC12",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000072
+    },
+    {
+     "id": "AGR01",
+     "name": "สำนักงานเกษตรและสหกรณ์จังหวัดน่าน",
+     "name_en": "Nan Provincial Agriculture & Cooperatives Office",
+     "type": "org",
+     "role": "เลขาฯ คณะทำงานพัฒนาเกษตรอินทรีย์จังหวัดน่าน; แผนพัฒนาเกษตรอินทรีย์ 2563–2565",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC09; SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000075
+    },
+    {
+     "id": "AGR02",
+     "name": "สำนักงานเกษตรจังหวัดน่าน",
+     "name_en": "Nan Provincial Agricultural Extension Office",
+     "type": "org",
+     "role": "ส่งเสริมการเกษตร (มี 1 ชุดข้อมูลบน GD Catalog)",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000077
+    },
+    {
+     "id": "AGR03",
+     "name": "สมาพันธ์เกษตรกรรมยั่งยืนจังหวัดน่าน",
+     "name_en": "Nan Sustainable Agriculture Confederation",
+     "type": "org",
+     "role": "คณะทำงานรับรองแปลงเกษตรอินทรีย์แบบมีส่วนร่วม (PGS); ใช้ระบบฐานข้อมูล OAN",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "ngo",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "pending",
+     "evidence": "SRC10",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000080
+    },
+    {
+     "id": "AGR04",
+     "name": "เครือข่ายวิสาหกิจชุมชนเกษตรอินทรีย์น่าน",
+     "name_en": "Nan Organic Community Enterprise Network",
+     "type": "org",
+     "role": "เครือข่ายวิสาหกิจชุมชนผลิตเกษตรอินทรีย์",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "community",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "pending",
+     "evidence": "SRC10",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000082
+    },
+    {
+     "id": "AGR05",
+     "name": "เครือข่ายเกษตรอินทรีย์น่าน",
+     "name_en": "Nan Organic Farming Network",
+     "type": "org",
+     "role": "ทำ MOU กับ พอช. และภาคี 31 หน่วยงาน",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "community",
+     "level": "จังหวัด",
+     "area": "9 อำเภอ (ตามข่าว พอช.)",
+     "status": "pending",
+     "evidence": "SRC11",
+     "note": "รอยืนยัน (ยังไม่ได้อ่านข่าวเต็ม)",
+     "a": null,
+     "created": 1763300000084
+    },
+    {
+     "id": "AGR06",
+     "name": "กลุ่มเกษตรอินทรีย์ พีจีเอส น่าน (แบรนด์กระซิบรักษ์)",
+     "name_en": "PGS Nan organic group (Krasib-Raks brand)",
+     "type": "org",
+     "role": "กลุ่ม PGS ส่งผักและข้าวอินทรีย์ภายใต้แบรนด์กระซิบรักษ์ (35→46 ครัวเรือนตามข้อมูล ADAPT)",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "community",
+     "level": "จังหวัด",
+     "area": "หลายอำเภอ",
+     "status": "pending",
+     "evidence": "SRC13; SRC17",
+     "note": "",
+     "a": null,
+     "created": 1763300000086
+    },
+    {
+     "id": "AGR07",
+     "name": "Haze Free PGS Nan / HazefreeSE",
+     "name_en": "Haze Free PGS Nan / HazefreeSE",
+     "type": "org",
+     "role": "กลุ่มนาข้าวอินทรีย์ PGS ลดหมอกควัน",
+     "sectors": [
+      "agri",
+      "env"
+     ],
+     "otype": "business",
+     "level": "อำเภอ",
+     "area": "อ.ท่าวังผา",
+     "status": "pending",
+     "evidence": "SRC13",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000089
+    },
+    {
+     "id": "AGR08",
+     "name": "สมาคมการค้าเกษตรกรรมยั่งยืน (SDGsPGS)",
+     "name_en": "Sustainable Agriculture Trade Association (SDGsPGS)",
+     "type": "org",
+     "role": "ออกหนังสือรับรอง SDGsPGS; น่านเป็นจังหวัดนำร่องตั้งแต่ 2560",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "ngo",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "pending",
+     "evidence": "SRC13",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000093
+    },
+    {
+     "id": "AGR09",
+     "name": "วิทยาลัยชุมชนน่าน",
+     "name_en": "Nan Community College",
+     "type": "org",
+     "role": "จัดประชุมสร้างเครือข่ายภาคีเกษตรอินทรีย์ SDGsPGS (ธ.ค. 2568)",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "academic",
+     "level": "จังหวัด",
+     "area": "น่าน",
+     "status": "pending",
+     "evidence": "SRC13",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000095
+    },
+    {
+     "id": "AGR10",
+     "name": "โรงสีข้าวพระราชทานฯ จังหวัดน่าน",
+     "name_en": "Royal Rice Mill, Nan",
+     "type": "org",
+     "role": "รับซื้อ-สีข้าว อนุรักษ์และแปรรูปข้าวพื้นเมือง",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "business",
+     "level": "อำเภอ",
+     "area": "ต.ศรีภูมิ อ.ท่าวังผา",
+     "status": "pending",
+     "evidence": "SRC14; SRC17",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000097
+    },
+    {
+     "id": "AGR11",
+     "name": "ศูนย์วิจัยข้าวแพร่ (กรมการข้าว)",
+     "name_en": "Phrae Rice Research Center",
+     "type": "org",
+     "role": "ตรวจประเมินระบบการผลิตข้าวอินทรีย์ (มิ.ย. 2567)",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "ภาค",
+     "area": "แพร่–น่าน",
+     "status": "pending",
+     "evidence": "SRC14",
+     "note": "รอยืนยัน (จากผลค้นหา)",
+     "a": null,
+     "created": 1763300000100
+    },
+    {
+     "id": "AGR12",
+     "name": "สถาบันวิจัยและพัฒนาพื้นที่สูง (สวพส.) / โครงการพัฒนาพื้นที่สูงแบบโครงการหลวงกลุ่ม 3 ลุ่มน้ำน่าน",
+     "name_en": "Highland Research & Development Institute (HRDI)",
+     "type": "org",
+     "role": "ร้าน 'ของดีพื้นที่สูง' จำหน่ายผักปลอดภัยในเมืองน่าน (2568)",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "puborg",
+     "level": "จังหวัด",
+     "area": "พื้นที่สูงลุ่มน้ำน่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "note": "",
+     "a": null,
+     "created": 1763300000103
+    },
+    {
+     "id": "AGR13",
+     "name": "สถาบันวิจัยวิทยาศาสตร์และเทคโนโลยีแห่งประเทศไทย (วว.) ศูนย์เชี่ยวชาญนวัตกรรมเกษตรสร้างสรรค์",
+     "name_en": "TISTR – Creative Agricultural Innovation Centre",
+     "type": "org",
+     "role": "ภาคีร่วมเปิดร้านของดีพื้นที่สูง",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "academic",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "note": "",
+     "a": null,
+     "created": 1763300000105
+    },
+    {
+     "id": "AGR14",
+     "name": "Lemon Farm",
+     "name_en": "Lemon Farm",
+     "type": "org",
+     "role": "รับรอง/รับซื้อผลผลิตอินทรีย์ล็อตเล็ก",
+     "sectors": [
+      "agri",
+      "econ"
+     ],
+     "otype": "business",
+     "level": "ประเทศ",
+     "area": "กรุงเทพฯ",
+     "status": "pending",
+     "evidence": "SRC17",
+     "note": "รอยืนยัน (ข้อมูลภายในโครงการ)",
+     "a": null,
+     "created": 1763300000107
+    },
+    {
+     "id": "AGR15",
+     "name": "สำนักงานเศรษฐกิจการเกษตร (สศก.)",
+     "name_en": "Office of Agricultural Economics",
+     "type": "org",
+     "role": "9 ชุดข้อมูลเกษตรของน่านบน GD Catalog (ระดับจังหวัด)",
+     "sectors": [
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "ประเทศ",
+     "area": "ทั้งประเทศ",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "note": "",
+     "a": null,
+     "created": 1763300000110
+    },
+    {
+     "id": "HLT01",
+     "name": "โรงพยาบาลเชียงกลาง",
+     "name_en": "Chiang Klang Hospital",
+     "type": "org",
+     "role": "ตลาดสีเขียวใน รพ. ตั้งแต่ ก.ย. 2556 (6 ตำบล) ผักเข้าโรงครัว",
+     "sectors": [
+      "health",
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "อำเภอ",
+     "area": "อ.เชียงกลาง",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000111
+    },
+    {
+     "id": "HLT02",
+     "name": "โรงพยาบาลเวียงสา",
+     "name_en": "Wiang Sa Hospital",
+     "type": "org",
+     "role": "บูธ 'กินเปลี่ยนน่าน'; ตลาดตำบลกลางเวียง",
+     "sectors": [
+      "health",
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "อำเภอ",
+     "area": "อ.เวียงสา",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000113
+    },
+    {
+     "id": "HLT03",
+     "name": "กลุ่ม อสม. อำเภอเวียงสา",
+     "name_en": "Wiang Sa village health volunteers",
+     "type": "org",
+     "role": "ปลูกผักไร้สาร 'บ้านนี้มีรัก ปลูกผักแบ่งปัน'",
+     "sectors": [
+      "health",
+      "agri"
+     ],
+     "otype": "community",
+     "level": "อำเภอ",
+     "area": "อ.เวียงสา",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000115
+    },
+    {
+     "id": "HLT04",
+     "name": "โรงพยาบาลสมเด็จพระยุพราชปัว",
+     "name_en": "Pua Crown Prince Hospital",
+     "type": "org",
+     "role": "ร่วมงานอาหารปลอดภัยในพื้นที่ปัว",
+     "sectors": [
+      "health",
+      "agri"
+     ],
+     "otype": "gov",
+     "level": "อำเภอ",
+     "area": "อ.ปัว",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000117
+    },
+    {
+     "id": "HLT05",
+     "name": "ชมรมรักษ์สมุนไพร (ทุ่งช้าง)",
+     "name_en": "Rak Samunphrai Club (Thung Chang)",
+     "type": "org",
+     "role": "ตลาดสีเขียวที่โรงพยาบาลทุกวันศุกร์",
+     "sectors": [
+      "health",
+      "agri"
+     ],
+     "otype": "community",
+     "level": "อำเภอ",
+     "area": "อ.ทุ่งช้าง",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000119
+    },
+    {
+     "id": "HLT06",
+     "name": "สถาบันวิจัยจุฬาภรณ์",
+     "name_en": "Chulabhorn Research Institute",
+     "type": "org",
+     "role": "ร่วมกับ อบต. ทำระบบสารวัตรอาหาร อ.บ้านหลวง",
+     "sectors": [
+      "health"
+     ],
+     "otype": "academic",
+     "level": "ประเทศ",
+     "area": "อ.บ้านหลวง",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000121
+    },
+    {
+     "id": "HLT07",
+     "name": "โครงการปิดทองหลังพระ",
+     "name_en": "Pid Thong Lang Phra project",
+     "type": "org",
+     "role": "ร่วมกับ อบจ. ส่งเสริมผักปลอดภัย อ.สันติสุข",
+     "sectors": [
+      "agri",
+      "health"
+     ],
+     "otype": "ngo",
+     "level": "อำเภอ",
+     "area": "อ.สันติสุข",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000123
+    },
+    {
+     "id": "HLT08",
+     "name": "มูลนิธิศุภนิมิตแห่งประเทศไทย",
+     "name_en": "World Vision Foundation of Thailand",
+     "type": "org",
+     "role": "ร่วมโครงการหลวงและกระทรวงฯ ใน อ.สองแคว (ตรวจสารเคมีเกษตรกร)",
+     "sectors": [
+      "agri",
+      "health"
+     ],
+     "otype": "ngo",
+     "level": "อำเภอ",
+     "area": "อ.สองแคว",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "note": "ยืนยันจากเอกสาร (ข้อมูลปี 2557)",
+     "a": null,
+     "created": 1763300000125
+    },
+    {
+     "id": "PER01",
+     "name": "นายเสวียน สองสีขวา",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "ประธานเครือข่ายป่าชุมชนจังหวัดน่าน (ข้อมูลปี 2551) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "a": null,
+     "created": 1763300000127
+    },
+    {
+     "id": "PER02",
+     "name": "นายพัฒน์ ขันสลี",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "รองประธานเครือข่ายป่าชุมชนจังหวัดน่าน (ข้อมูลปี 2551) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "a": null,
+     "created": 1763300000129
+    },
+    {
+     "id": "PER03",
+     "name": "พระครูพิทักษ์นันทคุณ",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "เจ้าอาวาสวัดอรัญญาวาส; ผู้ก่อตั้งกลุ่มฮักเมืองน่าน (ข้อมูลปี 2551 (ประวัติ)) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "a": null,
+     "created": 1763300000131
+    },
+    {
+     "id": "PER04",
+     "name": "นายสำรวย ผัดผล",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "ประธานมูลนิธิฮักเมืองน่าน (ข้อมูลปี 2569-03) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "pending",
+     "evidence": "SRC04",
+     "a": null,
+     "created": 1763300000134
+    },
+    {
+     "id": "PER05",
+     "name": "นายบัณฑูร ล่ำซำ",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "ประธานกรรมการภาคเอกชน โครงการน่านแซนด์บ็อกซ์ (ประธานกิตติคุณ ธ.กสิกรไทย) (ข้อมูลปี 2567) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "pending",
+     "evidence": "SRC06; SRC16",
+     "a": null,
+     "created": 1763300000136
+    },
+    {
+     "id": "PER06",
+     "name": "นายชัยนรงค์ วงศ์ใหญ่",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "ผู้ว่าราชการจังหวัดน่าน (ณ ก.พ. 2568) (ข้อมูลปี 2568-02) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "pending",
+     "evidence": "SRC07",
+     "a": null,
+     "created": 1763300000138
+    },
+    {
+     "id": "PER07",
+     "name": "ดร.อนุรักษ์ เรืองรอบ",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "นายกสมาคมการค้าเกษตรกรรมยั่งยืน (ลงนามหนังสือรับรอง SDGsPGS) (ข้อมูลปี ไม่ทราบ) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "pending",
+     "evidence": "SRC13",
+     "a": null,
+     "created": 1763300000140
+    },
+    {
+     "id": "PER08",
+     "name": "ผศ.ดร.ธัญศิภรณ์ ณ น่าน",
+     "name_en": "",
+     "type": "person",
+     "role": "",
+     "note": "อาจารย์/นักพัฒนาระบบเกษตร – Hazefree PGS Nan (ข้อมูลปี 2566) — ร่าง: ยืนยัน/ขอความยินยอมก่อนเผยแพร่",
+     "status": "pending",
+     "evidence": "SRC13",
+     "a": null,
+     "created": 1763300000142
+    }
+   ],
+   "links": [
+    {
+     "id": "xORG01T1",
+     "s": "ORG01",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000009
+    },
+    {
+     "id": "xORG01T2",
+     "s": "ORG01",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000010
+    },
+    {
+     "id": "xORG01T3",
+     "s": "ORG01",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000011
+    },
+    {
+     "id": "xORG02T1",
+     "s": "ORG02",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC12",
+     "created": 1763300000013
+    },
+    {
+     "id": "xORG02T2",
+     "s": "ORG02",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC12",
+     "created": 1763300000014
+    },
+    {
+     "id": "xORG03T1",
+     "s": "ORG03",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000016
+    },
+    {
+     "id": "xORG04T1",
+     "s": "ORG04",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000018
+    },
+    {
+     "id": "xORG04T3",
+     "s": "ORG04",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000019
+    },
+    {
+     "id": "xORG05T1",
+     "s": "ORG05",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000021
+    },
+    {
+     "id": "xORG06T1",
+     "s": "ORG06",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000023
+    },
+    {
+     "id": "xORG07T1",
+     "s": "ORG07",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000025
+    },
+    {
+     "id": "xORG08T1",
+     "s": "ORG08",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC02; SRC15",
+     "created": 1763300000027
+    },
+    {
+     "id": "xORG09T1",
+     "s": "ORG09",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC15",
+     "created": 1763300000029
+    },
+    {
+     "id": "xORG09T2",
+     "s": "ORG09",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC15",
+     "created": 1763300000030
+    },
+    {
+     "id": "xORG10T3",
+     "s": "ORG10",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000032
+    },
+    {
+     "id": "xORG10T4",
+     "s": "ORG10",
+     "t": "T4",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000033
+    },
+    {
+     "id": "xORG11T2",
+     "s": "ORG11",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000035
+    },
+    {
+     "id": "xORG12T2",
+     "s": "ORG12",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000037
+    },
+    {
+     "id": "xORG12T3",
+     "s": "ORG12",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000038
+    },
+    {
+     "id": "xORG13T2",
+     "s": "ORG13",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC07; SRC08",
+     "created": 1763300000040
+    },
+    {
+     "id": "xORG13T3",
+     "s": "ORG13",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC07; SRC08",
+     "created": 1763300000041
+    },
+    {
+     "id": "xORG13T6",
+     "s": "ORG13",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC07; SRC08",
+     "created": 1763300000042
+    },
+    {
+     "id": "xORG14T1",
+     "s": "ORG14",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC11; SRC12",
+     "created": 1763300000044
+    },
+    {
+     "id": "xORG14T5",
+     "s": "ORG14",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC04; SRC11; SRC12",
+     "created": 1763300000045
+    },
+    {
+     "id": "xORG15T1",
+     "s": "ORG15",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000047
+    },
+    {
+     "id": "xORG16T3",
+     "s": "ORG16",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000049
+    },
+    {
+     "id": "xORG17T3",
+     "s": "ORG17",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000051
+    },
+    {
+     "id": "xORG18T1",
+     "s": "ORG18",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC05",
+     "created": 1763300000053
+    },
+    {
+     "id": "xORG18T6",
+     "s": "ORG18",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC01; SRC05",
+     "created": 1763300000054
+    },
+    {
+     "id": "xORG19T2",
+     "s": "ORG19",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC04; SRC12",
+     "created": 1763300000056
+    },
+    {
+     "id": "xORG20T2",
+     "s": "ORG20",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000058
+    },
+    {
+     "id": "xORG21T2",
+     "s": "ORG21",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000060
+    },
+    {
+     "id": "xORG22T3",
+     "s": "ORG22",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000062
+    },
+    {
+     "id": "xORG23T2",
+     "s": "ORG23",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000064
+    },
+    {
+     "id": "xORG24T3",
+     "s": "ORG24",
+     "t": "T3",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC06; SRC16",
+     "created": 1763300000066
+    },
+    {
+     "id": "xORG24T4",
+     "s": "ORG24",
+     "t": "T4",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC06; SRC16",
+     "created": 1763300000067
+    },
+    {
+     "id": "xORG25T2",
+     "s": "ORG25",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "created": 1763300000069
+    },
+    {
+     "id": "xORG26T2",
+     "s": "ORG26",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "created": 1763300000071
+    },
+    {
+     "id": "xORG27T1",
+     "s": "ORG27",
+     "t": "T1",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC12",
+     "created": 1763300000073
+    },
+    {
+     "id": "xORG27T2",
+     "s": "ORG27",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC12",
+     "created": 1763300000074
+    },
+    {
+     "id": "xAGR01T5",
+     "s": "AGR01",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC09; SRC03",
+     "created": 1763300000076
+    },
+    {
+     "id": "xAGR02T5",
+     "s": "AGR02",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000078
+    },
+    {
+     "id": "xAGR02T6",
+     "s": "AGR02",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC03",
+     "created": 1763300000079
+    },
+    {
+     "id": "xAGR03T5",
+     "s": "AGR03",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC10",
+     "created": 1763300000081
+    },
+    {
+     "id": "xAGR04T5",
+     "s": "AGR04",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC10",
+     "created": 1763300000083
+    },
+    {
+     "id": "xAGR05T5",
+     "s": "AGR05",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC11",
+     "created": 1763300000085
+    },
+    {
+     "id": "xAGR06T5",
+     "s": "AGR06",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13; SRC17",
+     "created": 1763300000087
+    },
+    {
+     "id": "xAGR06T7",
+     "s": "AGR06",
+     "t": "T7",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13; SRC17",
+     "created": 1763300000088
+    },
+    {
+     "id": "xAGR07T2",
+     "s": "AGR07",
+     "t": "T2",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000090
+    },
+    {
+     "id": "xAGR07T5",
+     "s": "AGR07",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000091
+    },
+    {
+     "id": "xAGR07T7",
+     "s": "AGR07",
+     "t": "T7",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000092
+    },
+    {
+     "id": "xAGR08T5",
+     "s": "AGR08",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000094
+    },
+    {
+     "id": "xAGR09T5",
+     "s": "AGR09",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000096
+    },
+    {
+     "id": "xAGR10T5",
+     "s": "AGR10",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC14; SRC17",
+     "created": 1763300000098
+    },
+    {
+     "id": "xAGR10T7",
+     "s": "AGR10",
+     "t": "T7",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC14; SRC17",
+     "created": 1763300000099
+    },
+    {
+     "id": "xAGR11T5",
+     "s": "AGR11",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC14",
+     "created": 1763300000101
+    },
+    {
+     "id": "xAGR11T7",
+     "s": "AGR11",
+     "t": "T7",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC14",
+     "created": 1763300000102
+    },
+    {
+     "id": "xAGR12T6",
+     "s": "AGR12",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "created": 1763300000104
+    },
+    {
+     "id": "xAGR13T6",
+     "s": "AGR13",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "created": 1763300000106
+    },
+    {
+     "id": "xAGR14T5",
+     "s": "AGR14",
+     "t": "T5",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC17",
+     "created": 1763300000108
+    },
+    {
+     "id": "xAGR14T6",
+     "s": "AGR14",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "pending",
+     "evidence": "SRC17",
+     "created": 1763300000109
+    },
+    {
+     "id": "xHLT01T6",
+     "s": "HLT01",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000112
+    },
+    {
+     "id": "xHLT02T6",
+     "s": "HLT02",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000114
+    },
+    {
+     "id": "xHLT03T6",
+     "s": "HLT03",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000116
+    },
+    {
+     "id": "xHLT04T6",
+     "s": "HLT04",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000118
+    },
+    {
+     "id": "xHLT05T6",
+     "s": "HLT05",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000120
+    },
+    {
+     "id": "xHLT06T6",
+     "s": "HLT06",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000122
+    },
+    {
+     "id": "xHLT07T6",
+     "s": "HLT07",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000124
+    },
+    {
+     "id": "xHLT08T6",
+     "s": "HLT08",
+     "t": "T6",
+     "w": 3,
+     "label": "ทำงานด้านนี้",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000126
+    },
+    {
+     "id": "yPER01ORG01",
+     "s": "PER01",
+     "t": "ORG01",
+     "w": 3,
+     "label": "ประธานเครือข่ายป่าชุมชนจังหวัดน่าน",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "created": 1763300000128
+    },
+    {
+     "id": "yPER02ORG01",
+     "s": "PER02",
+     "t": "ORG01",
+     "w": 3,
+     "label": "รองประธานเครือข่ายป่าชุมชนจังหวัดน่าน",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "created": 1763300000130
+    },
+    {
+     "id": "yPER03ORG03",
+     "s": "PER03",
+     "t": "ORG03",
+     "w": 3,
+     "label": "เจ้าอาวาสวัดอรัญญาวาส; ผู้ก่อตั้งกลุ่มฮักเมืองน่าน",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "created": 1763300000132
+    },
+    {
+     "id": "yPER03ORG02",
+     "s": "PER03",
+     "t": "ORG02",
+     "w": 3,
+     "label": "เจ้าอาวาสวัดอรัญญาวาส; ผู้ก่อตั้งกลุ่มฮักเมืองน่าน",
+     "status": "outdated",
+     "evidence": "SRC01",
+     "created": 1763300000133
+    },
+    {
+     "id": "yPER04ORG02",
+     "s": "PER04",
+     "t": "ORG02",
+     "w": 3,
+     "label": "ประธานมูลนิธิฮักเมืองน่าน",
+     "status": "pending",
+     "evidence": "SRC04",
+     "created": 1763300000135
+    },
+    {
+     "id": "yPER05ORG24",
+     "s": "PER05",
+     "t": "ORG24",
+     "w": 3,
+     "label": "ประธานกรรมการภาคเอกชน โครงการน่านแซนด์บ็อกซ์ (ประธานกิตติคุณ ธ.กสิกรไทย)",
+     "status": "pending",
+     "evidence": "SRC06; SRC16",
+     "created": 1763300000137
+    },
+    {
+     "id": "yPER06ORG13",
+     "s": "PER06",
+     "t": "ORG13",
+     "w": 3,
+     "label": "ผู้ว่าราชการจังหวัดน่าน (ณ ก.พ. 2568)",
+     "status": "pending",
+     "evidence": "SRC07",
+     "created": 1763300000139
+    },
+    {
+     "id": "yPER07AGR08",
+     "s": "PER07",
+     "t": "AGR08",
+     "w": 3,
+     "label": "นายกสมาคมการค้าเกษตรกรรมยั่งยืน (ลงนามหนังสือรับรอง SDGsPGS)",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000141
+    },
+    {
+     "id": "yPER08AGR07",
+     "s": "PER08",
+     "t": "AGR07",
+     "w": 3,
+     "label": "อาจารย์/นักพัฒนาระบบเกษตร – Hazefree PGS Nan",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000143
+    },
+    {
+     "id": "L01",
+     "s": "ORG02",
+     "t": "ORG01",
+     "w": 3,
+     "label": "ร่วมก่อตั้ง/ประสานงาน · 2523–ปัจจุบัน · กลุ่มฮักเมืองน่านเป็นแกนเริ่มงานอนุรักษ์ป่าชุมชน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000144
+    },
+    {
+     "id": "L02",
+     "s": "ORG03",
+     "t": "ORG02",
+     "w": 3,
+     "label": "ต้นกำเนิด/สังกัด · 2523 · พระครูพิทักษ์นันทคุณ วัดอรัญญาวาส ตั้งกลุ่มฮักเมืองน่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000145
+    },
+    {
+     "id": "L03",
+     "s": "ORG04",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สมาชิกเครือข่าย · 2551 · ระดับลุ่มน้ำ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000146
+    },
+    {
+     "id": "L04",
+     "s": "ORG05",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สมาชิกเครือข่าย · 2551 · ระดับอำเภอ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000147
+    },
+    {
+     "id": "L05",
+     "s": "ORG06",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สมาชิกเครือข่าย · 2551 · ระดับอำเภอ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000148
+    },
+    {
+     "id": "L06",
+     "s": "ORG07",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สมาชิกเครือข่าย · 2551 · ระดับชุมชน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000149
+    },
+    {
+     "id": "L07",
+     "s": "ORG14",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สนับสนุนทุน/โครงการร่วม · 2547; 2550 · โครงการจัดการทรัพยากรโดยภูมิปัญญา; ฟื้นฟูระบบนิเวศลุ่มน้ำน่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000150
+    },
+    {
+     "id": "L08",
+     "s": "ORG15",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สนับสนุนทุน · 2548–2549 · SGP 258 ป่า 3 ลุ่มน้ำ",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000151
+    },
+    {
+     "id": "L09",
+     "s": "ORG13",
+     "t": "ORG01",
+     "w": 3,
+     "label": "สนับสนุนทุน/โครงการร่วม · 2550 · งบผู้ว่าฯ ฟื้นฟูลุ่มน้ำน่าน 368 ป่า",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000152
+    },
+    {
+     "id": "L10",
+     "s": "ORG16",
+     "t": "ORG01",
+     "w": 3,
+     "label": "โครงการร่วม · 2550",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000153
+    },
+    {
+     "id": "L11",
+     "s": "ORG17",
+     "t": "ORG01",
+     "w": 3,
+     "label": "โครงการร่วม · 2550",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000154
+    },
+    {
+     "id": "L12",
+     "s": "ORG18",
+     "t": "ORG01",
+     "w": 3,
+     "label": "ร่วมกำหนดกติกา/กรรมการ · 2551 · รองนายก อบจ. ในคณะกรรมการระดับจังหวัด",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000155
+    },
+    {
+     "id": "L13",
+     "s": "ORG01",
+     "t": "ORG13",
+     "w": 3,
+     "label": "แลกเปลี่ยนข้อมูล · 2551 · เครือข่ายป้อนข้อมูลให้แผนพัฒนาจังหวัด",
+     "status": "confirmed_doc",
+     "evidence": "SRC01",
+     "created": 1763300000156
+    },
+    {
+     "id": "L14",
+     "s": "ORG08",
+     "t": "ORG01",
+     "w": 3,
+     "label": "แลกเปลี่ยนข้อมูล/ขึ้นทะเบียนสมาชิก · ไม่ระบุ · ฐานข้อมูลสมาชิก 306 หมู่บ้าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC02",
+     "created": 1763300000157
+    },
+    {
+     "id": "L15",
+     "s": "ORG02",
+     "t": "ORG19",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2568; 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04; SRC12",
+     "created": 1763300000158
+    },
+    {
+     "id": "L16",
+     "s": "ORG02",
+     "t": "ORG14",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2568; 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04; SRC12",
+     "created": 1763300000159
+    },
+    {
+     "id": "L17",
+     "s": "ORG02",
+     "t": "ORG20",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000160
+    },
+    {
+     "id": "L18",
+     "s": "ORG02",
+     "t": "ORG21",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000161
+    },
+    {
+     "id": "L19",
+     "s": "ORG02",
+     "t": "ORG22",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000162
+    },
+    {
+     "id": "L20",
+     "s": "ORG02",
+     "t": "ORG23",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2569 · น่านฟอรั่ม",
+     "status": "confirmed_doc",
+     "evidence": "SRC04",
+     "created": 1763300000163
+    },
+    {
+     "id": "L21",
+     "s": "ORG14",
+     "t": "ORG27",
+     "w": 3,
+     "label": "โครงการร่วม (เวที) · 2568 · น่านฟอรั่ม ครั้งที่ 4",
+     "status": "pending",
+     "evidence": "SRC12",
+     "created": 1763300000164
+    },
+    {
+     "id": "L22",
+     "s": "ORG25",
+     "t": "ORG26",
+     "w": 3,
+     "label": "สนับสนุนทรัพยากร/ประสานงาน · 2569 · แนวกันไฟ อ.ท่าวังผา",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "created": 1763300000165
+    },
+    {
+     "id": "L23",
+     "s": "ORG26",
+     "t": "ORG13",
+     "w": 3,
+     "label": "ประสานงาน (single command) · 2569",
+     "status": "confirmed_doc",
+     "evidence": "SRC08",
+     "created": 1763300000166
+    },
+    {
+     "id": "L24",
+     "s": "ORG24",
+     "t": "ORG13",
+     "w": 3,
+     "label": "ร่วมกำหนดกติกา (รัฐ–เอกชน) · 2562– · น่านแซนด์บ็อกซ์ (จากผลค้นหา)",
+     "status": "pending",
+     "evidence": "SRC16",
+     "created": 1763300000167
+    },
+    {
+     "id": "L25",
+     "s": "ORG14",
+     "t": "AGR05",
+     "w": 3,
+     "label": "MOU · ไม่ทราบ · MOU เกษตรอินทรีย์ + ภาคี 31 หน่วยงาน (ยังไม่ได้รายชื่อ)",
+     "status": "pending",
+     "evidence": "SRC11",
+     "created": 1763300000168
+    },
+    {
+     "id": "L26",
+     "s": "AGR03",
+     "t": "AGR04",
+     "w": 3,
+     "label": "ประสานงาน · 2569 · ประชุมคณะทำงานรับรอง PGS",
+     "status": "pending",
+     "evidence": "SRC10",
+     "created": 1763300000169
+    },
+    {
+     "id": "L27",
+     "s": "AGR09",
+     "t": "AGR08",
+     "w": 3,
+     "label": "โครงการร่วม · 2568-12 · สร้างเครือข่าย SDGsPGS",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000170
+    },
+    {
+     "id": "L28",
+     "s": "AGR08",
+     "t": "AGR03",
+     "w": 3,
+     "label": "รับรองมาตรฐาน/ระบบข้อมูล · 2569 · ใช้ระบบ OAN/SDGsPGS",
+     "status": "pending",
+     "evidence": "SRC10; SRC13",
+     "created": 1763300000171
+    },
+    {
+     "id": "L29",
+     "s": "AGR07",
+     "t": "AGR06",
+     "w": 3,
+     "label": "แบรนด์/ตลาด · 2563– · กระซิบรักษ์โพสต์แปลงนา Haze Free PGS Nan",
+     "status": "pending",
+     "evidence": "SRC13",
+     "created": 1763300000172
+    },
+    {
+     "id": "L30",
+     "s": "AGR14",
+     "t": "AGR06",
+     "w": 3,
+     "label": "รับรอง/รับซื้อ · 2561– · ข้อมูลภายในโครงการ ADAPT",
+     "status": "pending",
+     "evidence": "SRC17",
+     "created": 1763300000173
+    },
+    {
+     "id": "L31",
+     "s": "AGR10",
+     "t": "AGR06",
+     "w": 3,
+     "label": "รับซื้อ/แปรรูปข้าว · ไม่ทราบ · ข้อมูลภายในโครงการ ADAPT",
+     "status": "pending",
+     "evidence": "SRC17",
+     "created": 1763300000174
+    },
+    {
+     "id": "L32",
+     "s": "AGR11",
+     "t": "AGR10",
+     "w": 3,
+     "label": "ตรวจประเมิน/วิชาการ · 2567 · ไม่ระบุกลุ่มที่ตรวจในข้อความย่อ — ตรวจสอบ",
+     "status": "pending",
+     "evidence": "SRC14",
+     "created": 1763300000175
+    },
+    {
+     "id": "L33",
+     "s": "AGR12",
+     "t": "AGR13",
+     "w": 3,
+     "label": "โครงการร่วม · 2568 · ร้านของดีพื้นที่สูง",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "created": 1763300000176
+    },
+    {
+     "id": "L34",
+     "s": "AGR12",
+     "t": "ORG13",
+     "w": 3,
+     "label": "โครงการร่วม · 2568 · ผู้ว่าฯ ร่วมเปิดร้าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC07",
+     "created": 1763300000177
+    },
+    {
+     "id": "L35",
+     "s": "HLT03",
+     "t": "HLT02",
+     "w": 3,
+     "label": "โครงการร่วม · 2557 · ตลาดตำบลกลางเวียง / กินเปลี่ยนน่าน",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000178
+    },
+    {
+     "id": "L37",
+     "s": "HLT07",
+     "t": "ORG18",
+     "w": 3,
+     "label": "โครงการร่วม · 2557 · ผักปลอดภัย อ.สันติสุข",
+     "status": "confirmed_doc",
+     "evidence": "SRC05",
+     "created": 1763300000179
+    },
+    {
+     "id": "L38",
+     "s": "HLT08",
+     "t": "AGR12",
+     "w": 3,
+     "label": "โครงการร่วม · 2557 · แหล่งข่าวระบุ 'โครงการหลวง' ใน อ.สองแคว",
+     "status": "pending",
+     "evidence": "SRC05",
+     "created": 1763300000180
+    }
+   ]
+  }
+ ]
+}
