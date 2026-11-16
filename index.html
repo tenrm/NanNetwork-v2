@@ -300,6 +300,7 @@ footer{display:none}
 const I18N = {
   subtitle:['แผนภาพเครือข่ายศูนย์เรียนรู้น่าน','Nan learning-centre network map'],
   v1link:['↗ v1 (วงเดียว)','↗ v1 (ring only)'],
+  seedUpdated:['อัปเดตข้อมูลตัวอย่างเป็นชุดล่าสุดแล้ว','Sample data updated to the latest version'],
   projSel:['เลือกโปรเจค','Choose project'], projNew:['+ โปรเจค','+ Project'], projEdit:['แก้ไข','Edit'],
   type_issue:['ประเด็น','Issue'], type_org:['หน่วยงาน','Organisation'], type_person:['บุคคล','Person'],
   types_issue:['ประเด็น','issues'], types_org:['หน่วยงาน','organisations'], types_person:['บุคคล','people'],
@@ -545,6 +546,7 @@ async function init(){
   } else {
     S.mode = 'local'; STORE = localStore();
     if (STORE.isEmpty()) await importFromUrl('data.json', true);
+    else await refreshSeed();
   }
   applyPerms();
   subscribeProjects();
@@ -1385,7 +1387,7 @@ function exportJson(){
   $('#jCopy').onclick = () => { navigator.clipboard.writeText(txt).then(() => toast(T('copied')), () => { $('#jx').select(); toast(T('pressCopy')); }); };
   $('#jDl').onclick = () => saveFile(fileBase() + '.json', new Blob([txt], {type:'application/json'}));
 }
-async function importData(obj, quiet){
+async function importData(obj, quiet, overwrite){
   let projs = [];
   if (obj && Array.isArray(obj.projects)) projs = obj.projects;
   else if (obj && Array.isArray(obj.nodes)) projs = [obj];
@@ -1394,7 +1396,7 @@ async function importData(obj, quiet){
   const okId = x => x && /^[A-Za-z0-9_\-]+$/.test(x);
   for (const p of projs){
     let pid = okId(p.id) ? p.id : newId('p');
-    if (S.projects.some(x => x.id === pid)) pid = newId('p');
+    if (!overwrite && S.projects.some(x => x.id === pid)) pid = newId('p');
     firstId = firstId || pid;
     await write(() => STORE.set(pPath(pid), {name:p.name || p.name_en || T('importedProj'), name_en:p.name_en || '', desc:p.desc || '', created:p.created || Date.now()}));
     const idmap = {};
@@ -1412,9 +1414,26 @@ async function importData(obj, quiet){
   if (!quiet) toast(T('imported', projs.length));
   if (firstId && S.loaded){ S.pid = null; openProject(firstId); renderProjSel(firstId); }
 }
+const SEED_KEY = 'nannetwork-v2-seed';
 async function importFromUrl(url, quiet){
-  try { const r = await fetch(url, {cache:'no-store'}); if (!r.ok) throw 0; await importData(await r.json(), quiet); }
+  try {
+    const r = await fetch(url, {cache:'no-store'}); if (!r.ok) throw 0;
+    const j = await r.json(); await importData(j, quiet);
+    try { if (j.seedVersion) localStorage.setItem(SEED_KEY, j.seedVersion); } catch(e){}
+  }
   catch(e){ if (!quiet) toast(T('seedFail')); }
+}
+// local mode: when data.json has a newer seedVersion, overwrite the seeded projects in place (same ids; local-only items are kept)
+async function refreshSeed(){
+  try {
+    const r = await fetch('data.json', {cache:'no-store'}); if (!r.ok) return;
+    const j = await r.json(); let cur = null;
+    try { cur = localStorage.getItem(SEED_KEY); } catch(e){}
+    if (!j.seedVersion || j.seedVersion === cur) return;
+    await importData(j, true, true);
+    try { localStorage.setItem(SEED_KEY, j.seedVersion); } catch(e){}
+    toast(T('seedUpdated'));
+  } catch(e){}
 }
 
 /* ---------- downloads ---------- */
