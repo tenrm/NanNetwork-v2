@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nan Network v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>window.NAN_FIREBASE_CONFIG = window.NAN_FIREBASE_CONFIG || null;</script>
+<script src="config.js" onerror="void 0"></script>
+<style>
+:root{
+  --issue:#FED7AA; --issue-s:#E07B2A; --issue-bg:#FFF4E8;
+  --org:#FDE68A;   --org-s:#C99A06;   --org-bg:#FFFBEA;
+  --person:#BBF7D0;--person-s:#1F9D55;--person-bg:#F1FBF4;
+  --ink:#2d2a26; --muted:#7a7268; --line:#e7e1d8; --panel:#fffdf9; --bg:#f7f4ef;
+  --accent:#b45309; --link:#7c6f5d; --danger:#b42318;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"IBM Plex Sans Thai",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1.15;margin-right:8px}
+.brand b{font-size:17px}
+.brand span{font-size:12px;color:var(--muted)}
+.brand .vtag{font-size:11px;background:#2f6f4e;color:#fff;border-radius:8px;padding:1px 7px;vertical-align:middle}
+.brand .v1link{font-size:11px;font-weight:400;color:var(--muted);margin-left:4px}
+.brand .v1link:hover{color:inherit}
+.proj{display:flex;align-items:center;gap:6px}
+.proj select{min-width:220px;max-width:340px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.spacer{flex:1}
+.pill{font-size:12px;padding:4px 10px;border-radius:999px;background:#eef2f0;color:#3c5a49;white-space:nowrap}
+.pill.warn{background:#fff3df;color:#8a5300}
+.pill.off{background:#f1efec;color:#6b645b}
+.pill.err{background:#fde8e6;color:var(--danger)}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#cfc6b8;background:#fffaf2}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#9a4708}
+.btn.danger{color:var(--danger)}
+.btn.danger.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn.sm{padding:3px 8px;font-size:12px}
+.btn.on{background:#3d3a35;color:#fff;border-color:#3d3a35}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+main{display:grid;grid-template-columns:270px 1fr 340px;height:calc(100vh - 58px);min-height:520px}
+aside{background:var(--panel);overflow:auto;padding:14px}
+aside.left{border-right:1px solid var(--line)}
+aside.right{border-left:1px solid var(--line);padding:0;display:flex;flex-direction:column}
+.sec{margin-bottom:18px}
+.sec h3{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px}
+.types button{border:2px solid transparent;border-radius:8px;padding:6px 2px;cursor:pointer;font-size:13px}
+.types button[data-type=issue]{background:var(--issue)}
+.types button[data-type=org]{background:var(--org)}
+.types button[data-type=person]{background:var(--person)}
+.types button.sel{border-color:var(--ink)}
+input[type=text],input[type=search],textarea,select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+textarea{resize:vertical}
+input[type=range]{accent-color:var(--accent)}
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
+label>input,label>textarea,label>select{margin-top:3px;color:var(--ink);font-size:14px}
+.row{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.hint{font-size:12px;color:var(--muted);margin:6px 0 0}
+.legend div{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;flex:none;border:1.5px solid}
+.dot.issue{background:var(--issue);border-color:var(--issue-s)}
+.dot.org{background:var(--org);border-color:var(--org-s)}
+.dot.person{background:var(--person);border-color:var(--person-s)}
+.legend #wlegend{display:block}
+.wl{display:flex;white-space:nowrap;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:3px 0}
+.wl i{display:inline-block;width:44px;background:var(--link);border-radius:4px}
+.stage{position:relative;overflow:hidden;background:#fff}
+#net{width:100%;height:100%;display:block;cursor:grab;user-select:none}
+#net.connect{cursor:crosshair}
+.ovl{position:absolute;pointer-events:none}
+.key{top:10px;left:12px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12px;display:flex;gap:12px}
+.key span{display:flex;align-items:center;gap:5px}
+.zoom{position:absolute;right:12px;top:10px;display:flex;flex-direction:column;gap:4px}
+.zoom button{width:32px;height:32px;padding:0;font-size:16px}
+.banner{position:absolute;left:50%;transform:translateX(-50%);top:10px;background:#3d3a35;color:#fff;font-size:13px;padding:6px 12px;border-radius:999px;display:none;pointer-events:auto}
+.banner button{margin-left:8px;background:transparent;border:1px solid #fff8;color:#fff;border-radius:999px;padding:1px 8px;cursor:pointer}
+.banner.fb{top:auto;bottom:14px;background:#9a4708;max-width:92%;text-align:center}
+.fchips{display:flex;flex-wrap:wrap;gap:5px}
+.fchip{border:1px solid var(--issue);background:var(--issue-bg);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:12.5px}
+.fchip:hover{border-color:var(--issue-s)}
+.fchip.on{background:var(--issue);border-color:var(--issue-s);font-weight:600}
+.empty{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.empty>div{background:rgba(255,255,255,.94);border:1px dashed #cfc6b8;border-radius:14px;padding:18px 22px;max-width:360px;pointer-events:auto}
+#tip{position:absolute;pointer-events:none;background:#2d2a26;color:#fff;font-size:12px;padding:7px 9px;border-radius:8px;max-width:260px;display:none;line-height:1.45;z-index:5}
+#tip b{font-size:13px}
+.tabs{display:flex;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:2}
+.tabs button{flex:1;border:0;background:none;padding:10px 4px;cursor:pointer;font-size:13px;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button.sel{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.tab{padding:14px;display:none;overflow:auto;flex:1}
+.tab.sel{display:block}
+.muted{color:var(--muted)}
+.det-head{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.det-title{font-size:18px;font-weight:600;margin:4px 0 2px;word-break:break-word}
+h4{font-size:13px;margin:16px 0 6px}
+ul.conn{list-style:none;margin:0;padding:0}
+ul.conn li{display:grid;grid-template-columns:14px 1fr 70px 16px 20px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid #f0ebe3;font-size:13px}
+ul.conn li a{color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ul.conn li a:hover{text-decoration:underline}
+ul.conn input[type=range]{width:70px}
+.x{border:0;background:none;color:#a59c90;cursor:pointer;font-size:16px;padding:0}
+.x:hover{color:var(--danger)}
+.addlink{display:grid;grid-template-columns:1fr 56px auto;gap:6px;margin-top:8px}
+.role-card{border:1px solid var(--line);border-left:5px solid var(--org-s);background:#fff;border-radius:10px;padding:9px 11px;margin-bottom:9px;cursor:pointer}
+.role-card:hover{background:#fffdf3}
+.role-card.sel{box-shadow:0 0 0 2px var(--org-s) inset}
+.rc-h{display:flex;align-items:center;gap:6px}
+.rc-h b{flex:1;font-size:14px}
+.rc-h small{color:var(--muted)}
+.rc-role{font-size:13px;margin:5px 0;white-space:pre-wrap;line-height:1.5}
+.rc-role i{color:#b0a698}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.chip{font-size:11.5px;padding:1px 7px;border-radius:999px;border:1px solid}
+.chip.issue{background:var(--issue-bg);border-color:var(--issue)}
+.chip.person{background:var(--person-bg);border-color:var(--person)}
+.chip.org{background:var(--org-bg);border-color:var(--org)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+.kpi b{display:block;font-size:20px}
+.kpi span{font-size:11.5px;color:var(--muted)}
+.bars .b{display:grid;grid-template-columns:1fr 90px 34px;gap:6px;align-items:center;font-size:12.5px;padding:3px 0;cursor:pointer}
+.bars .b:hover{background:#faf6ef}
+.bars .b span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.bars .track{height:8px;background:#f1ece4;border-radius:4px;overflow:hidden}
+.bars .fill{height:100%;background:var(--accent);opacity:.75}
+.bars .v{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+table.cov{width:100%;border-collapse:collapse;font-size:12.5px}
+table.cov th,table.cov td{padding:4px 3px;border-bottom:1px solid #f0ebe3;text-align:right}
+table.cov th:first-child,table.cov td:first-child{text-align:left}
+table.cov tr.low td{color:var(--danger)}
+.modal{position:fixed;inset:0;background:rgba(30,25,20,.35);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal>div{background:#fff;border-radius:14px;padding:18px;width:min(520px,100%);max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 6px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#2d2a26;color:#fff;padding:8px 14px;border-radius:999px;font-size:13px;display:none;z-index:30}
+svg text{font-family:"IBM Plex Sans Thai",system-ui,sans-serif}
+.halo{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.node{cursor:pointer}
+.link{fill:none;stroke:var(--link);stroke-linecap:round;transition:opacity .15s}
+.linkhit{fill:none;stroke:transparent;stroke-width:14;cursor:pointer}
+footer{display:none}
+@media (max-width:980px){
+  main{grid-template-columns:1fr;height:auto}
+  .stage{height:72vh;order:-1}
+  aside.left,aside.right{border:0;border-top:1px solid var(--line)}
+  aside.right{min-height:420px}
+  .proj select{min-width:160px}
+}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{border:0;background:#fff;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.lang button.on{background:#3d3a35;color:#fff}
+.viewsw{position:absolute;top:10px;left:12px;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff;z-index:3}
+.viewsw button{border:0;background:#fff;padding:5px 12px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.viewsw button.on{background:#3d3a35;color:#fff}
+.lblsw{position:absolute;top:10px;display:none;z-index:3}
+.lblsw select{width:auto;padding:4px 8px;font-size:12px;border-radius:999px}
+.key{top:48px !important}
+.ckey{left:12px;bottom:12px;background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:11.5px;max-width:330px;display:none;line-height:1.55}
+.ckey b{font-size:11.5px}
+.ckey summary{cursor:pointer;list-style:revert}
+.ckey{pointer-events:auto}
+.ckey .it{display:inline-flex;align-items:center;gap:4px;margin-right:8px;white-space:nowrap}
+.ckey .sq{display:inline-block;width:10px;height:10px;border-radius:2px}
+.ckey .ln{display:inline-block;width:22px;border-top:2px solid #555}
+.ckey .ln.d{border-top-style:dashed}
+.secchk{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.secchk label{display:inline-flex;align-items:center;gap:4px;margin:0;font-size:12px;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:2px 8px;cursor:pointer}
+.secchk input{margin:0}
+.secchk .sw{width:9px;height:9px;border-radius:50%}
+.dlgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.dlgrid .btn{text-align:left;font-size:12.5px;padding:6px 8px;white-space:normal;line-height:1.3}
+.dlgrid .btn small{display:block;color:var(--muted);font-size:11px}
+.dlgrid .btn.wide{grid-column:1 / -1}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>Nan Network <span class="vtag">v2</span> <a class="v1link" href="https://tenrm.github.io/NanNetwork/" target="_blank" rel="noopener" data-t="v1link"></a></b><span data-t="subtitle"></span></div>
+  <div class="proj">
+    <select id="projSel" data-ta="projSel"></select>
+    <button class="btn sm" id="projNew" data-t="projNew"></button>
+    <button class="btn sm" id="projEdit" data-t="projEdit"></button>
+  </div>
+  <div class="spacer"></div>
+  <div class="lang" role="group" aria-label="Language"><button data-lang="th">ไทย</button><button data-lang="en">EN</button></div>
+  <span class="pill off" id="status">…</span>
+  <button class="btn sm" id="authBtn" style="display:none"></button>
+</header>
+
+<main>
+  <aside class="left">
+    <div class="sec edit-only">
+      <h3 data-t="addTitle"></h3>
+      <div class="types" id="addTypes">
+        <button data-type="issue" class="sel" data-t="type_issue"></button>
+        <button data-type="org" data-t="type_org"></button>
+        <button data-type="person" data-t="type_person"></button>
+      </div>
+      <input type="text" id="addName" maxlength="80">
+      <div class="row"><button class="btn primary" id="addBtn" data-t="addBtn"></button></div>
+    </div>
+
+    <div class="sec">
+      <h3 data-t="tools"></h3>
+      <div class="row" style="margin-top:0">
+        <button class="btn on" id="toolSelect" data-t="toolSelect"></button>
+        <button class="btn edit-only" id="toolConnect" data-t="toolConnect"></button>
+      </div>
+      <p class="hint" id="toolHint"></p>
+    </div>
+
+    <div class="sec">
+      <h3 data-t="searchTitle"></h3>
+      <input type="search" id="search" data-tp="searchPh">
+      <label><span data-t="minW"></span> <b id="minWv">1</b></label>
+      <input type="range" id="minW" min="1" max="5" value="1" style="width:100%">
+      <label data-t="sizeBy"></label>
+      <select id="sizeBy">
+        <option value="degree" data-t="size_str"></option>
+        <option value="btw" data-t="size_btw"></option>
+        <option value="none" data-t="size_none"></option>
+      </select>
+      <div class="row edit-only"><button class="btn sm" id="autoLayout" data-t="autoLayout"></button></div>
+    </div>
+
+    <div class="sec">
+      <h3 data-t="focusTitle"></h3>
+      <div class="fchips" id="focusChips"></div>
+      <p class="hint" data-t="focusHint"></p>
+      <div class="row"><button class="btn sm" id="focusClear" disabled data-t="showAll"></button></div>
+    </div>
+
+    <div class="sec">
+      <h3 data-t="dlTitle"></h3>
+      <div class="dlgrid">
+        <button class="btn wide" id="dlXlsx"><b data-t="dlXlsx"></b><small data-t="dlXlsxSub"></small></button>
+        <button class="btn wide" id="dlReport"><b data-t="dlReport"></b><small data-t="dlReportSub"></small></button>
+        <button class="btn" id="dlPng"><b>PNG</b><small data-t="dlImg"></small></button>
+        <button class="btn" id="dlSvg"><b>SVG</b><small data-t="dlVec"></small></button>
+      </div>
+      <p class="hint" data-t="dlHint"></p>
+    </div>
+
+    <div class="sec legend">
+      <h3 data-t="legend"></h3>
+      <div><span class="dot issue"></span><span data-t="leg_issue"></span></div>
+      <div><span class="dot org"></span><span data-t="leg_org"></span></div>
+      <div><span class="dot person"></span><span data-t="leg_person"></span></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)" data-t="leg_w"></div>
+      <div id="wlegend"></div>
+    </div>
+
+    <div class="sec">
+      <h3 data-t="dataTitle"></h3>
+      <div class="row" style="margin-top:0">
+        <button class="btn sm" id="expJson" data-t="expJson"></button>
+        <button class="btn sm edit-only" id="impJson" data-t="impJson"></button>
+      </div>
+      <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+    </div>
+  </aside>
+
+  <section class="stage" id="stage">
+    <svg id="net" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMidYMid meet" role="img"></svg>
+    <div class="viewsw" id="viewSw"><button data-view="ring" class="on" data-t="viewRing"></button><button data-view="cluster" data-t="viewCluster"></button></div>
+    <div class="lblsw" id="lblSw"><select id="lblMode"><option value="org" data-t="lblOrg"></option><option value="all" data-t="lblAll"></option><option value="none" data-t="lblNone"></option></select></div>
+    <div class="ovl ckey" id="keyCluster"></div>
+    <div class="ovl key" id="keyRing"><span><i class="dot issue"></i><span data-t="type_issue"></span></span><span><i class="dot org"></i><span data-t="type_org"></span></span><span><i class="dot person"></i><span data-t="type_person"></span></span></div>
+    <div class="zoom"><button class="btn" id="zIn" data-tt="zIn">+</button><button class="btn" id="zOut" data-tt="zOut">−</button><button class="btn" id="zFit" data-tt="zFit">⟲</button></div>
+    <div class="banner" id="banner"></div>
+    <div class="banner fb" id="fbanner"></div>
+    <div class="empty" id="empty"><div id="emptyBox"></div></div>
+    <div id="tip"></div>
+  </section>
+
+  <aside class="right">
+    <div class="tabs">
+      <button data-tab="roles" class="sel" data-t="tabRoles"></button>
+      <button data-tab="detail" data-t="tabDetail"></button>
+      <button data-tab="analysis" data-t="tabAnalysis"></button>
+    </div>
+    <div class="tab sel" id="tab-roles"></div>
+    <div class="tab" id="tab-detail"></div>
+    <div class="tab" id="tab-analysis"></div>
+  </aside>
+</main>
+
+<div class="modal" id="modal"><div id="modalBox"></div></div>
+<div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- i18n ---------- */
+const I18N = {
+  subtitle:['แผนภาพเครือข่ายศูนย์เรียนรู้น่าน','Nan learning-centre network map'],
+  v1link:['↗ v1 (วงเดียว)','↗ v1 (ring only)'],
+  projSel:['เลือกโปรเจค','Choose project'], projNew:['+ โปรเจค','+ Project'], projEdit:['แก้ไข','Edit'],
+  type_issue:['ประเด็น','Issue'], type_org:['หน่วยงาน','Organisation'], type_person:['บุคคล','Person'],
+  types_issue:['ประเด็น','issues'], types_org:['หน่วยงาน','organisations'], types_person:['บุคคล','people'],
+  addTitle:['เพิ่มรายการ','Add item'], addBtn:['+ เพิ่ม','+ Add'],
+  ph_issue:['ชื่อประเด็น เช่น ความมั่นคงทางอาหาร','Issue name, e.g. Food security'], ph_org:['ชื่อหน่วยงาน','Organisation name'], ph_person:['ชื่อบุคคล','Person name'],
+  tools:['เครื่องมือ','Tools'], toolSelect:['เลือก / ย้าย','Select / move'], toolConnect:['วาดเส้น','Draw link'],
+  hintSelect:['คลิกโหนดเพื่อดูรายละเอียด · ลากโหนดเพื่อเลื่อนตำแหน่งบนวง · เลื่อนลูกกลิ้ง/ถ่างนิ้วเพื่อซูม','Click a node for details · drag it along its ring · scroll or pinch to zoom'],
+  hintConnect:['คลิกโหนดต้นทาง แล้วคลิกโหนดปลายทางเพื่อสร้างเส้น (กด Esc เพื่อยกเลิก)','Click a source node, then a target node to draw a link (Esc to cancel)'],
+  searchTitle:['ค้นหา / กรอง','Search / filter'], searchPh:['ค้นหาชื่อ…','Search names…'], minW:['แสดงเส้นที่ความสำคัญ ≥','Show links with importance ≥'],
+  sizeBy:['ขนาดโหนดตาม','Node size by'], size_str:['ผลรวมความสำคัญของเส้น (strength)','Sum of link importance (strength)'], size_btw:['ความเป็นตัวเชื่อม (betweenness)','Brokerage (betweenness)'], size_none:['เท่ากันทั้งหมด','Equal size'],
+  autoLayout:['จัดเรียงอัตโนมัติ','Auto-arrange'],
+  focusTitle:['กรองตามประเด็น','Filter by issue'], focusHint:['เลือกประเด็น (ได้หลายข้อ) เพื่อแสดงเฉพาะหน่วยงานและบุคคลที่เกี่ยวข้อง · ดับเบิลคลิกวงประเด็นในแผนภาพก็ได้','Pick one or more issues to show only the organisations and people linked to them · or double-click an issue in the diagram'],
+  showAll:['แสดงทั้งหมด','Show all'], noIssues:['ยังไม่มีประเด็น','No issues yet'],
+  dlTitle:['ดาวน์โหลด / รายงาน (โปรเจคนี้)','Download / reports (this project)'],
+  dlXlsx:['Excel ข้อมูล + ผลวิเคราะห์ (.xlsx)','Excel data + analysis (.xlsx)'], dlXlsxSub:['โหนด · เส้น · ความสำคัญ · เมทริกซ์ · ศูนย์กลาง · ความครอบคลุม','Nodes · links · importance · matrices · centrality · coverage'],
+  dlReport:['รายงานสรุป (.html → พิมพ์เป็น PDF)','Summary report (.html → print to PDF)'], dlReportSub:['แผนภาพ + ตารางผลวิเคราะห์เครือข่าย','Diagram + network-analysis tables'],
+  dlImg:['ภาพแผนภาพ','Diagram image'], dlVec:['ภาพเวกเตอร์','Vector image'],
+  dlHint:['ไฟล์ใช้ภาษาที่เลือกอยู่ · ถ้ากรองตามประเด็นอยู่ ภาพจะเป็นมุมมองที่กรอง','Files use the current language · images follow the active issue filter'],
+  legend:['คำอธิบาย','Legend'], leg_issue:['วงใน · ประเด็น','Inner ring · issues'], leg_org:['วงกลาง · หน่วยงาน (มีบทบาท)','Middle ring · organisations (with roles)'], leg_person:['วงนอก · บุคคล','Outer ring · people'], leg_w:['ความหนาเส้น = ระดับความสำคัญ','Line thickness = importance'],
+  w1:['น้อย','Low'], w2:['ค่อนข้างน้อย','Fairly low'], w3:['ปานกลาง','Medium'], w4:['สำคัญ','High'], w5:['สำคัญมาก','Very high'],
+  dataTitle:['ข้อมูล (สำรอง/ย้ายระบบ)','Data (backup / transfer)'], expJson:['ส่งออก JSON','Export JSON'], impJson:['นำเข้า JSON','Import JSON'],
+  zIn:['ซูมเข้า','Zoom in'], zOut:['ซูมออก','Zoom out'], zFit:['พอดีจอ','Fit'],
+  tabRoles:['บทบาทหน่วยงาน','Org roles'], tabDetail:['รายละเอียด','Details'], tabAnalysis:['วิเคราะห์เครือข่าย','Network analysis'],
+  st_loading:['กำลังเชื่อมต่อ…','Connecting…'], st_claude:['ซิงก์เรียลไทม์ (Claude)','Live sync (Claude)'], st_firebase:['ซิงก์เรียลไทม์ (Firebase)','Live sync (Firebase)'], st_local:['โหมดในเครื่อง (เบราว์เซอร์นี้)','Local mode (this browser)'],
+  st_ro:[' · ดูอย่างเดียว',' · view only'], st_localTip:['ข้อมูลเก็บในเบราว์เซอร์นี้เท่านั้น — ตั้งค่า Firebase ใน config.js เพื่อให้ทุกคนแก้ไขร่วมกันแบบเรียลไทม์','Data is kept in this browser only — set up Firebase in config.js for shared live editing'],
+  st_noconn:['ยังเชื่อมต่อข้อมูลไม่ได้ — ข้อมูลอาจไม่เป็นปัจจุบัน','Cannot reach the data yet — it may be out of date'], st_loadfail:['โหลดข้อมูลไม่สำเร็จ','Failed to load data'], st_signin:['ต้องลงชื่อเข้าใช้เพื่อดูข้อมูล','Sign in to view the data'],
+  signinNeed:['ลงชื่อเข้าใช้ claude.ai เพื่อดูเครือข่ายนี้','Sign in to claude.ai to view this network'], cantLoad:['ยังโหลดข้อมูลไม่ได้','Cannot load data yet'],
+  signIn:['ลงชื่อเข้าใช้เพื่อแก้ไข','Sign in to edit'], signOut:['ออกจากระบบ','Sign out'], notEditor:['บัญชี {0} ยังไม่มีสิทธิ์แก้ไข (ดูได้อย่างเดียว)','{0} has no edit rights (view only)'], signinFail:['ลงชื่อเข้าใช้ไม่สำเร็จ','Sign-in failed'],
+  fbFail:['เชื่อมต่อ Firebase ไม่ได้ ใช้โหมดในเครื่องแทน','Could not connect to Firebase — using local mode'],
+  ro:['โหมดดูอย่างเดียว — ไม่มีสิทธิ์แก้ไข','View-only — you cannot edit'], roAcct:['บัญชีนี้ดูได้อย่างเดียว ไม่สามารถแก้ไขข้อมูล','This account is view-only'],
+  noPerm:['ไม่มีสิทธิ์แก้ไข — ลงชื่อเข้าใช้ด้วยบัญชีที่ได้รับสิทธิ์','No permission — sign in with an editor account'], quota:['พื้นที่ข้อมูลเต็ม — ลบรายการที่ไม่ใช้ก่อน','Storage is full — delete unused items first'], saveFail:['บันทึกไม่สำเร็จ ลองอีกครั้ง','Save failed, please retry'],
+  noProj:['— ยังไม่มีโปรเจค —','— no projects yet —'], noName:['(ไม่มีชื่อ)','(untitled)'],
+  linkExists:['มีเส้นเชื่อมนี้อยู่แล้ว','That link already exists'], linked:['เชื่อมแล้ว — ปรับความสำคัญได้ที่แผงขวา','Linked — adjust importance in the right panel'],
+  makeProj:['สร้างโปรเจคก่อน','Create a project first'], dupName:['มีชื่อนี้อยู่แล้ว','That name already exists'], deleted:['ลบแล้ว','Deleted'], saved:['บันทึกแล้ว','Saved'],
+  bannerConnect:['โหมดวาดเส้น: คลิกโหนดต้นทาง','Draw mode: click a source node'], bannerFrom:['จาก <b>{0}</b> → คลิกโหนดปลายทาง','From <b>{0}</b> → click a target node'], done:['เสร็จ','Done'],
+  emptyNoProj:['ยังไม่มีโปรเจค','No projects yet'], emptyNoProjEdit:['สร้างโปรเจคแรก หรือนำเข้าข้อมูลตัวอย่างศูนย์เรียนรู้น่าน','Create the first project or import the Nan example'], emptyNoData:['ยังไม่มีข้อมูลให้แสดง','Nothing to show yet'],
+  newProj:['+ สร้างโปรเจค','+ New project'], importSeed:['นำเข้าตัวอย่าง','Import example'],
+  emptyProj:['โปรเจคนี้ยังว่าง','This project is empty'], emptyProjEdit:['เริ่มจากเพิ่ม <b>ประเด็น</b> (วงใน) ที่แผงซ้าย แล้วเพิ่มหน่วยงานและบุคคล จากนั้นใช้ "วาดเส้น" เชื่อมโยง','Start by adding <b>issues</b> (inner ring) on the left, then organisations and people, and link them with "Draw link"'],
+  rolesNone:['ยังไม่มีหน่วยงาน','No organisations yet'], rolesNoneEdit:[' — เพิ่มที่แผงซ้าย (เลือก "หน่วยงาน")',' — add one on the left (choose "Organisation")'],
+  rolesFiltered:['กำลังกรองตามประเด็น — แสดง {0} หน่วยงาน','Filtered by issue — showing {0} organisations'],
+  rolesIntro:['บทบาทของแต่ละหน่วยงาน (เรียงตามความสำคัญรวมของเส้น)','Role of each organisation (sorted by total link importance)'], rolesClick:[' · คลิกการ์ดเพื่อแก้ไข',' · click a card to edit'],
+  noRole:['ยังไม่ได้ระบุบทบาท','No role yet'], noRoleClick:[' — คลิกเพื่อพิมพ์',' — click to type'], nLinks:['{0} เส้น','{0} links'],
+  detailPick:['คลิกโหนดหรือเส้นในแผนภาพเพื่อดูและแก้ไขรายละเอียด','Click a node or link in the diagram to view and edit it'],
+  linkGone:['เส้นนี้ถูกลบแล้ว','This link was deleted'], nodeGone:['รายการนี้ถูกลบแล้ว','This item was deleted'],
+  linkTitle:['เส้นเชื่อมโยง','Link'], importance:['ระดับความสำคัญ (ความหนาเส้น)','Importance (line thickness)'],
+  relation:['บทบาท / ลักษณะความสัมพันธ์','Role / nature of relationship'], relationPh:['เช่น สนับสนุนงบประมาณ, ให้ความรู้, รับซื้อผลผลิต','e.g. funding, training, buys produce'],
+  save:['บันทึก','Save'], del:['ลบ','Delete'], delLink:['ลบเส้น','Delete link'], confirmDel:['ยืนยันลบ?','Confirm?'],
+  nodeMeta:['{0} · {1} เส้น · ความสำคัญรวม {2}','{0} · {1} links · total importance {2}'],
+  roleTh:['บทบาทของหน่วยงาน (ไทย)','Role (Thai)'], roleEn:['บทบาทของหน่วยงาน (อังกฤษ)','Role (English)'], rolePh:['พิมพ์บทบาท เช่น สนับสนุนเมล็ดพันธุ์ จัดอบรม รับซื้อผลผลิต','Type the role, e.g. supplies seed, runs training, buys produce'],
+  nameTh:['ชื่อ (ไทย)','Name (Thai)'], nameEn:['ชื่อ (อังกฤษ)','Name (English)'], ringType:['วง / ประเภท','Ring / type'], note:['หมายเหตุ / ข้อมูลติดต่อ','Notes / contact'],
+  needName:['กรุณาใส่ชื่อ','Please enter a name'], connections:['การเชื่อมโยง ({0})','Connections ({0})'], noConn:['ยังไม่มีเส้นเชื่อม','No links yet'],
+  linkBtn:['+ เชื่อม','+ Link'], linkHint:['เลือกรายการแล้วกำหนดความสำคัญ 1–5','Pick an item and set importance 1–5'], delLinkT:['ลบเส้น','Delete link'],
+  focusThis:['แสดงเฉพาะประเด็นนี้','Show only this issue'],
+  fbanner:['แสดงเฉพาะ: <b>{0}</b> · {1} หน่วยงาน · {2} คน','Showing only: <b>{0}</b> · {1} organisations · {2} people'],
+  noData:['ยังไม่มีข้อมูลให้วิเคราะห์','No data to analyse yet'],
+  k_links:['เส้นเชื่อม','links'], k_avg:['เส้นเฉลี่ย/โหนด','avg links / node'], k_dens:['ความหนาแน่น','density'], k_comp:['กลุ่มที่แยกกัน','components'], k_avgw:['ความสำคัญเฉลี่ย','avg importance'], k_iso:['ยังไม่เชื่อม','unlinked'],
+  a_str:['ศูนย์กลางเครือข่าย (ผลรวมความสำคัญของเส้น)','Network hubs (sum of link importance)'],
+  a_btw:['ตัวเชื่อม / สะพาน (betweenness)','Brokers / bridges (betweenness)'], a_btwHint:['โหนดที่อยู่บนเส้นทางสั้นที่สุดระหว่างคนอื่นบ่อย — ถ้าหายไปเครือข่ายจะขาดการเชื่อม','Nodes that often lie on shortest paths between others — losing them fragments the network'],
+  a_clo:['เข้าถึงคนอื่นได้ง่าย (closeness)','Reach (closeness)'], a_cloHint:['ค่าสูง = อยู่ใกล้ทุกคนในเครือข่าย กระจายข้อมูลได้เร็ว','High = close to everyone, spreads information quickly'],
+  a_cov:['ความครอบคลุมของแต่ละประเด็น','Coverage of each issue'], c_issue:['ประเด็น','Issue'], c_orgs:['หน่วยงาน','Orgs'], c_ppl:['บุคคล*','People*'], c_str:['ความสำคัญรวม','Total importance'],
+  a_covHint:['* บุคคลที่เชื่อมตรง หรือผ่านหน่วยงาน · สีแดง = ประเด็นที่ควรเสริม','* linked directly or through an organisation · red = issue that needs strengthening'], weakIssue:['ประเด็นที่ควรเสริมการเชื่อมโยง','Issue that needs more links'],
+  a_bridgeOrg:['หน่วยงานที่เชื่อมหลายประเด็น','Organisations spanning several issues'], a_bridgeP:['บุคคลที่เชื่อมหลายหน่วยงาน','People linked to several organisations'], nIssues:['{0} ประเด็น','{0} issues'], nOrgs:['{0} หน่วยงาน','{0} orgs'],
+  a_iso:['ยังไม่มีการเชื่อมโยง ({0})','Not linked yet ({0})'], a_wdist:['การกระจายระดับความสำคัญของเส้น','Distribution of link importance'],
+  projNewT:['สร้างโปรเจคใหม่','New project'], projEditT:['แก้ไขโปรเจค','Edit project'], projName:['ชื่อโปรเจค (ไทย)','Project name (Thai)'], projNameEn:['ชื่อโปรเจค (อังกฤษ)','Project name (English)'], projDesc:['คำอธิบาย','Description'],
+  create:['สร้าง','Create'], cancel:['ยกเลิก','Cancel'], delProj:['ลบโปรเจค','Delete project'], projDeleted:['ลบโปรเจคแล้ว','Project deleted'], close:['ปิด','Close'],
+  jsonTitle:['ส่งออกข้อมูล (JSON)','Export data (JSON)'], jsonHint:['ใช้สำรองข้อมูล หรือย้ายไประบบอื่น (เช่น จาก Claude ไป GitHub Pages) ด้วยปุ่ม "นำเข้า JSON"','Use it as a backup or to move data between systems (e.g. Claude → GitHub Pages) with "Import JSON"'],
+  copy:['คัดลอก','Copy'], copied:['คัดลอกแล้ว','Copied'], pressCopy:['กด Ctrl+C เพื่อคัดลอก','Press Ctrl+C to copy'], dlFile:['ดาวน์โหลดไฟล์','Download file'],
+  badFile:['รูปแบบไฟล์ไม่ถูกต้อง','Unsupported file format'], imported:['นำเข้าแล้ว {0} โปรเจค','Imported {0} project(s)'], seedFail:['โหลดข้อมูลตัวอย่างไม่ได้','Could not load the example data'], readFail:['อ่านไฟล์ไม่ได้','Could not read the file'], importedProj:['โปรเจคนำเข้า','Imported project'],
+  autoDone:['จัดเรียงใหม่แล้ว','Re-arranged'], autoAlready:['จัดเรียงอัตโนมัติอยู่แล้ว','Already auto-arranged'],
+  dlPrep:['กำลังเตรียมไฟล์…','Preparing file…'], dlSaved:['ดาวน์โหลดแล้ว','Downloaded'], dlFail:['ดาวน์โหลดไม่สำเร็จ','Download failed'], dlUnavail:['ดาวน์โหลดไม่ได้ในมุมมองนี้','Downloads are not available in this view'], xlsxFail:['โหลดตัวสร้าง Excel ไม่ได้','Could not load the Excel library'], noProjData:['ยังไม่มีข้อมูลในโปรเจคนี้','This project has no data yet'],
+  tipRole:['บทบาท','Role'], tipImp:['ความสำคัญ {0} ({1})','Importance {0} ({1})'],
+  // Excel / report
+  x_summary:['สรุป','Summary'], x_nodes:['โหนด','Nodes'], x_links:['เส้นเชื่อม','Links'], x_roles:['บทบาทหน่วยงาน','Org roles'], x_mIO:['เมทริกซ์ ประเด็น×หน่วยงาน','Matrix Issue×Org'], x_mOP:['เมทริกซ์ หน่วยงาน×บุคคล','Matrix Org×Person'], x_cov:['ความครอบคลุมประเด็น','Issue coverage'], x_bridge:['ตัวเชื่อม','Bridges'], x_cent:['อันดับศูนย์กลาง','Centrality ranking'],
+  x_item:['รายการ','Item'], x_value:['ค่า','Value'], x_project:['โปรเจค','Project'], x_desc:['คำอธิบาย','Description'], x_date:['วันที่ส่งออก','Exported'], x_filter:['ตัวกรองที่ใช้ในภาพ','Diagram filter'], x_none:['ไม่มี (ทั้งหมด)','None (all)'],
+  x_nIssue:['จำนวนประเด็น','Issues'], x_nOrg:['จำนวนหน่วยงาน','Organisations'], x_nPerson:['จำนวนบุคคล','People'], x_nLink:['จำนวนเส้นเชื่อม','Links'], x_dens:['ความหนาแน่นของเครือข่าย','Network density'], x_avgDeg:['จำนวนเส้นเฉลี่ยต่อโหนด','Average degree'], x_avgW:['ความสำคัญเฉลี่ยของเส้น','Average link importance'], x_comp:['จำนวนกลุ่มที่แยกจากกัน (components)','Connected components'], x_iso:['โหนดที่ยังไม่เชื่อม','Unlinked nodes'], x_wcount:['จำนวนเส้นระดับ {0} ({1})','Links at level {0} ({1})'],
+  x_id:['รหัส','ID'], x_type:['ประเภท','Type'], x_ring:['วง','Ring'], x_nameTh:['ชื่อ (ไทย)','Name (TH)'], x_nameEn:['ชื่อ (อังกฤษ)','Name (EN)'], x_roleTh:['บทบาท (ไทย)','Role (TH)'], x_roleEn:['บทบาท (อังกฤษ)','Role (EN)'], x_note:['หมายเหตุ','Notes'],
+  x_deg:['จำนวนเส้น (degree)','Degree'], x_str:['ผลรวมความสำคัญ (strength)','Strength'], x_wavg:['ความสำคัญเฉลี่ย','Mean importance'], x_btw:['Betweenness','Betweenness'], x_clo:['Closeness','Closeness'], x_rank:['อันดับ (strength)','Rank (strength)'],
+  x_from:['จาก','From'], x_fromType:['ประเภท (จาก)','From type'], x_to:['ถึง','To'], x_toType:['ประเภท (ถึง)','To type'], x_w:['ระดับความสำคัญ','Importance'], x_wl:['ระดับ (คำอธิบาย)','Level'], x_rel:['ความสัมพันธ์','Relationship'],
+  x_org:['หน่วยงาน','Organisation'], x_role:['บทบาท','Role'], x_issues:['ประเด็นที่เกี่ยวข้อง (ความสำคัญ)','Linked issues (importance)'], x_people:['บุคคลที่เกี่ยวข้อง (ความสำคัญ)','Linked people (importance)'], x_nI:['จำนวนประเด็น','# issues'], x_nP:['จำนวนบุคคล','# people'],
+  x_total:['รวม','Total'], x_pDirect:['บุคคล (ตรง+ผ่านหน่วยงาน)','People (direct + via orgs)'], x_orgList:['หน่วยงาน (ความสำคัญ)','Organisations (importance)'], x_flag:['ข้อสังเกต','Note'], x_weak:['ควรเสริม','Needs strengthening'],
+  x_kind:['ประเภทตัวเชื่อม','Bridge type'], x_bOrg:['หน่วยงานเชื่อมหลายประเด็น','Org spanning issues'], x_bP:['บุคคลเชื่อมหลายหน่วยงาน','Person spanning orgs'], x_count:['จำนวน','Count'], x_list:['รายการ','Linked to'],
+  x_metric:['ตัวชี้วัด','Metric'], x_matrixNote:['ค่าในตาราง = ระดับความสำคัญของเส้น (1–5)','Cell value = link importance (1–5)'],
+  r_title:['รายงานเครือข่าย','Network report'], r_overview:['ภาพรวม','Overview'], r_diagram:['แผนภาพเครือข่าย','Network diagram'], r_top:['10 อันดับแรก','Top 10'], r_allLinks:['รายการเส้นเชื่อมทั้งหมด','All links'], r_print:['พิมพ์ / บันทึกเป็น PDF','Print / save as PDF'],
+  r_gen:['สร้างจาก Nan Network เมื่อ {0}','Generated by Nan Network on {0}'],
+  r_glossary:['คำอธิบายตัวชี้วัด','Metric definitions'],
+  g_str:['Strength = ผลรวมระดับความสำคัญของเส้นทั้งหมดที่โหนดนั้นมี','Strength = sum of the importance of all a node\'s links'],
+  g_btw:['Betweenness = สัดส่วนของเส้นทางสั้นที่สุดระหว่างคู่โหนดอื่นที่ผ่านโหนดนี้ (0–1)','Betweenness = share of shortest paths between other node pairs that pass through this node (0–1)'],
+  g_clo:['Closeness = ค่าเฉลี่ยของ 1/ระยะทางไปยังทุกโหนด (0–1) ยิ่งสูงยิ่งเข้าถึงคนอื่นได้เร็ว','Closeness = mean of 1/distance to every other node (0–1); higher reaches others faster'],
+  viewRing:['วง 3 ชั้น','3 rings'], viewCluster:['6 กลุ่มตามด้าน','6 sector clusters'],
+  lblOrg:['แสดงชื่อหน่วยงาน','Org names'], lblAll:['แสดงชื่อทั้งหมด','All names'], lblNone:['ซ่อนชื่อ','Hide names'],
+  sec_env:['ทรัพยากรธรรมชาติ','Natural resources'], sec_agri:['การเกษตร','Agriculture'], sec_econ:['ส่งเสริมเศรษฐกิจ','Economy'], sec_tourism:['การท่องเที่ยว','Tourism'], sec_culture:['วัฒนธรรม','Culture'], sec_health:['สุขภาพ','Health'],
+  ot_gov:['ราชการ','Government'], ot_local:['อปท.','Local government'], ot_puborg:['องค์การมหาชน','Public organisation'], ot_academic:['สถาบันวิชาการ/วิจัย','Academic / research'], ot_ngo:['มูลนิธิ/ประชาสังคม','Foundation / civil society'], ot_community:['เครือข่าย/กลุ่มชุมชน','Community network / group'], ot_business:['วิสาหกิจ/เอกชน','Enterprise / private'], ot_religious:['วัด/ศาสนา','Religious'], ot_intl:['องค์กรระหว่างประเทศ','International'], ot_:['ไม่ระบุประเภท','Unspecified'],
+  st_confirmed_doc:['ยืนยันจากเอกสาร','Confirmed by document'], st_confirmed_org:['ยืนยันโดยหน่วยงาน','Confirmed by organisation'], st_pending:['รอยืนยัน','Pending'], st_outdated:['ข้อมูลอาจเก่า','May be outdated'], st_:['ไม่ระบุ','Not set'],
+  sectorsLbl:['ด้าน (เลือกได้หลายด้าน)','Sectors (multi-select)'], otypeLbl:['ประเภทหน่วยงาน','Organisation type'], levelLbl:['ระดับการทำงาน','Level'], areaLbl:['พื้นที่','Area'], statusLbl:['สถานะการยืนยัน','Verification status'], evidLbl:['หลักฐาน (รหัส/ลิงก์)','Evidence (ID / link)'],
+  noSector:['ไม่ระบุด้าน','No sector'], ck_title:['สี = ประเภทหน่วยงาน · วงประ = ด้าน','Colour = organisation type · dotted outline = sector'],
+  ck_solid:['ยืนยันแล้ว','confirmed'], ck_dash:['รอยืนยัน','pending'], ck_person:['บุคคล','person'], ck_dots:['จุดสีใต้สี่เหลี่ยม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Dots under a square = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
+  a_clusters:['กลุ่มตามด้าน','Sector clusters'], c_sector:['ด้าน','Sector'], c_int:['เส้นภายใน','Internal'], c_cross:['เส้นข้ามด้าน','Cross'],
+  a_otypes:['ประเภทหน่วยงาน','Organisation types'], a_multi:['หน่วยงานที่ทำงานหลายด้าน (อยู่ระหว่างกลุ่ม)','Organisations across sectors (between clusters)'], nSectors:['{0} ด้าน','{0} sectors'],
+  x_clusters:['กลุ่มตามด้าน','Sector clusters'], x_sectors:['ด้าน','Sectors'], x_otype:['ประเภทหน่วยงาน','Org type'], x_level:['ระดับ','Level'], x_area:['พื้นที่','Area'], x_status:['สถานะการยืนยัน','Status'], x_evid:['หลักฐาน','Evidence'], x_members:['หน่วยงาน/บุคคลในกลุ่ม','Members'],
+  g_dens:['Density = จำนวนเส้นที่มี ÷ จำนวนเส้นที่เป็นไปได้ทั้งหมด','Density = existing links ÷ all possible links']
+};
+let LANG = 'th';
+try { const l = localStorage.getItem('nannetwork-lang'); if (l === 'en' || l === 'th') LANG = l; } catch(e){}
+function T(k){ const e = I18N[k]; let s = e ? e[LANG === 'en' ? 1 : 0] : k; for (let i = 1; i < arguments.length; i++) s = s.split('{' + (i-1) + '}').join(arguments[i]); return s; }
+const dn = n => n ? ((LANG === 'en' && n.name_en) ? n.name_en : (n.name || '')) : '';
+const dr = n => n ? ((LANG === 'en' && n.role_en) ? n.role_en : (n.role || (LANG === 'en' ? '' : n.role_en || ''))) : '';
+const pn = p => p ? ((LANG === 'en' && p.name_en) ? p.name_en : (p.name || '')) : '';
+const tl = t => T('type_' + t);
+const wl = w => T('w' + w);
+
+/* ---------- constants ---------- */
+const TYPES = {
+  issue:{fill:'#FED7AA', stroke:'#E07B2A', base:30},
+  org:{fill:'#FDE68A', stroke:'#C99A06', base:14},
+  person:{fill:'#BBF7D0', stroke:'#1F9D55', base:9}
+};
+const ORDER = ['issue','org','person'];
+let RING_R = [150, 300, 440];
+let GEO = {R:RING_R, baseO:14, baseP:9, fO:15, fP:14.5, radialO:false, ext:600};
+let curVB = 600;
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const WW = {1:1.2, 2:2.6, 3:4.2, 4:6.2, 5:8.6};
+const SECTORS = [{k:'env',c:'#15803D'},{k:'agri',c:'#B45309'},{k:'econ',c:'#EA580C'},{k:'tourism',c:'#0891B2'},{k:'culture',c:'#9333EA'},{k:'health',c:'#E11D48'}];
+const SECK = SECTORS.map(x => x.k);
+const OTYPES = [{k:'gov',c:'#2563EB'},{k:'local',c:'#0EA5E9'},{k:'puborg',c:'#7C3AED'},{k:'academic',c:'#DB2777'},{k:'ngo',c:'#F59E0B'},{k:'community',c:'#16A34A'},{k:'business',c:'#DC2626'},{k:'religious',c:'#92400E'},{k:'intl',c:'#475569'}];
+const OTC = k => (OTYPES.find(o => o.k === k) || {c:'#9CA3AF'}).c;
+const STATUSES = ['confirmed_doc','confirmed_org','pending','outdated'];
+const secName = k => T('sec_' + k), otName = k => T('ot_' + (k || '')), stName = k => T('st_' + (k || ''));
+
+/* ---------- state ---------- */
+const S = {mode:'local', canWrite:true, projects:[], pid:null, nodes:[], links:[], sel:null,
+  tool:'select', connectFrom:null, hover:null, minW:1, sizeBy:'degree', search:'', tmpA:{},
+  addType:'issue', loaded:false, focus:new Set(), vis:null, view:'ring', lblMode:'org', vb:null, user:null, panelDirty:false};
+let STORE = null, M = {adj:{},deg:{},str:{},bc:{},cl:{},comp:0}, POS = {};
+let unsubN = null, unsubL = null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const newId = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const nodeById = id => S.nodes.find(n => n.id === id);
+const linkById = id => S.links.find(l => l.id === id);
+const W = l => Math.max(1, Math.min(5, +l.w || 3));
+const cmpName = (a,b) => dn(a).localeCompare(dn(b), LANG);
+
+function toast(msg, ms){ const t=$('#toast'); t.textContent=msg; t.style.display='block'; clearTimeout(toast._t); toast._t=setTimeout(()=>t.style.display='none', ms||2600); }
+
+/* ---------- storage adapters ---------- */
+// Claude artifact db and Firebase Firestore (compat) share this API shape.
+function docStore(db){
+  return {
+    subCol(path, cb, err){
+      return db.collection(path).onSnapshot(
+        snap => cb(snap.docs.map(d => Object.assign({}, d.data(), {id:d.id}))),
+        e => err && err(e));
+    },
+    set(path, data){ return db.doc(path).set(JSON.parse(JSON.stringify(data))); },
+    del(path){ return db.doc(path).delete(); }
+  };
+}
+function localStore(){
+  const KEY = 'nannetwork-v2';
+  let docs = {};
+  try { docs = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e){ docs = {}; }
+  const subs = new Set();
+  const parent = p => p.split('/').slice(0,-1).join('/');
+  const list = col => Object.keys(docs).filter(k => parent(k) === col).map(k => Object.assign({}, docs[k], {id:k.split('/').pop()}));
+  const emit = col => subs.forEach(s => { if (s.path === col) s.cb(list(col)); });
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(docs)); } catch(e){} };
+  window.addEventListener('storage', e => {
+    if (e.key !== KEY) return;
+    try { docs = JSON.parse(e.newValue || '{}') || {}; } catch(_){ return; }
+    subs.forEach(s => s.cb(list(s.path)));
+  });
+  return {
+    isEmpty: () => Object.keys(docs).length === 0,
+    subCol(path, cb){ const s = {path, cb}; subs.add(s); setTimeout(() => cb(list(path)), 0); return () => subs.delete(s); },
+    async set(path, data){ docs[path] = JSON.parse(JSON.stringify(data)); save(); emit(parent(path)); },
+    async del(path){ delete docs[path]; save(); emit(parent(path)); }
+  };
+}
+
+let wq = Promise.resolve();
+function write(fn){
+  if (!S.canWrite){ toast(T('ro')); return Promise.resolve(); }
+  wq = wq.then(fn).catch(onWriteErr);
+  return wq;
+}
+function onWriteErr(e){
+  console.warn(e);
+  const code = e && (e.code || '');
+  if (S.mode === 'claude' && code === 'invalid_argument'){ S.canWrite = false; applyPerms(); toast(T('roAcct')); return; }
+  if (code === 'permission-denied'){ toast(T('noPerm')); return; }
+  if (code === 'quota_exceeded'){ toast(T('quota')); return; }
+  toast(T('saveFail'));
+}
+const pPath = pid => 'projects/' + pid;
+const nPath = (pid,id) => 'projects/' + pid + '/nodes/' + id;
+const lPath = (pid,id) => 'projects/' + pid + '/links/' + id;
+const nodeBody = n => ({name:String(n.name||'').slice(0,120), name_en:String(n.name_en||'').slice(0,120), type:n.type, role:n.role||'', role_en:n.role_en||'', note:n.note||'',
+  sectors:(Array.isArray(n.sectors) ? n.sectors : []).filter(k => SECK.includes(k)), otype:n.otype||'', level:n.level||'', area:n.area||'', status:STATUSES.includes(n.status) ? n.status : '', evidence:n.evidence||'',
+  a:(typeof n.a==='number' && isFinite(n.a)) ? n.a : null, created:n.created||Date.now()});
+const linkBody = l => ({s:l.s, t:l.t, w:W(l), label:l.label||'', status:STATUSES.includes(l.status) ? l.status : '', evidence:l.evidence||'', created:l.created||Date.now()});
+const saveNode = n => write(() => STORE.set(nPath(S.pid, n.id), nodeBody(n)));
+const saveLink = l => write(() => STORE.set(lPath(S.pid, l.id), linkBody(l)));
+
+/* ---------- language ---------- */
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-t]').forEach(el => el.textContent = T(el.dataset.t));
+  document.querySelectorAll('[data-tp]').forEach(el => el.placeholder = T(el.dataset.tp));
+  document.querySelectorAll('[data-tt]').forEach(el => el.title = T(el.dataset.tt));
+  document.querySelectorAll('[data-ta]').forEach(el => el.setAttribute('aria-label', T(el.dataset.ta)));
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
+  $('#addName').placeholder = T('ph_' + S.addType);
+  $('#wlegend').innerHTML = [1,2,3,4,5].map(w => '<div class="wl"><i style="height:' + WW[w] + 'px"></i>' + w + ' · ' + wl(w) + '</div>').join('');
+  $('#net').setAttribute('aria-label', LANG === 'en' ? '3-ring network diagram' : 'แผนภาพเครือข่าย 3 วง');
+  document.title = 'Nan Network · ' + T('subtitle');
+  setTool(S.tool, true);
+  if (S.loaded){ applyPerms(); renderProjSel(S.pid); }
+  if (S.mode === 'firebase') renderAuthBtn();
+  if (svg) renderAll();
+}
+function setLang(l){ LANG = l; try { localStorage.setItem('nannetwork-lang', l); } catch(e){} applyLang(); }
+
+/* ---------- init ---------- */
+async function init(){
+  bindUI(); setupSvg(); applyLang();
+  try { if (localStorage.getItem('nannetwork-v2-view') !== 'ring') setView('cluster'); } catch(e){ setView('cluster'); }
+  if (window.claude && typeof window.claude.use === 'function'){
+    S.mode = 'claude'; setStatus(T('st_loading'), 'off');
+    let db = null;
+    try { db = await window.claude.use('db'); } catch(e){ db = null; }
+    if (!db){ setStatus(T('st_signin'), 'err'); showEmpty('<b>' + T('cantLoad') + '</b><p class="muted">' + T('signinNeed') + '</p>'); return; }
+    STORE = docStore(db);
+    try {
+      const u = await window.claude.use('user');
+      if (u && typeof u.can === 'function'){ const c = await u.can('data.write'); if (c === false) S.canWrite = false; }
+    } catch(e){}
+  } else if (window.NAN_FIREBASE_CONFIG && window.NAN_FIREBASE_CONFIG.apiKey){
+    S.mode = 'firebase'; S.canWrite = false; setStatus(T('st_loading'), 'off');
+    try { STORE = await initFirebase(); }
+    catch(e){ console.error(e); S.mode='local'; S.canWrite = true; STORE = localStore(); toast(T('fbFail')); }
+  } else {
+    S.mode = 'local'; STORE = localStore();
+    if (STORE.isEmpty()) await importFromUrl('data.json', true);
+  }
+  applyPerms();
+  subscribeProjects();
+}
+
+let FB = null;
+async function initFirebase(){
+  const V = '10.12.2', base = 'https://www.gstatic.com/firebasejs/' + V + '/';
+  await loadScript(base + 'firebase-app-compat.js');
+  await Promise.all([loadScript(base + 'firebase-firestore-compat.js'), loadScript(base + 'firebase-auth-compat.js')]);
+  firebase.initializeApp(window.NAN_FIREBASE_CONFIG);
+  const fs = firebase.firestore(), auth = firebase.auth(); FB = auth;
+  const btn = $('#authBtn'); btn.style.display = '';
+  btn.onclick = () => {
+    if (S.user) auth.signOut();
+    else auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => toast(T('signinFail') + ' ' + (e.code||'')));
+  };
+  auth.onAuthStateChanged(async u => {
+    S.user = u; S.canWrite = false;
+    if (u){
+      try {
+        const d = await fs.doc('config/editors').get();
+        const emails = ((d.exists && d.data().emails) || []).map(x => String(x).toLowerCase());
+        S.canWrite = emails.includes(String(u.email||'').toLowerCase());
+        if (!S.canWrite) toast(T('notEditor', u.email), 4000);
+      } catch(e){ S.canWrite = false; }
+    }
+    renderAuthBtn(); applyPerms(); renderAll();
+  });
+  return docStore(fs);
+}
+function renderAuthBtn(){ const btn = $('#authBtn'); btn.textContent = S.user ? (T('signOut') + ' (' + (S.user.displayName || S.user.email) + ')') : T('signIn'); }
+function loadScript(src){ return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+
+function setStatus(txt, cls){ const s = $('#status'); s.textContent = txt; s.className = 'pill ' + (cls||''); }
+function applyPerms(){
+  document.querySelectorAll('.edit-only').forEach(el => el.style.display = S.canWrite ? '' : 'none');
+  $('#projNew').style.display = S.canWrite ? '' : 'none';
+  $('#projEdit').style.display = S.canWrite ? '' : 'none';
+  if (!S.canWrite && S.tool === 'connect') setTool('select');
+  setStatus(T('st_' + S.mode) + (S.canWrite ? '' : T('st_ro')), S.mode === 'local' ? 'warn' : (S.canWrite ? '' : 'off'));
+  $('#status').title = S.mode === 'local' ? T('st_localTip') : '';
+}
+
+/* ---------- subscriptions ---------- */
+let loadTimer = null;
+function subscribeProjects(){
+  loadTimer = setTimeout(() => { if (!S.loaded) setStatus(T('st_noconn'), 'err'); }, 10000);
+  STORE.subCol('projects', list => {
+    S.loaded = true; clearTimeout(loadTimer); applyPerms();
+    S.projects = list.sort((a,b) => (a.created||0) - (b.created||0));
+    let want = S.pid;
+    const h = location.hash.replace(/^#p-/, '');
+    if (h && S.projects.some(p => p.id === h)) want = h;
+    if (!S.projects.some(p => p.id === want)) want = S.projects.length ? S.projects[0].id : null;
+    renderProjSel(want);
+    if (want !== S.pid) openProject(want);
+    else renderAll();
+  }, e => { setStatus(T('st_loadfail'), 'err'); console.warn(e); });
+}
+function openProject(pid){
+  if (unsubN) unsubN(); if (unsubL) unsubL();
+  S.pid = pid; S.nodes = []; S.links = []; S.sel = null; S.connectFrom = null; S.tmpA = {}; S.focus = new Set(); CPOS = {}; CKEY = '';
+  zoomFit(true);
+  if (pid){
+    try { if (location.hash !== '#p-' + pid) history.replaceState(null, '', '#p-' + pid); } catch(e){}
+    unsubN = STORE.subCol('projects/' + pid + '/nodes', l => { S.nodes = l.filter(n => TYPES[n.type]); renderAll(); });
+    unsubL = STORE.subCol('projects/' + pid + '/links', l => { S.links = l; renderAll(); });
+  }
+  renderAll();
+}
+function renderProjSel(want){
+  const sel = $('#projSel');
+  sel.innerHTML = S.projects.length ? S.projects.map(p => '<option value="' + esc(p.id) + '"' + (p.id === want ? ' selected' : '') + '>' + esc(pn(p) || T('noName')) + '</option>').join('') : '<option>' + T('noProj') + '</option>';
+  $('#projEdit').disabled = !S.projects.length;
+}
+
+/* ---------- metrics ---------- */
+function computeMetrics(){
+  const ids = new Set(S.nodes.map(n => n.id));
+  const adj = {}, deg = {}, str = {};
+  S.nodes.forEach(n => { adj[n.id] = []; deg[n.id] = 0; str[n.id] = 0; });
+  S.links.forEach(l => {
+    if (!ids.has(l.s) || !ids.has(l.t) || l.s === l.t) return;
+    adj[l.s].push(l.t); adj[l.t].push(l.s);
+    deg[l.s]++; deg[l.t]++; str[l.s] += W(l); str[l.t] += W(l);
+  });
+  const V = Object.keys(adj), bc = {}, cl = {}; V.forEach(v => bc[v] = 0);
+  const n = V.length;
+  for (const s of V){
+    const st = [], P = {}, sg = {}, d = {};
+    V.forEach(v => { P[v] = []; sg[v] = 0; d[v] = -1; });
+    sg[s] = 1; d[s] = 0; const Q = [s]; let qi = 0;
+    while (qi < Q.length){ const v = Q[qi++]; st.push(v);
+      for (const w of adj[v]){ if (d[w] < 0){ d[w] = d[v] + 1; Q.push(w); } if (d[w] === d[v] + 1){ sg[w] += sg[v]; P[w].push(v); } } }
+    let h = 0; V.forEach(v => { if (v !== s && d[v] > 0) h += 1 / d[v]; });
+    cl[s] = n > 1 ? h / (n - 1) : 0; // harmonic closeness (works for disconnected graphs)
+    const dl = {}; V.forEach(v => dl[v] = 0);
+    while (st.length){ const w = st.pop(); for (const v of P[w]) dl[v] += sg[v] / sg[w] * (1 + dl[w]); if (w !== s) bc[w] += dl[w]; }
+  }
+  const norm = n > 2 ? (n-1)*(n-2) : 1;
+  V.forEach(v => bc[v] /= norm);
+  // connected components
+  const seen = new Set(); let comp = 0;
+  V.forEach(v => { if (seen.has(v)) return; comp++; const q = [v]; seen.add(v); while (q.length){ const x = q.pop(); adj[x].forEach(y => { if (!seen.has(y)){ seen.add(y); q.push(y); } }); } });
+  M = {adj, deg, str, bc, cl, comp};
+  buildSecMap();
+}
+// shared analysis used by the panel, the Excel workbook and the report
+function analysis(){
+  const ids = new Set(S.nodes.map(n => n.id));
+  const links = S.links.filter(l => ids.has(l.s) && ids.has(l.t) && l.s !== l.t);
+  const N = S.nodes.length, E = links.length;
+  const cnt = t => S.nodes.filter(n => n.type === t).length;
+  const wdist = [1,2,3,4,5].map(w => links.filter(l => W(l) === w).length);
+  const avgW = E ? links.reduce((a,l) => a + W(l), 0) / E : 0;
+  const typeOf = id => (nodeById(id) || {}).type;
+  const nbW = (id, type) => links.filter(l => l.s === id || l.t === id).map(l => ({n:nodeById(l.s === id ? l.t : l.s), w:W(l), l})).filter(x => x.n && (!type || x.n.type === type)).sort((a,b) => b.w - a.w);
+  const cov = S.nodes.filter(n => n.type === 'issue').map(i => {
+    const orgs = nbW(i.id, 'org');
+    const ppl = new Set(nbW(i.id, 'person').map(x => x.n.id));
+    orgs.forEach(o => nbW(o.n.id, 'person').forEach(p => ppl.add(p.n.id)));
+    return {n:i, orgs, ppl:ppl.size, s:M.str[i.id]||0, avg:orgs.length ? orgs.reduce((a,x) => a + x.w, 0) / orgs.length : 0};
+  }).sort((a,b) => b.s - a.s);
+  const minS = cov.length ? Math.min(...cov.map(c => c.s)) : 0;
+  const bridgeO = S.nodes.filter(n => n.type === 'org').map(o => ({n:o, list:nbW(o.id, 'issue')})).filter(x => x.list.length >= 2).sort((a,b) => b.list.length - a.list.length);
+  const bridgeP = S.nodes.filter(n => n.type === 'person').map(p => ({n:p, list:nbW(p.id, 'org')})).filter(x => x.list.length >= 2).sort((a,b) => b.list.length - a.list.length);
+  const iso = S.nodes.filter(n => !(M.deg[n.id] > 0));
+  const top = (src, k) => S.nodes.map(n => ({n, v:src[n.id]||0})).filter(x => x.v > 0).sort((a,b) => b.v - a.v).slice(0, k);
+  const stake = S.nodes.filter(n => n.type !== 'issue');
+  const sl = links.filter(l => typeOf(l.s) !== 'issue' && typeOf(l.t) !== 'issue');
+  const clusters = SECTORS.map(s => {
+    const mem = stake.filter(n => effSectors(n).includes(s.k)), ms = new Set(mem.map(n => n.id));
+    return {s, orgs:mem.filter(n => n.type === 'org'), ppl:mem.filter(n => n.type === 'person'),
+      inn:sl.filter(l => ms.has(l.s) && ms.has(l.t)).length, cross:sl.filter(l => ms.has(l.s) !== ms.has(l.t)).length};
+  });
+  const hasSec = stake.some(n => effSectors(n).length);
+  const multi = S.nodes.filter(n => n.type === 'org' && effSectors(n).length >= 2).sort((a,b) => effSectors(b).length - effSectors(a).length || (M.str[b.id]||0) - (M.str[a.id]||0));
+  const otypes = OTYPES.map(o => o.k).concat(['']).map(k => ({k, n:S.nodes.filter(n => n.type === 'org' && (n.otype || '') === k).length})).filter(x => x.n);
+  return {clusters, hasSec, multi, otypes, N, E, links, cnt, wdist, avgW, dens:N > 1 ? 2*E/(N*(N-1)) : 0, avgDeg:N ? 2*E/N : 0, comp:M.comp, cov, minS, bridgeO, bridgeP, iso, top, nbW, typeOf};
+}
+
+/* ---------- layout ---------- */
+const TAU = Math.PI * 2;
+function angleOf(n){ const t = S.tmpA[n.id]; if (typeof t === 'number') return t; return (typeof n.a === 'number' && isFinite(n.a)) ? n.a : null; }
+function circMean(arr){ let x = 0, y = 0; arr.forEach(o => { x += Math.cos(o.a) * o.w; y += Math.sin(o.a) * o.w; }); return (x === 0 && y === 0) ? null : Math.atan2(y, x); }
+function visibleSet(){
+  if (!S.focus.size) return null;
+  const vis = new Set(S.focus), orgs = new Set();
+  const nb = (set, fn) => S.links.forEach(l => { if (set.has(l.s)) fn(l.t); if (set.has(l.t)) fn(l.s); });
+  nb(S.focus, id => { const n = nodeById(id); if (n && n.type !== 'issue'){ vis.add(id); if (n.type === 'org') orgs.add(id); } });
+  nb(orgs, id => { const n = nodeById(id); if (n && n.type === 'person') vis.add(id); });
+  return vis;
+}
+function maxLen(list, cap){ let m = 0; list.forEach(n => { m = Math.max(m, Math.min(cap, dn(n).length)); }); return m; }
+// ring radii, node & font sizes and drawing extent scale with how many items each ring holds
+function computeGeometry(by){
+  const nI = by.issue.length, nO = by.org.length, nP = by.person.length;
+  const radialO = nO > 24;
+  const R0 = Math.max(150, nI * 80 / TAU);
+  let R1 = Math.max(300, R0 + 130, nO * (radialO ? 30 : 50) / TAU);
+  R1 = Math.min(R1, 600);
+  const arcO = TAU * R1 / Math.max(nO, 1);
+  const baseO = radialO ? clamp(arcO * 0.42, 5, 14) : 14;
+  const fO = radialO ? clamp(arcO * 0.72, 8, 13.5) : 15;
+  const lenO = radialO ? maxLen(by.org, 22) * fO * 0.6 + baseO + 14 : 0;
+  let R2 = Math.max(440, R1 + 140 + lenO, nP * 18 / TAU);
+  R2 = Math.min(R2, Math.max(1100, R1 + 140 + lenO));
+  const arcP = TAU * R2 / Math.max(nP, 1);
+  const baseP = clamp(arcP * 0.42, 3.5, 9);
+  const fP = clamp(arcP * 0.8, 7.5, 14.5);
+  const lenP = nP ? maxLen(by.person, 24) * fP * 0.6 + baseP * 1.5 + 12 : 0;
+  const ext = Math.max(600, R2 + lenP + 24, R1 + (radialO ? lenO : 170) + 30);
+  GEO = {R:[R0, R1, R2], baseO, baseP, fO, fP, radialO, ext};
+  RING_R = GEO.R;
+}
+function computeLayout(){
+  POS = {};
+  S.vis = visibleSet();
+  const by = {issue:[], org:[], person:[]};
+  S.nodes.forEach(n => { if (!S.vis || S.vis.has(n.id)) by[n.type].push(n); });
+  computeGeometry(by);
+  ORDER.forEach(t => by[t].sort((a,b) => (a.created||0) - (b.created||0) || String(a.id).localeCompare(String(b.id))));
+  const wts = {};
+  S.links.forEach(l => { (wts[l.s] = wts[l.s] || []).push({o:l.t, w:W(l)}); (wts[l.t] = wts[l.t] || []).push({o:l.s, w:W(l)}); });
+  ORDER.forEach((t, ri) => {
+    const list = by[t], N = list.length; if (!N) return;
+    const r = RING_R[ri], step = TAU / N;
+    const free = [];
+    list.forEach(n => { const a = S.vis ? null : angleOf(n); if (a !== null) POS[n.id] = {a, r}; else free.push(n); });
+    free.forEach(n => {
+      const nb = (wts[n.id] || []).filter(o => POS[o.o] && POS[o.o].r < r).map(o => ({a:POS[o.o].a, w:o.w}));
+      n._t = nb.length ? circMean(nb) : null;
+    });
+    const withT = free.filter(n => n._t !== null).sort((a,b) => norm(a._t) - norm(b._t));
+    const noT = free.filter(n => n._t === null);
+    const ordered = withT.concat(noT);
+    let off = -Math.PI/2;
+    if (withT.length){ const m = circMean(withT.map((n,k) => ({a:n._t - k*step, w:1}))); if (m !== null) off = m; }
+    ordered.forEach((n,k) => { POS[n.id] = {a: off + k*step, r}; delete n._t; });
+  });
+  if (S.vis && by.issue.length === 1) POS[by.issue[0].id] = {a:-Math.PI/2, r:0};
+  Object.values(POS).forEach(p => { p.x = Math.cos(p.a) * p.r; p.y = Math.sin(p.a) * p.r; });
+}
+function norm(a){ a = a % TAU; return a < 0 ? a + TAU : a; }
+function nodeR(n){
+  const b = n.type === 'org' ? GEO.baseO : (n.type === 'person' ? GEO.baseP : TYPES[n.type].base);
+  if (S.sizeBy === 'none') return b;
+  const src = S.sizeBy === 'btw' ? M.bc : M.str;
+  const vals = S.nodes.filter(x => x.type === n.type).map(x => src[x.id] || 0);
+  const mx = Math.max(0.0001, ...vals);
+  return b * (0.75 + 0.7 * Math.sqrt((src[n.id] || 0) / mx));
+}
+
+/* ---------- SVG ---------- */
+let svg, gZoom, gBand, gLinks, gHits, gNodes, gCenter, tempLine, zoom, gC, cHull, cSecLbl, cLinks, cHits, cNodes;
+function setupSvg(){
+  svg = d3.select('#net');
+  gZoom = svg.append('g');
+  gBand = gZoom.append('g').attr('class','bands');
+  gCenter = gZoom.append('g').attr('class','center');
+  gLinks = gZoom.append('g'); gHits = gZoom.append('g').attr('class','hits');
+  tempLine = gZoom.append('line').attr('class','temp').attr('stroke','#3d3a35').attr('stroke-width',2).attr('stroke-dasharray','6 5').style('display','none').style('pointer-events','none');
+  gNodes = gZoom.append('g');
+  gC = gZoom.append('g').attr('class','cluster').style('display','none');
+  cHull = gC.append('g'); cSecLbl = gC.append('g'); cLinks = gC.append('g'); cHits = gC.append('g').attr('class','hits'); cNodes = gC.append('g');
+  zoom = d3.zoom().scaleExtent([0.4, 10]).on('zoom', e => gZoom.attr('transform', e.transform));
+  svg.call(zoom).on('dblclick.zoom', null);
+  svg.on('click', e => { if (e.target === svg.node() || e.target.closest('g') === gBand.node() || e.target.closest('.center') || e.target.closest('.hull')){ if (S.connectFrom){ S.connectFrom = null; tempLine.style('display','none'); updateBanner(); } select(null); } });
+  svg.on('mousemove', e => {
+    const PP = S.view === 'cluster' ? CPOS : POS;
+    if (!S.connectFrom || !PP[S.connectFrom]) return;
+    const [x,y] = d3.pointer(e, gZoom.node()), p = PP[S.connectFrom];
+    tempLine.style('display', null).attr('x1', p.x).attr('y1', p.y).attr('x2', x).attr('y2', y);
+  });
+}
+function zoomBy(k){ svg.transition().duration(250).call(zoom.scaleBy, k); }
+function zoomFit(instant){ if (!svg) return; (instant ? svg : svg.transition().duration(300)).call(zoom.transform, d3.zoomIdentity); }
+
+function linkPath(l){
+  const a = POS[l.s], b = POS[l.t]; if (!a || !b) return '';
+  const k = a.r === b.r ? 0.62 : 0.93;
+  const cx = (a.x + b.x) / 2 * k, cy = (a.y + b.y) / 2 * k;
+  return 'M' + a.x + ',' + a.y + 'Q' + cx + ',' + cy + ' ' + b.x + ',' + b.y;
+}
+const seg = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('th', {granularity:'word'}) : null;
+function wrap(s, max){
+  s = String(s || ''); if (s.length <= max) return [s];
+  const parts = seg ? Array.from(seg.segment(s), x => x.segment) : s.split(/(\s+)/);
+  const lines = [''];
+  for (const w of parts){ const cur = lines[lines.length-1]; if ((cur + w).length > max && cur.trim()) lines.push(w.replace(/^\s+/, '')); else lines[lines.length-1] = cur + w; }
+  if (lines.length > 3){ lines.length = 3; lines[2] += '…'; }
+  return lines;
+}
+const drag = d3.drag()
+  .filter(e => S.canWrite && S.tool === 'select' && !S.vis && !e.button)
+  .on('start', (e,d) => { d._mv = false; })
+  .on('drag', (e,d) => { const [x,y] = d3.pointer(e, gZoom.node()); S.tmpA[d.id] = Math.atan2(y, x); d._mv = true; hideTip(); renderGraph(); })
+  .on('end', (e,d) => {
+    if (!d._mv) return;
+    const a = S.tmpA[d.id], n = nodeById(d.id);
+    if (n) saveNode(Object.assign({}, n, {a})).then(() => { delete S.tmpA[d.id]; });
+  });
+
+function renderBands(){
+  const [R0, R1, R2] = GEO.R;
+  const bands = [[Math.min(R2 + 90, GEO.ext - 8), '#F1FBF4'], [(R1 + R2) / 2, '#FFFBEA'], [(R0 + R1) / 2, '#FFF4E8'], [Math.max(45, R0 - 65), '#ffffff']];
+  gBand.selectAll('circle.band').data(bands).join('circle').attr('class','band').attr('r', d => d[0]).attr('fill', d => d[1]);
+  gBand.selectAll('circle.guide').data(GEO.R).join('circle').attr('class','guide').attr('r', d => d).attr('fill','none')
+    .attr('stroke', (d,i) => [TYPES.issue.stroke, TYPES.org.stroke, TYPES.person.stroke][i]).attr('stroke-opacity', .28).attr('stroke-dasharray','4 6');
+  const vb = Math.ceil(GEO.ext / 10) * 10;
+  S.vb = [-vb, -vb, 2*vb, 2*vb];
+  if (vb !== curVB){ curVB = vb; svg.attr('viewBox', S.vb.join(' ')); }
+}
+function renderGraph(){
+  if (S.view === 'cluster'){ renderCluster(); return; }
+  computeLayout();
+  renderBands();
+  const shown = S.vis ? S.nodes.filter(n => S.vis.has(n.id)) : S.nodes;
+  const ids = new Set(shown.map(n => n.id));
+  const vis = S.links.filter(l => ids.has(l.s) && ids.has(l.t) && l.s !== l.t && W(l) >= S.minW);
+  const pj = S.projects.find(p => p.id === S.pid);
+  const cl = (S.vis && S.focus.size === 1) ? [] : wrap(pn(pj), 11);
+  gCenter.selectAll('text').data(cl).join('text').attr('text-anchor','middle').attr('y', (d,i) => (i - (cl.length-1)/2) * 20 + 6)
+    .attr('font-size', 17).attr('font-weight', 600).attr('fill', '#9a7b55').text(d => d);
+
+  gLinks.selectAll('path.link').data(vis, d => d.id).join('path').attr('class','link')
+    .attr('d', linkPath).attr('stroke-width', d => WW[W(d)]);
+  gHits.selectAll('path.linkhit').data(vis, d => d.id).join('path').attr('class','linkhit')
+    .attr('d', linkPath)
+    .on('click', (e,d) => { e.stopPropagation(); select({kind:'link', id:d.id}); })
+    .on('mouseenter', (e,d) => showTip(e, linkTip(d))).on('mousemove', moveTip).on('mouseleave', hideTip);
+
+  const ns = gNodes.selectAll('g.node').data(shown, d => d.id).join(enter => {
+    const g = enter.append('g').attr('class','node');
+    g.append('circle').attr('class','ring-sel');
+    g.append('circle').attr('class','body');
+    g.append('text').attr('class','lbl halo');
+    g.call(drag);
+    g.on('click', (e,d) => { e.stopPropagation(); onNodeClick(d); })
+     .on('dblclick', (e,d) => { e.stopPropagation(); if (d.type === 'issue') focusOnly(d.id); })
+     .on('mouseenter', (e,d) => { S.hover = d.id; applyHighlight(); showTip(e, nodeTip(d)); })
+     .on('mousemove', moveTip)
+     .on('mouseleave', () => { S.hover = null; applyHighlight(); hideTip(); });
+    return g;
+  });
+  ns.attr('transform', d => { const p = POS[d.id]; return p ? 'translate(' + p.x + ',' + p.y + ')' : ''; });
+  ns.select('circle.body').attr('r', d => nodeR(d)).attr('fill', d => TYPES[d.type].fill).attr('stroke', d => TYPES[d.type].stroke).attr('stroke-width', 1.6);
+  ns.select('circle.ring-sel').attr('r', d => nodeR(d) + 5).attr('fill','none').attr('stroke', '#3d3a35').attr('stroke-width', 2.2).attr('stroke-dasharray', d => S.connectFrom === d.id ? '4 3' : null);
+  ns.each(function(d){
+    const p = POS[d.id]; if (!p) return;
+    const t = d3.select(this).select('text.lbl'), r = nodeR(d), name = dn(d);
+    const deg = p.a * 180 / Math.PI, c = Math.cos(p.a), s = Math.sin(p.a);
+    t.selectAll('tspan').remove(); t.attr('transform', null).attr('x', null).attr('y', null).attr('font-weight', null);
+    if (d.type === 'issue'){
+      const ls = wrap(name, LANG === 'en' ? 12 : 10);
+      t.attr('text-anchor','middle').attr('font-size', 16).attr('font-weight', 600).attr('fill', '#6b3410');
+      ls.forEach((ln,i) => t.append('tspan').attr('x', 0).attr('y', (i - (ls.length-1)/2) * 18 + 5.5).text(ln));
+    } else if (d.type === 'org' && GEO.radialO){
+      const left = c < 0;
+      t.attr('font-size', GEO.fO).attr('font-weight', 500).attr('fill', '#5a4500').attr('text-anchor', left ? 'end' : 'start')
+       .attr('transform', 'rotate(' + deg + ') translate(' + (r + 5) + ',0)' + (left ? ' rotate(180)' : ''))
+       .append('tspan').attr('x', 0).attr('y', GEO.fO * 0.35).text(name.length > 22 ? name.slice(0,21) + '…' : name);
+    } else if (d.type === 'org'){
+      const ls = wrap(name, LANG === 'en' ? 18 : 16);
+      const anchor = c > 0.25 ? 'start' : (c < -0.25 ? 'end' : 'middle');
+      const dx = c * (r + 6), dy = s * (r + 6) + (Math.abs(c) <= 0.25 ? (s > 0 ? 14 : -6 - (ls.length-1)*17) : 5 - (ls.length-1)*8.5);
+      t.attr('text-anchor', anchor).attr('font-size', 15).attr('font-weight', 500).attr('fill', '#5a4500');
+      ls.forEach((ln,i) => t.append('tspan').attr('x', dx).attr('y', dy + i*17).text(ln));
+    } else {
+      const left = c < 0;
+      t.attr('font-size', GEO.fP).attr('fill', '#14532d').attr('text-anchor', left ? 'end' : 'start')
+       .attr('transform', 'rotate(' + deg + ') translate(' + (r + 4) + ',0)' + (left ? ' rotate(180)' : ''))
+       .append('tspan').attr('x', 0).attr('y', GEO.fP * 0.35).text(name.length > 24 ? name.slice(0,23) + '…' : name);
+    }
+  });
+  if (S.connectFrom && POS[S.connectFrom]){ const p = POS[S.connectFrom]; tempLine.attr('x1', p.x).attr('y1', p.y); }
+  applyHighlight();
+}
+
+/* ---------- cluster view (6 sectors) ---------- */
+// sectors a node belongs to: its own, else inherited from linked issues (orgs) or linked orgs (people)
+let SECMAP = {};
+function buildSecMap(){
+  SECMAP = {};
+  const own = n => (Array.isArray(n.sectors) ? n.sectors.filter(k => SECK.includes(k)) : []);
+  S.nodes.forEach(n => { SECMAP[n.id] = own(n); });
+  const nb = id => S.links.filter(l => l.s === id || l.t === id).map(l => nodeById(l.s === id ? l.t : l.s)).filter(Boolean);
+  ['org', 'person'].forEach(t => S.nodes.filter(n => n.type === t && !SECMAP[n.id].length).forEach(n => {
+    const from = nb(n.id).filter(o => t === 'org' ? o.type === 'issue' : o.type === 'org');
+    SECMAP[n.id] = [...new Set([].concat(...from.map(o => SECMAP[o.id] || [])))].filter(k => SECK.includes(k));
+  }));
+}
+function effSectors(n){ return (n && SECMAP[n.id]) || []; }
+function hashJ(id, k){ let h = 2166136261 ^ k; for (const ch of String(id)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return ((h >>> 0) % 1000) / 1000 - 0.5; }
+let CPOS = {}, CKEY = '';
+function clusterCenters(N){
+  const Rc = 220 + Math.sqrt(Math.max(N, 1)) * 40, C = {};
+  SECTORS.forEach((s, i) => { const a = -2 * Math.PI / 3 + i * Math.PI / 3; C[s.k] = {x: Math.cos(a) * Rc, y: Math.sin(a) * Rc}; });
+  return C;
+}
+function cNodeR(n){
+  if (n.type === 'person') return 5.5;
+  const b = 10, src = S.sizeBy === 'btw' ? M.bc : M.str;
+  if (S.sizeBy === 'none') return b;
+  const mx = Math.max(0.0001, ...S.nodes.filter(x => x.type === n.type).map(x => src[x.id] || 0));
+  return b * (0.75 + 0.75 * Math.sqrt((src[n.id] || 0) / mx));
+}
+function hullPath(pts, pad){
+  const P = [];
+  pts.forEach(p => { for (let k = 0; k < 12; k++){ const a = k * TAU / 12; P.push([p.x + Math.cos(a) * (p.r + pad), p.y + Math.sin(a) * (p.r + pad)]); } });
+  const h = d3.polygonHull(P);
+  return h ? d3.line().curve(d3.curveCatmullRomClosed.alpha(0.5))(h) : '';
+}
+const cdrag = d3.drag()
+  .filter(e => S.tool === 'select' && !e.button)
+  .on('drag', (e, d) => { const [x, y] = d3.pointer(e, gZoom.node()); CPOS[d.id] = {x, y}; d._mv = true; hideTip(); renderCluster(true); });
+function renderCluster(noSim){
+  buildSecMap();
+  S.vis = visibleSet();
+  const shown = S.nodes.filter(n => n.type !== 'issue' && (!S.vis || S.vis.has(n.id)));
+  const ids = new Set(shown.map(n => n.id));
+  const links = S.links.filter(l => ids.has(l.s) && ids.has(l.t) && l.s !== l.t && W(l) >= S.minW);
+  const C = clusterCenters(shown.length);
+  // multi-sector nodes lean toward their first (primary) sector and sit on the side facing the others
+  const target = n => { const ss = effSectors(n); if (!ss.length) return {x:0, y:0}; let x = 0, y = 0; ss.forEach(k => { x += C[k].x; y += C[k].y; });
+    x /= ss.length; y /= ss.length; const p0 = C[ss[0]]; return {x: p0.x * 0.62 + x * 0.38, y: p0.y * 0.62 + y * 0.38}; };
+  const key = shown.map(n => n.id + ':' + effSectors(n).join('+')).join('|') + '#' + links.map(l => l.id).join(',') + '#' + S.sizeBy;
+  if (!noSim && key !== CKEY){
+    CKEY = key;
+    const sn = shown.map(n => { const t = target(n), p = CPOS[n.id]; return {id:n.id, type:n.type, r:cNodeR(n), tx:t.x, ty:t.y, x:p ? p.x : t.x + hashJ(n.id, 1) * 90, y:p ? p.y : t.y + hashJ(n.id, 2) * 90}; });
+    const byId = {}; sn.forEach(d => byId[d.id] = d);
+    const sl = links.map(l => ({source:byId[l.s], target:byId[l.t], person:byId[l.s].type === 'person' || byId[l.t].type === 'person'}));
+    const sim = d3.forceSimulation(sn)
+      .force('x', d3.forceX(d => d.tx).strength(d => d.type === 'person' ? 0.03 : 0.1))
+      .force('y', d3.forceY(d => d.ty).strength(d => d.type === 'person' ? 0.03 : 0.1))
+      .force('link', d3.forceLink(sl).distance(l => l.person ? 20 : 90).strength(l => l.person ? 0.8 : 0.02))
+      .force('collide', d3.forceCollide(d => d.r + (d.type === 'person' ? 6 : 28)).iterations(3))
+      .force('charge', d3.forceManyBody().strength(-30).distanceMax(160))
+      .stop();
+    for (let i = 0; i < 320; i++) sim.tick();
+    sn.forEach(d => CPOS[d.id] = {x:d.x, y:d.y});
+  }
+  const P = id => CPOS[id] || {x:0, y:0};
+  // hulls + sector labels
+  const hulls = SECTORS.map(s => {
+    // hull = primary members (first sector); secondary members appear as coloured dots on the node
+    const mem = shown.filter(n => effSectors(n)[0] === s.k).map(n => ({x:P(n.id).x, y:P(n.id).y, r:cNodeR(n)}));
+    const sec2 = shown.filter(n => effSectors(n).indexOf(s.k) > 0).length;
+    let lx = C[s.k].x * 0.7, ly = C[s.k].y * 0.7;
+    if (mem.length){
+      const mx = mem.reduce((a, m) => a + m.x, 0) / mem.length, my = mem.reduce((a, m) => a + m.y, 0) / mem.length;
+      const len = Math.hypot(C[s.k].x, C[s.k].y) || 1, ux = C[s.k].x / len, uy = C[s.k].y / len;
+      let far = 0; mem.forEach(m => { far = Math.max(far, (m.x - mx) * ux + (m.y - my) * uy + m.r); });
+      lx = mx + ux * (far + 46); ly = my + uy * (far + 46);
+    }
+    return {s, mem, sec2, d: mem.length ? hullPath(mem, 22) : '', lx, ly};
+  });
+  cHull.selectAll('path.hull').data(hulls, d => d.s.k).join('path').attr('class', 'hull').attr('d', d => d.d)
+    .attr('fill', d => d.s.c).attr('fill-opacity', 0.05).attr('stroke', d => d.s.c).attr('stroke-width', 2.6)
+    .attr('stroke-dasharray', '1 7').attr('stroke-linecap', 'round');
+  cSecLbl.selectAll('text').data(hulls, d => d.s.k).join('text').attr('class', 'halo').attr('text-anchor', 'middle')
+    .attr('x', d => d.lx).attr('y', d => d.ly + 6).attr('font-size', 21).attr('font-weight', 700).attr('fill', d => d.s.c)
+    .style('opacity', d => d.mem.length ? 1 : 0.35)
+    .text(d => secName(d.s.k) + (d.mem.length || d.sec2 ? ' ' + d.mem.length + (d.sec2 ? ' (+' + d.sec2 + ')' : '') : ''));
+  // links
+  const lp = l => { const a = P(l.s), b = P(l.t); return 'M' + a.x + ',' + a.y + 'L' + b.x + ',' + b.y; };
+  cLinks.selectAll('path.link').data(links, d => d.id).join('path').attr('class', 'link').attr('d', lp)
+    .attr('stroke-width', d => Math.max(0.8, WW[W(d)] * 0.55)).attr('stroke-dasharray', d => d.status === 'pending' ? '5 4' : null);
+  cHits.selectAll('path.linkhit').data(links, d => d.id).join('path').attr('class', 'linkhit').attr('d', lp)
+    .on('click', (e, d) => { e.stopPropagation(); select({kind:'link', id:d.id}); })
+    .on('mouseenter', (e, d) => showTip(e, linkTip(d))).on('mousemove', moveTip).on('mouseleave', hideTip);
+  // nodes
+  const ns = cNodes.selectAll('g.node').data(shown, d => d.id).join(enter => {
+    const g = enter.append('g').attr('class', 'node');
+    g.append('circle').attr('class', 'ring-sel').attr('fill', 'none').attr('stroke', '#3d3a35').attr('stroke-width', 2.2);
+    g.append('path').attr('class', 'body');
+    g.append('text').attr('class', 'lbl halo');
+    g.call(cdrag);
+    g.on('click', (e, d) => { if (d._mv){ d._mv = false; return; } e.stopPropagation(); onNodeClick(d); })
+     .on('mouseenter', (e, d) => { S.hover = d.id; applyHighlight(); showTip(e, nodeTip(d)); })
+     .on('mousemove', moveTip)
+     .on('mouseleave', () => { S.hover = null; applyHighlight(); hideTip(); });
+    return g;
+  });
+  ns.attr('transform', d => 'translate(' + P(d.id).x + ',' + P(d.id).y + ')');
+  ns.select('path.body').attr('d', d => { const r = cNodeR(d); return d.type === 'person' ? d3.symbol(d3.symbolCircle, Math.PI * r * r)() : 'M' + (-r) + ',' + (-r) + 'h' + (2*r) + 'v' + (2*r) + 'h' + (-2*r) + 'Z'; })
+    .attr('fill', d => d.type === 'person' ? TYPES.person.fill : OTC(d.otype))
+    .attr('stroke', d => d.type === 'person' ? TYPES.person.stroke : '#ffffff').attr('stroke-width', d => d.type === 'person' ? 1.4 : 1.2)
+    .attr('stroke-dasharray', d => d.status === 'pending' ? '2 2' : null);
+  ns.each(function(d){
+    const r = cNodeR(d), extra = d.type === 'person' ? [] : effSectors(d).slice(1);
+    d3.select(this).selectAll('circle.sd').data(extra).join('circle').attr('class', 'sd').attr('r', 3.2)
+      .attr('cx', (k, i) => -r + 3.5 + i * 7.5).attr('cy', r + 5).attr('fill', k => SECTORS.find(x => x.k === k).c).attr('stroke', '#fff').attr('stroke-width', 0.8);
+  });
+  ns.select('circle.ring-sel').attr('r', d => cNodeR(d) + 5).attr('stroke-dasharray', d => S.connectFrom === d.id ? '4 3' : null);
+  ns.select('text.lbl').attr('x', d => cNodeR(d) + 4).attr('y', 4).attr('font-size', d => d.type === 'person' ? 11 : 13)
+    .attr('fill', d => d.type === 'person' ? '#14532d' : '#2d2a26')
+    .style('display', d => S.lblMode === 'all' || (S.lblMode === 'org' && d.type !== 'person') ? null : 'none')
+    .text(d => { const t = dn(d); return t.length > 30 ? t.slice(0, 29) + '…' : t; });
+  // fit view box
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  hulls.forEach(h => { x0 = Math.min(x0, h.lx - 130); x1 = Math.max(x1, h.lx + 130); y0 = Math.min(y0, h.ly - 30); y1 = Math.max(y1, h.ly + 30); });
+  shown.forEach(n => { const p = P(n.id); x0 = Math.min(x0, p.x - 30); x1 = Math.max(x1, p.x + 190); y0 = Math.min(y0, p.y - 30); y1 = Math.max(y1, p.y + 30); });
+  if (!isFinite(x0)){ x0 = -500; y0 = -500; x1 = 500; y1 = 500; }
+  const vb = [Math.floor(x0), Math.floor(y0), Math.ceil(x1 - x0), Math.ceil(y1 - y0)];
+  if (!noSim){ S.vb = vb; svg.attr('viewBox', vb.join(' ')); }
+  if (S.connectFrom && CPOS[S.connectFrom]){ const p = CPOS[S.connectFrom]; tempLine.attr('x1', p.x).attr('y1', p.y); }
+  renderClusterKey(shown);
+  applyHighlight();
+}
+function renderClusterKey(shown){
+  const used = [...new Set(shown.filter(n => n.type === 'org').map(n => n.otype || ''))];
+  const order = OTYPES.map(o => o.k).concat(['']).filter(k => used.includes(k));
+  const wasOpen = !$('#keyCluster details') || $('#keyCluster details').open;
+  $('#keyCluster').innerHTML = '<details' + (wasOpen ? ' open' : '') + '><summary><b>' + esc(T('ck_title')) + '</b></summary>' +
+    order.map(k => '<span class="it"><i class="sq" style="background:' + OTC(k) + '"></i>' + esc(otName(k)) + '</span>').join('') +
+    '<br><span class="it"><i class="ln"></i>' + esc(T('ck_solid')) + '</span><span class="it"><i class="ln d"></i>' + esc(T('ck_dash')) + '</span>' +
+    '<span class="it"><i class="dot person" style="width:9px;height:9px"></i>' + esc(T('ck_person')) + '</span><br><span style="color:var(--muted)">' + esc(T('ck_dots')) + '<br>' + esc(T('ck_issues')) + '</span></details>';
+}
+function setView(v){
+  S.view = v;
+  document.querySelectorAll('#viewSw button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  const c = v === 'cluster';
+  [gBand, gCenter, gLinks, gHits, gNodes].forEach(g => g.style('display', c ? 'none' : null));
+  gC.style('display', c ? null : 'none');
+  $('#keyRing').style.display = c ? 'none' : '';
+  $('#keyCluster').style.display = c ? 'block' : 'none';
+  $('#lblSw').style.display = c ? 'block' : 'none';
+  const sw = $('#viewSw').getBoundingClientRect(); $('#lblSw').style.left = (sw.width + 20) + 'px';
+  curVB = null; zoomFit(true); hideTip();
+  try { localStorage.setItem('nannetwork-v2-view', v); } catch(e){}
+  renderGraph();
+}
+const matches = (n, q) => (n.name || '').toLowerCase().includes(q) || (n.name_en || '').toLowerCase().includes(q);
+function applyHighlight(){
+  const focus = S.hover || (S.sel && S.sel.kind === 'node' ? S.sel.id : null);
+  const selLink = S.sel && S.sel.kind === 'link' ? S.sel.id : null;
+  const q = S.search.trim().toLowerCase();
+  let act = null;
+  if (focus){ act = new Set([focus].concat(M.adj[focus] || [])); }
+  else if (selLink){ const l = linkById(selLink); if (l) act = new Set([l.s, l.t]); }
+  svg.selectAll('g.node')
+    .style('opacity', d => { if (q) return matches(d, q) ? 1 : 0.18; return !act || act.has(d.id) ? 1 : 0.18; })
+    .select('circle.ring-sel').style('display', d => (S.sel && S.sel.kind === 'node' && S.sel.id === d.id) || S.connectFrom === d.id || (q && matches(d, q)) ? null : 'none');
+  svg.selectAll('path.link')
+    .attr('stroke', d => d.id === selLink ? '#b45309' : '#7c6f5d')
+    .style('opacity', d => {
+      if (selLink) return d.id === selLink ? 0.95 : 0.08;
+      if (focus) return (d.s === focus || d.t === focus) ? 0.85 : 0.06;
+      if (q) return 0.12;
+      return 0.42;
+    });
+}
+
+/* ---------- tooltip ---------- */
+function nodeTip(d){
+  let h = '<b>' + esc(dn(d)) + '</b><br><span style="opacity:.75">' + T('nodeMeta', tl(d.type), M.deg[d.id]||0, M.str[d.id]||0) + '</span>';
+  const role = dr(d);
+  if (d.type === 'org' && role) h += '<br>' + T('tipRole') + ': ' + esc(role.length > 140 ? role.slice(0,140) + '…' : role);
+  const secs = effSectors(d);
+  if (d.type === 'org' && d.otype) h += '<br>' + esc(otName(d.otype)) + (d.level ? ' · ' + esc(d.level) : '') + (d.area ? ' · ' + esc(d.area) : '');
+  if (secs.length) h += '<br>' + secs.map(k => '<span style="color:' + SECTORS.find(x => x.k === k).c + '">●</span> ' + esc(secName(k))).join(' ');
+  if (d.status) h += '<br><span style="opacity:.75">' + esc(stName(d.status)) + '</span>';
+  if (d.note) h += '<br><i>' + esc(d.note.slice(0,120)) + '</i>';
+  return h;
+}
+function linkTip(l){
+  const a = nodeById(l.s), b = nodeById(l.t);
+  return '<b>' + esc(dn(a)) + ' — ' + esc(dn(b)) + '</b><br>' + T('tipImp', W(l), wl(W(l))) + (l.label ? '<br>' + esc(l.label) : '') + (l.status ? '<br><span style="opacity:.75">' + esc(stName(l.status)) + '</span>' : '');
+}
+function showTip(e, html){ const t = $('#tip'); t.innerHTML = html; t.style.display = 'block'; moveTip(e); }
+function moveTip(e){ const t = $('#tip'), r = $('#stage').getBoundingClientRect(); let x = e.clientX - r.left + 14, y = e.clientY - r.top + 14; if (x + 270 > r.width) x = e.clientX - r.left - 270; t.style.left = x + 'px'; t.style.top = y + 'px'; }
+function hideTip(){ $('#tip').style.display = 'none'; }
+
+/* ---------- interactions ---------- */
+function onNodeClick(d){
+  if (S.tool === 'connect' && S.canWrite){
+    if (!S.connectFrom){ S.connectFrom = d.id; updateBanner(); renderGraph(); return; }
+    if (S.connectFrom === d.id){ S.connectFrom = null; tempLine.style('display','none'); updateBanner(); renderGraph(); return; }
+    const from = S.connectFrom; S.connectFrom = null; tempLine.style('display','none'); updateBanner();
+    createLink(from, d.id, 3);
+    return;
+  }
+  select({kind:'node', id:d.id});
+}
+function createLink(s, t, w){
+  if (s === t) return;
+  const ex = S.links.find(l => (l.s === s && l.t === t) || (l.s === t && l.t === s));
+  if (ex){ toast(T('linkExists')); select({kind:'link', id:ex.id}); return; }
+  const l = {id:newId('l'), s, t, w:w||3, label:'', created:Date.now()};
+  saveLink(l).then(() => { select({kind:'link', id:l.id}); toast(T('linked')); });
+}
+function select(sel){
+  S.sel = sel;
+  if (sel) showTab('detail');
+  S.panelDirty = false;
+  renderGraph(); renderPanels(true);
+}
+function setTool(t, quiet){
+  S.tool = t; if (!quiet){ S.connectFrom = null; tempLine && tempLine.style('display','none'); }
+  $('#toolSelect').classList.toggle('on', t === 'select');
+  $('#toolConnect').classList.toggle('on', t === 'connect');
+  $('#net').classList.toggle('connect', t === 'connect');
+  $('#toolHint').textContent = T(t === 'connect' ? 'hintConnect' : 'hintSelect');
+  updateBanner(); if (!quiet && svg) renderGraph();
+}
+function updateBanner(){
+  const b = $('#banner');
+  if (S.tool !== 'connect'){ b.style.display = 'none'; return; }
+  const f = S.connectFrom && nodeById(S.connectFrom);
+  b.innerHTML = (f ? T('bannerFrom', esc(dn(f))) : T('bannerConnect')) + '<button id="bannerX">' + T('done') + '</button>';
+  b.style.display = 'block';
+  $('#bannerX').onclick = () => setTool('select');
+}
+function showTab(t){
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('sel', b.dataset.tab === t));
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('sel', el.id === 'tab-' + t));
+}
+async function addNode(){
+  const name = $('#addName').value.trim();
+  if (!name){ $('#addName').focus(); return; }
+  if (!S.pid){ toast(T('makeProj')); return; }
+  if (S.nodes.some(n => n.type === S.addType && (n.name.trim() === name || (n.name_en||'').trim() === name))){ toast(T('dupName')); return; }
+  const n = {id:newId('n'), name, name_en: LANG === 'en' ? name : '', type:S.addType, role:'', role_en:'', note:'', a:null, created:Date.now()};
+  $('#addName').value = '';
+  await saveNode(n);
+  select({kind:'node', id:n.id});
+  setTimeout(() => { const r = $(LANG === 'en' ? '#d-role-en' : '#d-role'); if (r) r.focus(); }, 50);
+}
+async function deleteNode(id){
+  const ls = S.links.filter(l => l.s === id || l.t === id);
+  for (const l of ls) await write(() => STORE.del(lPath(S.pid, l.id)));
+  await write(() => STORE.del(nPath(S.pid, id)));
+  select(null); toast(T('deleted'));
+}
+
+/* ---------- panels ---------- */
+function panelBusy(){
+  const a = document.activeElement;
+  return a && a.closest && a.closest('aside.right') && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== 'range';
+}
+function renderPanels(force){
+  if (!force && panelBusy()){ S.panelDirty = true; return; }
+  S.panelDirty = false;
+  renderRoles(); renderDetail(); renderAnalysis();
+}
+function setFocus(ids){ S.focus = new Set(ids); renderFocusUI(); renderGraph(); renderPanels(true); }
+function toggleFocus(id){ const f = new Set(S.focus); if (f.has(id)) f.delete(id); else f.add(id); setFocus(f); }
+function focusOnly(id){ setFocus(S.focus.size === 1 && S.focus.has(id) ? [] : [id]); }
+function renderFocusUI(){
+  const issues = S.nodes.filter(n => n.type === 'issue').sort((a,b) => (a.created||0) - (b.created||0));
+  const ids = new Set(issues.map(n => n.id));
+  S.focus.forEach(id => { if (!ids.has(id)) S.focus.delete(id); });
+  $('#focusChips').innerHTML = issues.length ? issues.map(n => '<button class="fchip' + (S.focus.has(n.id) ? ' on' : '') + '" data-n="' + esc(n.id) + '">' + esc(dn(n)) + '</button>').join('') : '<span class="muted" style="font-size:12px">' + T('noIssues') + '</span>';
+  $('#focusChips').querySelectorAll('.fchip').forEach(b => b.onclick = () => toggleFocus(b.dataset.n));
+  $('#focusClear').disabled = !S.focus.size;
+  const fb = $('#fbanner');
+  if (!S.focus.size){ fb.style.display = 'none'; return; }
+  const vis = visibleSet() || new Set();
+  const cO = S.nodes.filter(n => n.type === 'org' && vis.has(n.id)).length, cP = S.nodes.filter(n => n.type === 'person' && vis.has(n.id)).length;
+  fb.innerHTML = T('fbanner', issues.filter(n => S.focus.has(n.id)).map(n => esc(dn(n))).join(', '), cO, cP) + ' <button id="fbClear">' + T('showAll') + '</button>';
+  fb.style.display = 'block';
+  $('#fbClear').onclick = () => setFocus([]);
+}
+function renderAll(){
+  computeMetrics();
+  renderFocusUI();
+  renderGraph();
+  renderPanels(false);
+  renderEmpty();
+}
+function renderEmpty(){
+  if (!S.loaded) return;
+  if (!S.projects.length){
+    showEmpty('<b>' + T('emptyNoProj') + '</b><p class="muted">' + (S.canWrite ? T('emptyNoProjEdit') : T('emptyNoData')) + '</p>' +
+      (S.canWrite ? '<div class="row" style="justify-content:center"><button class="btn primary" id="eNew">' + T('newProj') + '</button>' + (S.mode !== 'claude' ? '<button class="btn" id="eSeed">' + T('importSeed') + '</button>' : '') + '</div>' : ''));
+    const a = $('#eNew'); if (a) a.onclick = () => projDialog(null);
+    const b = $('#eSeed'); if (b) b.onclick = () => importFromUrl('data.json');
+  } else if (!S.nodes.length){
+    showEmpty('<b>' + T('emptyProj') + '</b><p class="muted">' + (S.canWrite ? T('emptyProjEdit') : T('emptyNoData')) + '</p>');
+  } else $('#empty').style.display = 'none';
+}
+function showEmpty(html){ $('#emptyBox').innerHTML = html; $('#empty').style.display = 'flex'; }
+
+function chipsFor(n, type){
+  const out = [];
+  S.links.forEach(l => {
+    const o = l.s === n.id ? l.t : (l.t === n.id ? l.s : null); if (!o) return;
+    const on = nodeById(o); if (on && on.type === type) out.push({n:on, w:W(l)});
+  });
+  out.sort((a,b) => b.w - a.w);
+  return out.map(x => '<span class="chip ' + type + '" title="' + esc(T('tipImp', x.w, wl(x.w))) + '">' + esc(dn(x.n)) + ' · ' + x.w + '</span>').join('');
+}
+function renderRoles(){
+  const el = $('#tab-roles');
+  const orgs = S.nodes.filter(n => n.type === 'org' && (!S.vis || S.vis.has(n.id))).sort((a,b) => (M.str[b.id]||0) - (M.str[a.id]||0) || cmpName(a,b));
+  if (!orgs.length){ el.innerHTML = '<p class="muted">' + T('rolesNone') + (S.canWrite ? T('rolesNoneEdit') : '') + '</p>'; return; }
+  el.innerHTML = (S.vis ? '<p class="hint" style="margin-top:0;color:var(--accent)">' + T('rolesFiltered', orgs.length) + '</p>' : '') +
+    '<p class="muted" style="margin-top:0;font-size:12.5px">' + T('rolesIntro') + (S.canWrite ? T('rolesClick') : '') + '</p>' +
+    orgs.map(o => {
+      const sel = S.sel && S.sel.kind === 'node' && S.sel.id === o.id, role = dr(o);
+      return '<div class="role-card' + (sel ? ' sel' : '') + '" data-n="' + esc(o.id) + '">' +
+        '<div class="rc-h"><span class="dot org"></span><b>' + esc(dn(o)) + '</b><small>' + T('nLinks', M.deg[o.id]||0) + '</small></div>' +
+        '<div class="rc-role">' + (role ? esc(role) : '<i>' + T('noRole') + (S.canWrite ? T('noRoleClick') : '') + '</i>') + '</div>' +
+        '<div class="chips">' + chipsFor(o, 'issue') + '</div>' +
+        '<div class="chips">' + chipsFor(o, 'person') + '</div></div>';
+    }).join('');
+  el.querySelectorAll('.role-card').forEach(c => c.onclick = () => {
+    const id = c.dataset.n; select({kind:'node', id});
+    setTimeout(() => { const r = $(LANG === 'en' ? '#d-role-en' : '#d-role'); if (r && S.canWrite){ r.focus(); r.setSelectionRange(r.value.length, r.value.length); } }, 30);
+  });
+}
+function renderDetail(){
+  const el = $('#tab-detail');
+  const ro = S.canWrite ? '' : ' disabled';
+  if (!S.sel){ el.innerHTML = '<p class="muted">' + T('detailPick') + '</p>'; return; }
+  if (S.sel.kind === 'link'){
+    const l = linkById(S.sel.id); if (!l){ el.innerHTML = '<p class="muted">' + T('linkGone') + '</p>'; return; }
+    const a = nodeById(l.s), b = nodeById(l.t);
+    el.innerHTML = '<div class="det-head">' + T('linkTitle') + '</div>' +
+      '<div class="det-title"><span class="dot ' + (a?a.type:'') + '"></span> <a href="#" data-n="' + esc(l.s) + '">' + esc(dn(a)) + '</a> — <span class="dot ' + (b?b.type:'') + '"></span> <a href="#" data-n="' + esc(l.t) + '">' + esc(dn(b)) + '</a></div>' +
+      '<label>' + T('importance') + ': <b id="lwv">' + W(l) + ' · ' + wl(W(l)) + '</b></label>' +
+      '<input type="range" id="lw" min="1" max="5" step="1" value="' + W(l) + '" style="width:100%"' + ro + '>' +
+      '<label>' + T('relation') + '<textarea id="ll" rows="3" placeholder="' + esc(T('relationPh')) + '"' + ro + '>' + esc(l.label) + '</textarea></label>' +
+      '<label>' + T('statusLbl') + '<select id="lst"' + ro + '>' + [''].concat(STATUSES).map(k => '<option value="' + k + '"' + (k === (l.status || '') ? ' selected' : '') + '>' + esc(stName(k)) + '</option>').join('') + '</select></label>' +
+      '<label>' + T('evidLbl') + '<input type="text" id="lev" value="' + esc(l.evidence) + '"' + ro + '></label>' +
+      (S.canWrite ? '<div class="row"><button class="btn primary" id="lsave">' + T('save') + '</button><button class="btn danger" id="ldel">' + T('delLink') + '</button></div>' : '');
+    el.querySelectorAll('a[data-n]').forEach(x => x.onclick = e => { e.preventDefault(); select({kind:'node', id:x.dataset.n}); });
+    if (!S.canWrite) return;
+    $('#lw').oninput = e => { $('#lwv').textContent = e.target.value + ' · ' + wl(e.target.value); };
+    $('#lw').onchange = e => saveLink(Object.assign({}, l, {w:+e.target.value}));
+    $('#lsave').onclick = () => { saveLink(Object.assign({}, l, {w:+$('#lw').value, label:$('#ll').value.trim(), status:$('#lst').value, evidence:$('#lev').value.trim()})); toast(T('saved')); $('#lsave').blur(); };
+    armDelete($('#ldel'), async () => { await write(() => STORE.del(lPath(S.pid, l.id))); select(null); });
+    return;
+  }
+  const n = nodeById(S.sel.id); if (!n){ el.innerHTML = '<p class="muted">' + T('nodeGone') + '</p>'; return; }
+  const conns = S.links.filter(l => l.s === n.id || l.t === n.id).map(l => ({l, o:nodeById(l.s === n.id ? l.t : l.s)})).filter(x => x.o)
+    .sort((a,b) => ORDER.indexOf(a.o.type) - ORDER.indexOf(b.o.type) || W(b.l) - W(a.l));
+  const linked = new Set(conns.map(c => c.o.id).concat([n.id]));
+  const opts = ORDER.map(t => {
+    const items = S.nodes.filter(x => x.type === t && !linked.has(x.id)).sort(cmpName);
+    return items.length ? '<optgroup label="' + tl(t) + '">' + items.map(x => '<option value="' + esc(x.id) + '">' + esc(dn(x)) + '</option>').join('') + '</optgroup>' : '';
+  }).join('');
+  const nameFields = '<label>' + T('nameTh') + '<input type="text" id="d-name" maxlength="120" value="' + esc(n.name) + '"' + ro + '></label>' +
+    '<label>' + T('nameEn') + '<input type="text" id="d-name-en" maxlength="120" value="' + esc(n.name_en) + '"' + ro + '></label>';
+  const roleTh = '<label>' + T('roleTh') + '<textarea id="d-role" rows="3" placeholder="' + esc(T('rolePh')) + '"' + ro + '>' + esc(n.role) + '</textarea></label>';
+  const roleEn = '<label>' + T('roleEn') + '<textarea id="d-role-en" rows="3"' + ro + '>' + esc(n.role_en) + '</textarea></label>';
+  el.innerHTML =
+    '<div class="det-head"><span class="dot ' + n.type + '"></span>' + T('nodeMeta', tl(n.type), M.deg[n.id]||0, M.str[n.id]||0) + '</div>' +
+    '<div class="det-title">' + esc(dn(n)) + '</div>' +
+    (n.type === 'issue' ? '<div class="row" style="margin-top:4px"><button class="btn sm" id="d-focus">' + (S.focus.size === 1 && S.focus.has(n.id) ? T('showAll') : T('focusThis')) + '</button></div>' : '') +
+    (n.type === 'org' ? (LANG === 'en' ? roleEn + roleTh : roleTh + roleEn) : '') +
+    nameFields +
+    '<label>' + T('ringType') + '<select id="d-type"' + ro + '>' + ORDER.map(t => '<option value="' + t + '"' + (t === n.type ? ' selected' : '') + '>' + tl(t) + '</option>').join('') + '</select></label>' +
+    '<label>' + T('sectorsLbl') + '</label><div class="secchk">' + SECTORS.map(x => '<label><input type="checkbox" class="d-sec" value="' + x.k + '"' + ((n.sectors || []).includes(x.k) ? ' checked' : '') + ro + '><i class="sw" style="background:' + x.c + '"></i>' + esc(secName(x.k)) + '</label>').join('') + '</div>' +
+    (!(n.sectors || []).length && effSectors(n).length ? '<p class="hint">↳ ' + esc(effSectors(n).map(secName).join(', ')) + '</p>' : '') +
+    (n.type === 'org' ? '<label>' + T('otypeLbl') + '<select id="d-otype"' + ro + '>' + [''].concat(OTYPES.map(o => o.k)).map(k => '<option value="' + k + '"' + (k === (n.otype || '') ? ' selected' : '') + '>' + esc(otName(k)) + '</option>').join('') + '</select></label>' +
+      '<label>' + T('levelLbl') + '<input type="text" id="d-level" value="' + esc(n.level) + '"' + ro + '></label>' +
+      '<label>' + T('areaLbl') + '<input type="text" id="d-area" value="' + esc(n.area) + '"' + ro + '></label>' : '') +
+    '<label>' + T('statusLbl') + '<select id="d-status"' + ro + '>' + [''].concat(STATUSES).map(k => '<option value="' + k + '"' + (k === (n.status || '') ? ' selected' : '') + '>' + esc(stName(k)) + '</option>').join('') + '</select></label>' +
+    '<label>' + T('evidLbl') + '<input type="text" id="d-evid" value="' + esc(n.evidence) + '"' + ro + '></label>' +
+    '<label>' + T('note') + '<textarea id="d-note" rows="2"' + ro + '>' + esc(n.note) + '</textarea></label>' +
+    (S.canWrite ? '<div class="row"><button class="btn primary" id="d-save">' + T('save') + '</button><button class="btn danger" id="d-del">' + T('del') + '</button></div>' : '') +
+    '<h4>' + T('connections', conns.length) + '</h4>' +
+    (conns.length ? '<ul class="conn">' + conns.map(c => '<li data-l="' + esc(c.l.id) + '"><span class="dot ' + c.o.type + '"></span><a href="#" data-n="' + esc(c.o.id) + '" title="' + esc(c.l.label || dn(c.o)) + '">' + esc(dn(c.o)) + '</a><input type="range" class="cw" min="1" max="5" value="' + W(c.l) + '" title="' + esc(T('importance')) + '"' + ro + '><span class="wv">' + W(c.l) + '</span>' + (S.canWrite ? '<button class="x" title="' + esc(T('delLinkT')) + '">×</button>' : '<span></span>') + '</li>').join('') + '</ul>' : '<p class="muted" style="font-size:13px">' + T('noConn') + '</p>') +
+    (S.canWrite && opts ? '<div class="addlink"><select id="d-target">' + opts + '</select><select id="d-w">' + [1,2,3,4,5].map(w => '<option value="' + w + '"' + (w === 3 ? ' selected' : '') + '>' + w + '</option>').join('') + '</select><button class="btn" id="d-link">' + T('linkBtn') + '</button></div><p class="hint">' + T('linkHint') + '</p>' : '');
+  el.querySelectorAll('a[data-n]').forEach(x => x.onclick = e => { e.preventDefault(); select({kind:'node', id:x.dataset.n}); });
+  const df = $('#d-focus'); if (df) df.onclick = () => focusOnly(n.id);
+  if (!S.canWrite) return;
+  $('#d-save').onclick = () => {
+    const name = $('#d-name').value.trim(), name_en = $('#d-name-en').value.trim();
+    if (!name && !name_en){ toast(T('needName')); return; }
+    const type = $('#d-type').value;
+    const upd = Object.assign({}, n, {name: name || name_en, name_en, type, note:$('#d-note').value.trim(),
+      role:$('#d-role') ? $('#d-role').value.trim() : (n.role||''), role_en:$('#d-role-en') ? $('#d-role-en').value.trim() : (n.role_en||''),
+      sectors:[...document.querySelectorAll('.d-sec:checked')].map(x => x.value), status:$('#d-status').value, evidence:$('#d-evid').value.trim(),
+      otype:$('#d-otype') ? $('#d-otype').value : (n.otype||''), level:$('#d-level') ? $('#d-level').value.trim() : (n.level||''), area:$('#d-area') ? $('#d-area').value.trim() : (n.area||'')});
+    if (type !== n.type) upd.a = null;
+    saveNode(upd).then(() => toast(T('saved'))); $('#d-save').blur();
+  };
+  ['#d-role', '#d-role-en'].forEach(sel => { const r = $(sel); if (r) r.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('#d-save').click(); }); });
+  ['#d-name', '#d-name-en'].forEach(sel => $(sel).addEventListener('keydown', e => { if (e.key === 'Enter') $('#d-save').click(); }));
+  armDelete($('#d-del'), () => deleteNode(n.id));
+  el.querySelectorAll('ul.conn li').forEach(li => {
+    const l = linkById(li.dataset.l);
+    const r = li.querySelector('.cw');
+    r.oninput = () => { li.querySelector('.wv').textContent = r.value; };
+    r.onchange = () => saveLink(Object.assign({}, l, {w:+r.value}));
+    li.querySelector('.x').onclick = () => write(() => STORE.del(lPath(S.pid, l.id)));
+  });
+  const dl = $('#d-link'); if (dl) dl.onclick = () => {
+    const t = $('#d-target').value; if (!t) return;
+    saveLink({id:newId('l'), s:n.id, t, w:+$('#d-w').value, label:'', created:Date.now()});
+  };
+}
+function armDelete(btn, fn){
+  if (!btn) return;
+  btn.onclick = () => {
+    if (btn.classList.contains('armed')){ fn(); return; }
+    btn.classList.add('armed'); const old = btn.textContent; btn.textContent = T('confirmDel');
+    setTimeout(() => { if (btn.isConnected){ btn.classList.remove('armed'); btn.textContent = old; } }, 3000);
+  };
+}
+function bars(items, fmt){
+  const mx = Math.max(0.0001, ...items.map(x => x.v));
+  return '<div class="bars">' + items.map(x => '<div class="b" data-n="' + esc(x.n.id) + '"><span><i class="dot ' + x.n.type + '"></i>' + esc(dn(x.n)) + '</span><div class="track"><div class="fill" style="width:' + (x.v/mx*100).toFixed(1) + '%"></div></div><span class="v">' + fmt(x.v) + '</span></div>').join('') + '</div>';
+}
+function renderAnalysis(){
+  const el = $('#tab-analysis');
+  if (!S.nodes.length){ el.innerHTML = '<p class="muted">' + T('noData') + '</p>'; return; }
+  const A = analysis();
+  const wmax = Math.max(1, ...A.wdist);
+  el.innerHTML =
+    '<div class="row" style="margin:0 0 10px"><button class="btn sm" id="aXlsx">⬇ Excel</button><button class="btn sm" id="aReport">⬇ ' + (LANG === 'en' ? 'Report' : 'รายงาน') + '</button></div>' +
+    '<div class="kpis"><div class="kpi"><b>' + A.cnt('issue') + '</b><span>' + T('types_issue') + '</span></div><div class="kpi"><b>' + A.cnt('org') + '</b><span>' + T('types_org') + '</span></div><div class="kpi"><b>' + A.cnt('person') + '</b><span>' + T('types_person') + '</span></div>' +
+    '<div class="kpi"><b>' + A.E + '</b><span>' + T('k_links') + '</span></div><div class="kpi"><b>' + A.avgDeg.toFixed(1) + '</b><span>' + T('k_avg') + '</span></div><div class="kpi"><b>' + (A.dens*100).toFixed(1) + '%</b><span>' + T('k_dens') + '</span></div>' +
+    '<div class="kpi"><b>' + A.avgW.toFixed(1) + '</b><span>' + T('k_avgw') + '</span></div><div class="kpi"><b>' + A.comp + '</b><span>' + T('k_comp') + '</span></div><div class="kpi"><b>' + A.iso.length + '</b><span>' + T('k_iso') + '</span></div></div>' +
+    (A.hasSec ? '<h4>' + T('a_clusters') + '</h4><table class="cov"><tr><th>' + T('c_sector') + '</th><th>' + T('c_orgs') + '</th><th>' + T('ck_person') + '</th><th>' + T('c_int') + '</th><th>' + T('c_cross') + '</th></tr>' +
+      A.clusters.map(c => '<tr><td><span style="color:' + c.s.c + '">●</span> ' + esc(secName(c.s.k)) + '</td><td>' + c.orgs.length + '</td><td>' + c.ppl.length + '</td><td>' + c.inn + '</td><td>' + c.cross + '</td></tr>').join('') + '</table>' +
+      (A.multi.length ? '<h4>' + T('a_multi') + '</h4>' + bars(A.multi.slice(0, 10).map(n => ({n, v:effSectors(n).length})), v => T('nSectors', v)) : '') : '') +
+    (A.otypes.length > 1 || (A.otypes[0] && A.otypes[0].k) ? '<h4>' + T('a_otypes') + '</h4><div class="chips">' + A.otypes.map(o => '<span class="chip" style="border-color:' + OTC(o.k) + '"><span style="color:' + OTC(o.k) + '">■</span> ' + esc(otName(o.k)) + ' · ' + o.n + '</span>').join('') + '</div>' : '') +
+    '<h4>' + T('a_wdist') + '</h4><div class="bars">' + A.wdist.map((c,i) => '<div class="b" style="cursor:default"><span>' + (i+1) + ' · ' + wl(i+1) + '</span><div class="track"><div class="fill" style="width:' + (c/wmax*100).toFixed(1) + '%"></div></div><span class="v">' + c + '</span></div>').join('') + '</div>' +
+    '<h4>' + T('a_str') + '</h4>' + bars(A.top(M.str, 8), v => v) +
+    '<h4>' + T('a_btw') + '</h4><p class="hint" style="margin-top:0">' + T('a_btwHint') + '</p>' + bars(A.top(M.bc, 8), v => v.toFixed(2)) +
+    '<h4>' + T('a_clo') + '</h4><p class="hint" style="margin-top:0">' + T('a_cloHint') + '</p>' + bars(A.top(M.cl, 8), v => v.toFixed(2)) +
+    (A.cov.length ? '<h4>' + T('a_cov') + '</h4><table class="cov"><tr><th>' + T('c_issue') + '</th><th>' + T('c_orgs') + '</th><th>' + T('c_ppl') + '</th><th>' + T('c_str') + '</th></tr>' +
+      A.cov.map(c => '<tr' + (c.s === A.minS && A.cov.length > 1 ? ' class="low" title="' + esc(T('weakIssue')) + '"' : '') + '><td>' + esc(dn(c.n)) + '</td><td>' + c.orgs.length + '</td><td>' + c.ppl + '</td><td>' + c.s + '</td></tr>').join('') +
+      '</table><p class="hint">' + T('a_covHint') + '</p>' : '') +
+    (A.bridgeO.length ? '<h4>' + T('a_bridgeOrg') + '</h4>' + bars(A.bridgeO.map(x => ({n:x.n, v:x.list.length})), v => T('nIssues', v)) : '') +
+    (A.bridgeP.length ? '<h4>' + T('a_bridgeP') + '</h4>' + bars(A.bridgeP.map(x => ({n:x.n, v:x.list.length})), v => T('nOrgs', v)) : '') +
+    (A.iso.length ? '<h4>' + T('a_iso', A.iso.length) + '</h4><div class="chips">' + A.iso.map(n => '<span class="chip ' + n.type + '">' + esc(dn(n)) + '</span>').join('') + '</div>' : '');
+  el.querySelectorAll('.b[data-n]').forEach(b => b.onclick = () => select({kind:'node', id:b.dataset.n}));
+  $('#aXlsx').onclick = exportXlsx; $('#aReport').onclick = exportReport;
+}
+
+/* ---------- projects ---------- */
+function modal(html){ $('#modalBox').innerHTML = html; $('#modal').style.display = 'flex'; }
+function closeModal(){ $('#modal').style.display = 'none'; }
+function projDialog(p){
+  modal('<h3>' + T(p ? 'projEditT' : 'projNewT') + '</h3>' +
+    '<label>' + T('projName') + '<input type="text" id="pName" maxlength="100" value="' + esc(p ? p.name : '') + '"></label>' +
+    '<label>' + T('projNameEn') + '<input type="text" id="pNameEn" maxlength="100" value="' + esc(p ? p.name_en : '') + '"></label>' +
+    '<label>' + T('projDesc') + '<textarea id="pDesc" rows="3">' + esc(p ? p.desc : '') + '</textarea></label>' +
+    '<div class="row"><button class="btn primary" id="pOk">' + T(p ? 'save' : 'create') + '</button><button class="btn" id="pCancel">' + T('cancel') + '</button><span class="spacer"></span>' + (p ? '<button class="btn danger" id="pDel">' + T('delProj') + '</button>' : '') + '</div>');
+  $('#pName').focus();
+  $('#pCancel').onclick = closeModal;
+  $('#pOk').onclick = async () => {
+    const name = $('#pName').value.trim(), name_en = $('#pNameEn').value.trim();
+    if (!name && !name_en){ $('#pName').focus(); return; }
+    const id = p ? p.id : newId('p');
+    await write(() => STORE.set(pPath(id), {name: name || name_en, name_en, desc:$('#pDesc').value.trim(), created:p ? (p.created||Date.now()) : Date.now()}));
+    closeModal();
+    if (!p){ S.pid = null; location.hash = 'p-' + id; openProject(id); }
+  };
+  if (p) armDelete($('#pDel'), async () => {
+    const pid = p.id; closeModal();
+    const ns = S.pid === pid ? S.nodes.slice() : [], ls = S.pid === pid ? S.links.slice() : [];
+    for (const l of ls) await write(() => STORE.del(lPath(pid, l.id)));
+    for (const n of ns) await write(() => STORE.del(nPath(pid, n.id)));
+    await write(() => STORE.del(pPath(pid)));
+    S.pid = null; history.replaceState(null, '', location.pathname); toast(T('projDeleted'));
+  });
+}
+
+/* ---------- import / export JSON ---------- */
+function projectData(){
+  const p = S.projects.find(x => x.id === S.pid) || {};
+  return {format:'nannetwork-v1', exported:new Date().toISOString(), projects:[{id:S.pid, name:p.name||'', name_en:p.name_en||'', desc:p.desc||'', created:p.created||Date.now(),
+    nodes:S.nodes.map(n => Object.assign({id:n.id}, nodeBody(n))), links:S.links.map(l => Object.assign({id:l.id}, linkBody(l)))}]};
+}
+function exportJson(){
+  const txt = JSON.stringify(projectData(), null, 1);
+  modal('<h3>' + T('jsonTitle') + '</h3><p class="muted" style="font-size:13px">' + T('jsonHint') + '</p>' +
+    '<textarea id="jx" rows="10" readonly style="font-family:monospace;font-size:12px">' + esc(txt) + '</textarea>' +
+    '<div class="row"><button class="btn primary" id="jCopy">' + T('copy') + '</button><button class="btn" id="jDl">' + T('dlFile') + '</button><button class="btn" id="jClose">' + T('close') + '</button></div>');
+  $('#jClose').onclick = closeModal;
+  $('#jCopy').onclick = () => { navigator.clipboard.writeText(txt).then(() => toast(T('copied')), () => { $('#jx').select(); toast(T('pressCopy')); }); };
+  $('#jDl').onclick = () => saveFile(fileBase() + '.json', new Blob([txt], {type:'application/json'}));
+}
+async function importData(obj, quiet){
+  let projs = [];
+  if (obj && Array.isArray(obj.projects)) projs = obj.projects;
+  else if (obj && Array.isArray(obj.nodes)) projs = [obj];
+  if (!projs.length){ toast(T('badFile')); return; }
+  let firstId = null;
+  const okId = x => x && /^[A-Za-z0-9_\-]+$/.test(x);
+  for (const p of projs){
+    let pid = okId(p.id) ? p.id : newId('p');
+    if (S.projects.some(x => x.id === pid)) pid = newId('p');
+    firstId = firstId || pid;
+    await write(() => STORE.set(pPath(pid), {name:p.name || p.name_en || T('importedProj'), name_en:p.name_en || '', desc:p.desc || '', created:p.created || Date.now()}));
+    const idmap = {};
+    for (const n of (p.nodes || [])){
+      if (!TYPES[n.type]) continue;
+      const id = okId(n.id) ? n.id : newId('n'); idmap[n.id] = id;
+      await write(() => STORE.set(nPath(pid, id), nodeBody(n)));
+    }
+    for (const l of (p.links || [])){
+      const s = idmap[l.s], t = idmap[l.t]; if (!s || !t) continue;
+      const id = okId(l.id) ? l.id : newId('l');
+      await write(() => STORE.set(lPath(pid, id), linkBody(Object.assign({}, l, {s, t}))));
+    }
+  }
+  if (!quiet) toast(T('imported', projs.length));
+  if (firstId && S.loaded){ S.pid = null; openProject(firstId); renderProjSel(firstId); }
+}
+async function importFromUrl(url, quiet){
+  try { const r = await fetch(url, {cache:'no-store'}); if (!r.ok) throw 0; await importData(await r.json(), quiet); }
+  catch(e){ if (!quiet) toast(T('seedFail')); }
+}
+
+/* ---------- downloads ---------- */
+function fileBase(suffix){
+  const p = S.projects.find(x => x.id === S.pid);
+  // ASCII-only file names (some browsers fall back to "download" for Thai names)
+  const name = ((p && p.name_en) || (p && p.id) || 'project').replace(/[^A-Za-z0-9\-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 50) || 'project';
+  const d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  return 'NanNetwork_' + name + (suffix ? '_' + suffix : '') + '_' + ds;
+}
+async function saveFile(name, blob){
+  if (S.mode === 'claude'){
+    let d = null;
+    try { d = await window.claude.use('downloads'); } catch(e){ d = null; }
+    if (!d){ toast(T('dlUnavail')); return; }
+    try { await d.save({filename:name, data:blob}); toast(T('dlSaved')); }
+    catch(e){ if (e && e.code === 'declined') return; toast(T('dlFail') + (e && e.code ? ' (' + e.code + ')' : '')); }
+    return;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function needData(){ if (!S.pid || !S.nodes.length){ toast(T('noProjData')); return false; } return true; }
+// Standalone SVG of the current diagram with title + legend (used by PNG, SVG and the report)
+function buildSvg(){
+  const node = $('#net').cloneNode(true);
+  node.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  let V = S.vb || [-600, -600, 1200, 1200];
+  if (S.view === 'cluster') V = [V[0] - V[2] * 0.22, V[1] - V[3] * 0.16, V[2] * 1.22, V[3] * 1.16]; // room for title + legend
+  const vb = -V[0], size = 2 * vb;
+  const X0 = V[0], Y0 = V[1];
+  node.setAttribute('viewBox', V.join(' '));
+  node.setAttribute('width', 1600); node.setAttribute('height', Math.round(1600 * V[3] / V[2]));
+  node.querySelectorAll('[style*="display: none"]').forEach(x => x.remove());
+  node.removeAttribute('class'); node.removeAttribute('style');
+  const g = node.querySelector('g'); g.removeAttribute('transform');
+  node.querySelectorAll('.hits,.temp,circle.ring-sel').forEach(x => x.remove());
+  node.querySelectorAll('g.node').forEach(x => x.style.opacity = 1);
+  node.querySelectorAll('path.link').forEach(p => { p.setAttribute('stroke', '#7c6f5d'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-linecap', 'round'); p.style.opacity = 0.5; });
+  node.querySelectorAll('text.halo').forEach(t => { t.setAttribute('paint-order', 'stroke'); t.setAttribute('stroke', '#fff'); t.setAttribute('stroke-width', '3.5'); t.setAttribute('stroke-linejoin', 'round'); });
+  const st = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+  st.textContent = 'text{font-family:"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif}';
+  node.insertBefore(st, node.firstChild);
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('x', X0); bg.setAttribute('y', Y0); bg.setAttribute('width', V[2]); bg.setAttribute('height', V[3]); bg.setAttribute('fill', '#fff');
+  node.insertBefore(bg, st.nextSibling);
+  // title & legend in the top-left corner
+  const k = V[2] / 1200, p = S.projects.find(x => x.id === S.pid);
+  const focusTxt = S.focus.size ? S.nodes.filter(n => S.focus.has(n.id)).map(dn).join(', ') : '';
+  let hdr = '<text x="' + (X0 + 24*k) + '" y="' + (Y0 + 40*k) + '" font-size="' + (24*k) + '" font-weight="700" fill="#2d2a26">' + esc(pn(p)) + '</text>' +
+    '<text x="' + (X0 + 24*k) + '" y="' + (Y0 + 64*k) + '" font-size="' + (13*k) + '" fill="#7a7268">Nan Network · ' + new Date().toLocaleDateString(LANG === 'en' ? 'en-GB' : 'th-TH') + (focusTxt ? ' · ' + esc(T('focusTitle')) + ': ' + esc(focusTxt) : '') + '</text>';
+  if (S.view === 'cluster'){
+    const used = [...new Set(S.nodes.filter(n => n.type === 'org' && (!S.vis || S.vis.has(n.id))).map(n => n.otype || ''))];
+    OTYPES.map(o => o.k).concat(['']).filter(t => used.includes(t)).forEach((t,i) => { const y = Y0 + (92 + i*20)*k;
+      hdr += '<rect x="' + (X0 + 26*k) + '" y="' + (y - 10*k) + '" width="' + (11*k) + '" height="' + (11*k) + '" fill="' + OTC(t) + '"/>' +
+        '<text x="' + (X0 + 44*k) + '" y="' + y + '" font-size="' + (12.5*k) + '" fill="#2d2a26">' + esc(otName(t)) + '</text>'; });
+  } else {
+  ORDER.forEach((t,i) => { const y = Y0 + (92 + i*22)*k;
+    hdr += '<circle cx="' + (X0 + 32*k) + '" cy="' + (y - 4*k) + '" r="' + (7*k) + '" fill="' + TYPES[t].fill + '" stroke="' + TYPES[t].stroke + '" stroke-width="' + (1.5*k) + '"/>' +
+      '<text x="' + (X0 + 46*k) + '" y="' + y + '" font-size="' + (13*k) + '" fill="#2d2a26">' + esc(T('leg_' + t)) + '</text>'; });
+  [1,3,5].forEach((w,i) => { const y = Y0 + (168 + i*18)*k;
+    hdr += '<line x1="' + (X0 + 24*k) + '" x2="' + (X0 + 62*k) + '" y1="' + (y - 4*k) + '" y2="' + (y - 4*k) + '" stroke="#7c6f5d" stroke-width="' + WW[w] + '" stroke-linecap="round"/>' +
+      '<text x="' + (X0 + 70*k) + '" y="' + y + '" font-size="' + (12*k) + '" fill="#7a7268">' + w + ' · ' + esc(wl(w)) + '</text>'; });
+  }
+  const hg = document.createElementNS('http://www.w3.org/2000/svg', 'g'); hg.innerHTML = hdr; node.appendChild(hg);
+  return new XMLSerializer().serializeToString(node);
+}
+function exportSvg(){ if (!needData()) return; saveFile(fileBase('diagram') + '.svg', new Blob([buildSvg()], {type:'image/svg+xml'})); }
+function exportPng(){
+  if (!needData()) return;
+  const img = new Image(), px = 2400, V0 = S.vb || [0, 0, 1, 1], V = S.view === 'cluster' ? [0, 0, V0[2] * 1.22, V0[3] * 1.16] : V0, py = Math.round(px * V[3] / V[2]);
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width = px; c.height = py;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, px, py); ctx.drawImage(img, 0, 0, px, py);
+    c.toBlob(b => saveFile(fileBase('diagram') + '.png', b), 'image/png');
+  };
+  img.onerror = () => toast(T('dlFail'));
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(buildSvg());
+}
+
+let xlsxP = null;
+function loadXlsx(){
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (!xlsxP) xlsxP = loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js').then(() => window.XLSX).catch(e => { xlsxP = null; throw e; });
+  return xlsxP;
+}
+const r3 = v => Math.round(v * 1000) / 1000;
+const listW = arr => arr.map(x => dn(x.n) + ' (' + x.w + ')').join('; ');
+async function exportXlsx(){
+  if (!needData()) return;
+  toast(T('dlPrep'));
+  let X;
+  try { X = await loadXlsx(); } catch(e){ toast(T('xlsxFail')); return; }
+  const A = analysis(), p = S.projects.find(x => x.id === S.pid) || {};
+  const wb = X.utils.book_new();
+  const add = (name, rows, widths) => { const ws = X.utils.aoa_to_sheet(rows); if (widths) ws['!cols'] = widths.map(w => ({wch:w})); X.utils.book_append_sheet(wb, ws, name.slice(0, 31)); return ws; };
+  const rank = {}; S.nodes.slice().sort((a,b) => (M.str[b.id]||0) - (M.str[a.id]||0)).forEach((n,i) => rank[n.id] = i + 1);
+  // 1 Summary
+  add(T('x_summary'), [
+    [T('x_item'), T('x_value')],
+    [T('x_project'), pn(p)], [T('x_desc'), p.desc || ''], [T('x_date'), new Date().toLocaleString(LANG === 'en' ? 'en-GB' : 'th-TH')],
+    [T('x_nIssue'), A.cnt('issue')], [T('x_nOrg'), A.cnt('org')], [T('x_nPerson'), A.cnt('person')], [T('x_nLink'), A.E],
+    [T('x_dens'), r3(A.dens)], [T('x_avgDeg'), r3(A.avgDeg)], [T('x_avgW'), r3(A.avgW)], [T('x_comp'), A.comp], [T('x_iso'), A.iso.length]
+  ].concat([1,2,3,4,5].map(w => [T('x_wcount', w, wl(w)), A.wdist[w-1]]))
+   .concat([[], [T('r_glossary')], [T('g_str')], [T('g_btw')], [T('g_clo')], [T('g_dens')]]), [42, 60]);
+  // 2 Nodes
+  const nodesSorted = S.nodes.slice().sort((a,b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type) || rank[a.id] - rank[b.id]);
+  add(T('x_nodes'), [[T('x_id'), T('x_type'), T('x_nameTh'), T('x_nameEn'), T('x_sectors'), T('x_otype'), T('x_level'), T('x_area'), T('x_roleTh'), T('x_roleEn'), T('x_note'), T('x_status'), T('x_evid'), T('x_deg'), T('x_str'), T('x_wavg'), T('x_btw'), T('x_clo'), T('x_rank')]]
+    .concat(nodesSorted.map(n => [n.id, tl(n.type), n.name || '', n.name_en || '', effSectors(n).map(secName).join('; '), n.type === 'org' ? otName(n.otype) : '', n.level || '', n.area || '',
+      n.role || '', n.role_en || '', n.note || '', n.status ? stName(n.status) : '', n.evidence || '', M.deg[n.id]||0, M.str[n.id]||0,
+      M.deg[n.id] ? r3(M.str[n.id] / M.deg[n.id]) : 0, r3(M.bc[n.id]||0), r3(M.cl[n.id]||0), rank[n.id]])),
+    [12, 12, 30, 30, 26, 18, 12, 18, 40, 40, 24, 16, 14, 10, 12, 12, 12, 12, 10]);
+  if (A.hasSec) add(T('x_clusters'), [[T('c_sector'), T('x_nOrg'), T('x_nPerson'), T('c_int'), T('c_cross'), T('x_members')]]
+    .concat(A.clusters.map(c => [secName(c.s.k), c.orgs.length, c.ppl.length, c.inn, c.cross, c.orgs.concat(c.ppl).map(dn).join('; ')])), [22, 12, 12, 12, 12, 90]);
+  // 3 Links
+  const linksSorted = A.links.slice().sort((a,b) => W(b) - W(a));
+  add(T('x_links'), [[T('x_id'), T('x_from'), T('x_fromType'), T('x_to'), T('x_toType'), T('x_w'), T('x_wl'), T('x_rel'), T('x_status'), T('x_evid')]]
+    .concat(linksSorted.map(l => { const a = nodeById(l.s), b = nodeById(l.t); return [l.id, dn(a), tl(a.type), dn(b), tl(b.type), W(l), wl(W(l)), l.label || '', l.status ? stName(l.status) : '', l.evidence || '']; })),
+    [12, 30, 12, 30, 12, 10, 14, 40, 16, 16]);
+  // 4 Org roles
+  const orgs = S.nodes.filter(n => n.type === 'org').sort((a,b) => (M.str[b.id]||0) - (M.str[a.id]||0));
+  add(T('x_roles'), [[T('x_org'), T('x_role'), T('x_issues'), T('x_people'), T('x_nI'), T('x_nP'), T('x_str')]]
+    .concat(orgs.map(o => { const is = A.nbW(o.id, 'issue'), ps = A.nbW(o.id, 'person'); return [dn(o), dr(o), listW(is), listW(ps), is.length, ps.length, M.str[o.id]||0]; })),
+    [30, 50, 45, 45, 10, 10, 10]);
+  // 5 Issue coverage
+  add(T('x_cov'), [[T('c_issue'), T('x_nOrg'), T('x_pDirect'), T('x_str'), T('x_wavg'), T('x_orgList'), T('x_flag')]]
+    .concat(A.cov.map(c => [dn(c.n), c.orgs.length, c.ppl, c.s, r3(c.avg), listW(c.orgs), (c.s === A.minS && A.cov.length > 1) ? T('x_weak') : ''])),
+    [28, 14, 22, 14, 14, 60, 18]);
+  // 6–7 Matrices
+  const wOf = (a, b) => { const l = A.links.find(x => (x.s === a && x.t === b) || (x.s === b && x.t === a)); return l ? W(l) : ''; };
+  const issues = S.nodes.filter(n => n.type === 'issue').sort((a,b) => (a.created||0) - (b.created||0));
+  const people = S.nodes.filter(n => n.type === 'person').sort((a,b) => (M.str[b.id]||0) - (M.str[a.id]||0));
+  const matrix = (rows, cols) => [[T('x_matrixNote')].concat(cols.map(dn)).concat([T('x_total')])]
+    .concat(rows.map(r => { const vals = cols.map(c => wOf(r.id, c.id)); return [dn(r)].concat(vals).concat([vals.reduce((s,v) => s + (+v||0), 0)]); }));
+  add(T('x_mIO'), matrix(orgs, issues), [34].concat(issues.map(() => 14)).concat([10]));
+  if (people.length && orgs.length) add(T('x_mOP'), matrix(people, orgs), [30].concat(orgs.map(() => 12)).concat([10]));
+  // 8 Centrality ranking
+  const tops = [['Strength', M.str, v => v], ['Betweenness', M.bc, r3], ['Closeness', M.cl, r3]];
+  const ranked = tops.map(([, src]) => S.nodes.slice().sort((a,b) => (src[b.id]||0) - (src[a.id]||0)));
+  const cent = [[T('x_rank')].concat(...tops.map(([lbl]) => [lbl + ' · ' + T('x_nameTh').replace(/ \(.*\)/, ''), T('x_type'), lbl]))];
+  for (let i = 0; i < S.nodes.length; i++) cent.push([i + 1].concat(...ranked.map((arr, k) => { const n = arr[i]; return [dn(n), tl(n.type), tops[k][2](tops[k][1][n.id]||0)]; })));
+  add(T('x_cent'), cent, [8, 28, 12, 10, 28, 12, 12, 28, 12, 12]);
+  // 9 Bridges
+  add(T('x_bridge'), [[T('x_kind'), T('x_nameTh').replace(/ \(.*\)/, ''), T('x_count'), T('x_list')]]
+    .concat(A.bridgeO.map(x => [T('x_bOrg'), dn(x.n), x.list.length, listW(x.list)]))
+    .concat(A.bridgeP.map(x => [T('x_bP'), dn(x.n), x.list.length, listW(x.list)])), [28, 30, 10, 70]);
+  const buf = X.write(wb, {type:'array', bookType:'xlsx'});
+  saveFile(fileBase('analysis') + '.xlsx', new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+}
+
+function exportReport(){
+  if (!needData()) return;
+  const A = analysis(), p = S.projects.find(x => x.id === S.pid) || {};
+  const date = new Date().toLocaleString(LANG === 'en' ? 'en-GB' : 'th-TH');
+  const tbl = (head, rows, cls) => '<table' + (cls ? ' class="' + cls + '"' : '') + '><thead><tr>' + head.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+  const topTbl = (src, fmt) => tbl(['#', T('x_nameTh').replace(/ \(.*\)/, ''), T('x_type'), T('x_value')], A.top(src, 10).map((x,i) => [i+1, dn(x.n), tl(x.n.type), fmt(x.v)]));
+  const orgs = S.nodes.filter(n => n.type === 'org').sort((a,b) => (M.str[b.id]||0) - (M.str[a.id]||0));
+  const kp = [[A.cnt('issue'), T('types_issue')], [A.cnt('org'), T('types_org')], [A.cnt('person'), T('types_person')], [A.E, T('k_links')], [(A.dens*100).toFixed(1) + '%', T('k_dens')], [A.avgDeg.toFixed(1), T('k_avg')], [A.avgW.toFixed(1), T('k_avgw')], [A.comp, T('k_comp')], [A.iso.length, T('k_iso')]];
+  const html = '<!DOCTYPE html><html lang="' + LANG + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>' + esc(T('r_title') + ' · ' + pn(p)) + '</title>' +
+    '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">' +
+    '<style>body{font-family:"IBM Plex Sans Thai",Tahoma,sans-serif;color:#2d2a26;max-width:980px;margin:24px auto;padding:0 20px;font-size:14px;line-height:1.5}' +
+    'h1{font-size:26px;margin:0}h2{font-size:18px;margin:28px 0 8px;border-bottom:2px solid #b45309;padding-bottom:4px;break-after:avoid}.muted{color:#7a7268}' +
+    '.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}.kpi{border:1px solid #e7e1d8;border-radius:10px;padding:8px 10px}.kpi b{display:block;font-size:22px}.kpi span{font-size:12px;color:#7a7268}' +
+    'table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}th,td{border-bottom:1px solid #eee5d8;padding:5px 6px;text-align:left;vertical-align:top}th{background:#faf6ef}' +
+    '.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.diagram svg{width:100%;height:auto;border:1px solid #e7e1d8;border-radius:12px}' +
+    '.btn{position:fixed;right:18px;top:18px;background:#b45309;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}' +
+    'ul{margin:4px 0;padding-left:20px}@media print{.btn{display:none}body{margin:0}h2{break-after:avoid}table,tr{break-inside:avoid}.diagram{break-inside:avoid}}@media(max-width:700px){.two{grid-template-columns:1fr}}</style></head><body>' +
+    '<button class="btn" onclick="window.print()">' + esc(T('r_print')) + '</button>' +
+    '<h1>' + esc(T('r_title')) + ': ' + esc(pn(p)) + '</h1><p class="muted">' + esc(p.desc || '') + '<br>' + esc(T('r_gen', date)) + '</p>' +
+    '<h2>' + esc(T('r_overview')) + '</h2><div class="kpis">' + kp.map(k => '<div class="kpi"><b>' + esc(k[0]) + '</b><span>' + esc(k[1]) + '</span></div>').join('') + '</div>' +
+    '<h2>' + esc(T('r_diagram')) + '</h2><div class="diagram">' + buildSvg().replace(/ width="1600" height="1600"/, '') + '</div>' +
+    (A.hasSec ? '<h2>' + esc(T('a_clusters')) + '</h2>' + tbl([T('c_sector'), T('x_nOrg'), T('x_nPerson'), T('c_int'), T('c_cross')], A.clusters.map(c => [secName(c.s.k), c.orgs.length, c.ppl.length, c.inn, c.cross])) +
+      (A.multi.length ? '<h2>' + esc(T('a_multi')) + '</h2>' + tbl([T('x_org'), T('x_sectors'), T('x_otype')], A.multi.map(n => [dn(n), effSectors(n).map(secName).join(', '), otName(n.otype)])) : '') : '') +
+    '<h2>' + esc(T('a_wdist')) + '</h2>' + tbl([T('x_w'), T('x_wl'), T('x_count')], A.wdist.map((c,i) => [i+1, wl(i+1), c])) +
+    '<h2>' + esc(T('a_str')) + ' · ' + esc(T('r_top')) + '</h2>' + topTbl(M.str, v => v) +
+    '<div class="two"><div><h2>' + esc(T('a_btw')) + '</h2>' + topTbl(M.bc, v => v.toFixed(3)) + '</div><div><h2>' + esc(T('a_clo')) + '</h2>' + topTbl(M.cl, v => v.toFixed(3)) + '</div></div>' +
+    (A.cov.length ? '<h2>' + esc(T('a_cov')) + '</h2>' + tbl([T('c_issue'), T('x_nOrg'), T('x_pDirect'), T('x_str'), T('x_orgList'), T('x_flag')], A.cov.map(c => [dn(c.n), c.orgs.length, c.ppl, c.s, listW(c.orgs), (c.s === A.minS && A.cov.length > 1) ? T('x_weak') : ''])) : '') +
+    (orgs.length ? '<h2>' + esc(T('x_roles')) + '</h2>' + tbl([T('x_org'), T('x_role'), T('x_issues'), T('x_people')], orgs.map(o => [dn(o), dr(o), listW(A.nbW(o.id, 'issue')), listW(A.nbW(o.id, 'person'))])) : '') +
+    ((A.bridgeO.length || A.bridgeP.length) ? '<h2>' + esc(T('x_bridge')) + '</h2>' + tbl([T('x_kind'), T('x_nameTh').replace(/ \(.*\)/, ''), T('x_list')], A.bridgeO.map(x => [T('x_bOrg'), dn(x.n), listW(x.list)]).concat(A.bridgeP.map(x => [T('x_bP'), dn(x.n), listW(x.list)]))) : '') +
+    (A.iso.length ? '<h2>' + esc(T('a_iso', A.iso.length)) + '</h2><p>' + A.iso.map(n => esc(dn(n)) + ' (' + esc(tl(n.type)) + ')').join(', ') + '</p>' : '') +
+    '<h2>' + esc(T('r_allLinks')) + '</h2>' + tbl([T('x_from'), T('x_to'), T('x_w'), T('x_rel')], A.links.slice().sort((a,b) => W(b) - W(a)).map(l => [dn(nodeById(l.s)), dn(nodeById(l.t)), W(l) + ' · ' + wl(W(l)), l.label || ''])) +
+    '<h2>' + esc(T('r_glossary')) + '</h2><ul><li>' + esc(T('g_str')) + '</li><li>' + esc(T('g_btw')) + '</li><li>' + esc(T('g_clo')) + '</li><li>' + esc(T('g_dens')) + '</li></ul>' +
+    '</body></html>';
+  saveFile(fileBase('report') + '.html', new Blob([html], {type:'text/html'}));
+}
+
+/* ---------- UI bindings ---------- */
+function bindUI(){
+  document.querySelectorAll('.lang button').forEach(b => b.onclick = () => setLang(b.dataset.lang));
+  document.querySelectorAll('#addTypes button').forEach(b => b.onclick = () => {
+    S.addType = b.dataset.type;
+    document.querySelectorAll('#addTypes button').forEach(x => x.classList.toggle('sel', x === b));
+    $('#addName').placeholder = T('ph_' + S.addType); $('#addName').focus();
+  });
+  $('#addBtn').onclick = addNode;
+  $('#addName').addEventListener('keydown', e => { if (e.key === 'Enter') addNode(); });
+  $('#toolSelect').onclick = () => setTool('select');
+  $('#toolConnect').onclick = () => setTool(S.tool === 'connect' ? 'select' : 'connect');
+  $('#search').oninput = e => { S.search = e.target.value; applyHighlight(); };
+  $('#minW').oninput = e => { S.minW = +e.target.value; $('#minWv').textContent = S.minW; renderGraph(); };
+  $('#sizeBy').onchange = e => { S.sizeBy = e.target.value; renderGraph(); };
+  $('#autoLayout').onclick = async () => {
+    const fixed = S.nodes.filter(n => typeof n.a === 'number');
+    if (!fixed.length){ toast(T('autoAlready')); return; }
+    for (const n of fixed) await saveNode(Object.assign({}, n, {a:null}));
+    toast(T('autoDone'));
+  };
+  $('#focusClear').onclick = () => setFocus([]);
+  document.querySelectorAll('#viewSw button').forEach(b => b.onclick = () => setView(b.dataset.view));
+  $('#lblMode').onchange = e => { S.lblMode = e.target.value; renderGraph(); };
+  $('#zIn').onclick = () => zoomBy(1.3); $('#zOut').onclick = () => zoomBy(1/1.3); $('#zFit').onclick = () => zoomFit();
+  document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+  $('#projSel').onchange = e => { const id = e.target.value; if (S.projects.some(p => p.id === id)) openProject(id); };
+  $('#projNew').onclick = () => projDialog(null);
+  $('#projEdit').onclick = () => { const p = S.projects.find(x => x.id === S.pid); if (p) projDialog(p); };
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+  $('#expJson').onclick = exportJson;
+  $('#dlXlsx').onclick = exportXlsx; $('#dlReport').onclick = exportReport; $('#dlPng').onclick = exportPng; $('#dlSvg').onclick = exportSvg;
+  $('#impJson').onclick = () => $('#impFile').click();
+  $('#impFile').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { await importData(JSON.parse(await f.text())); } catch(err){ toast(T('readFail')); }
+    e.target.value = '';
+  };
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){
+      if ($('#modal').style.display === 'flex'){ closeModal(); return; }
+      if (S.connectFrom){ S.connectFrom = null; tempLine.style('display','none'); updateBanner(); renderGraph(); }
+      else if (S.tool === 'connect') setTool('select');
+      else if (S.sel) select(null);
+    }
+  });
+  $('aside.right').addEventListener('focusout', () => setTimeout(() => { if (S.panelDirty && !panelBusy()) renderPanels(true); }, 120));
+  window.addEventListener('hashchange', () => { const h = location.hash.replace(/^#p-/, ''); if (h && h !== S.pid && S.projects.some(p => p.id === h)){ renderProjSel(h); openProject(h); } });
+}
+
+init();
+})();
+</script>
+</body>
+</html>
