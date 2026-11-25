@@ -168,6 +168,15 @@ footer{display:none}
 .ckey .sq{display:inline-block;width:10px;height:10px;border-radius:2px}
 .ckey .ln{display:inline-block;width:22px;border-top:2px solid #555}
 .ckey .ln.d{border-top-style:dashed}
+.ckey .ln.w{border-top:2px dotted #2f8f5b}
+.ckey .ln.dn{border-top:2px dashed #2b6cb0}
+#feedChip{cursor:pointer;background:#e8f3ec;color:#1f5f3c;border:1px solid #b9dcc6}
+#feedChip.err{background:#fdecea;color:#8a1f11;border-color:#f3c1b8}
+#qrOv{position:fixed;inset:0;background:rgba(20,18,15,.55);display:none;align-items:center;justify-content:center;z-index:80}
+#qrOv .box{background:#fff;border-radius:14px;padding:22px 26px;text-align:center;max-width:92vw}
+#qrOv .box h3{margin:0 0 6px;font-size:20px}
+#qrOv .box a{word-break:break-all;font-size:13px}
+#qrOv #qrImg svg{width:min(70vw,420px);height:auto}
 .secchk{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .secchk label{display:inline-flex;align-items:center;gap:4px;margin:0;font-size:12px;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:2px 8px;cursor:pointer}
 .secchk input{margin:0}
@@ -188,6 +197,7 @@ footer{display:none}
   </div>
   <div class="spacer"></div>
   <div class="lang" role="group" aria-label="Language"><button data-lang="th">ไทย</button><button data-lang="en">EN</button></div>
+  <span class="pill" id="feedChip" style="display:none"></span>
   <span class="pill off" id="status">…</span>
   <button class="btn sm" id="authBtn" style="display:none"></button>
 </header>
@@ -276,6 +286,7 @@ footer{display:none}
     <div class="banner fb" id="fbanner"></div>
     <div class="empty" id="empty"><div id="emptyBox"></div></div>
     <div id="tip"></div>
+    <div id="qrOv"><div class="box"><h3 id="qrT"></h3><div id="qrS" style="color:var(--muted);margin-bottom:8px"></div><div id="qrImg"></div><div><a id="qrA" target="_blank" rel="noopener"></a></div><button class="btn" id="qrX" style="margin-top:12px"></button></div></div>
   </section>
 
   <aside class="right">
@@ -393,10 +404,15 @@ const I18N = {
   lblOrg:['แสดงชื่อหน่วยงาน','Org names'], lblAll:['แสดงชื่อทั้งหมด','All names'], lblNone:['ซ่อนชื่อ','Hide names'],
   sec_env:['ทรัพยากรธรรมชาติ','Natural resources'], sec_agri:['การเกษตร','Agriculture'], sec_econ:['ส่งเสริมเศรษฐกิจ','Economy'], sec_tourism:['การท่องเที่ยว','Tourism'], sec_culture:['วัฒนธรรม','Culture'], sec_health:['สุขภาพ','Health'],
   ot_gov:['ราชการ','Government'], ot_local:['อปท.','Local government'], ot_puborg:['องค์การมหาชน','Public organisation'], ot_academic:['สถาบันวิชาการ/วิจัย','Academic / research'], ot_ngo:['มูลนิธิ/ประชาสังคม','Foundation / civil society'], ot_community:['เครือข่าย/กลุ่มชุมชน','Community network / group'], ot_business:['วิสาหกิจ/เอกชน','Enterprise / private'], ot_religious:['วัด/ศาสนา','Religious'], ot_intl:['องค์กรระหว่างประเทศ','International'], ot_:['ไม่ระบุประเภท','Unspecified'],
-  st_confirmed_doc:['ยืนยันจากเอกสาร','Confirmed by document'], st_confirmed_org:['ยืนยันโดยหน่วยงาน','Confirmed by organisation'], st_pending:['รอยืนยัน','Pending'], st_outdated:['ข้อมูลอาจเก่า','May be outdated'], st_:['ไม่ระบุ','Not set'],
+  st_confirmed_doc:['ยืนยันจากเอกสาร','Confirmed by document'], st_confirmed_org:['ยืนยันโดยหน่วยงาน','Confirmed by organisation'], st_pending:['รอยืนยัน','Pending'], st_outdated:['ข้อมูลอาจเก่า','May be outdated'], st_wish:['อยากร่วมงานในอนาคต','Wants to work with (future)'], st_dataneed:['ต้องการข้อมูลจาก','Needs data from'], st_:['ไม่ระบุ','Not set'],
   sectorsLbl:['ด้าน (เลือกได้หลายด้าน)','Sectors (multi-select)'], otypeLbl:['ประเภทหน่วยงาน','Organisation type'], levelLbl:['ระดับการทำงาน','Level'], areaLbl:['พื้นที่','Area'], statusLbl:['สถานะการยืนยัน','Verification status'], evidLbl:['หลักฐาน (รหัส/ลิงก์)','Evidence (ID / link)'],
   noSector:['ไม่ระบุด้าน','No sector'], ck_title:['สี = ประเภทหน่วยงาน · วงประ = ด้าน','Colour = organisation type · dotted outline = sector'],
-  ck_solid:['ยืนยันแล้ว','confirmed'], ck_dash:['รอยืนยัน','pending'], ck_person:['บุคคล','person'], ck_dots:['จุดสีใต้สี่เหลี่ยม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Dots under a square = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
+  ck_solid:['ยืนยันแล้ว','confirmed'], ck_dash:['รอยืนยัน','pending'], ck_wish:['อยากร่วมงาน','wants to work with'], ck_data:['ต้องการข้อมูลจาก','needs data from'],
+  fd_chip:['แบบสอบถาม','Survey'], fd_n:['{0} คำตอบ','{0} responses'], fd_new:['มีคำตอบใหม่ {0} รายการ','{0} new response(s)'], fd_err:['ดึงข้อมูลแบบสอบถามไม่สำเร็จ (ลองใหม่อัตโนมัติ)','Could not load survey feed (retrying)'],
+  fd_title:['ตอบแบบสอบถามเครือข่าย','Answer the network survey'], fd_open:['เปิดแบบสอบถาม','Open the survey'], fd_scan:['สแกน QR เพื่อตอบแบบสอบถาม','Scan to answer the survey'], fd_close:['ปิด','Close'],
+  fd_proj:['น่านฟอรั่ม – ผลแบบสอบถามเครือข่าย (สด)','Nan Forum – live survey network'], fd_desc:['สร้างอัตโนมัติจากแบบสอบถาม · {0} คำตอบ · ข้อมูลที่ผู้ตอบรายงานเอง · แก้ไขในหน้านี้จะถูกเขียนทับเมื่อมีคำตอบใหม่','Built automatically from the survey · {0} responses · self-reported · edits here are overwritten by new responses'],
+  fd_resp:['ผู้ตอบแบบสอบถาม','Survey respondent'], fd_mentioned:['ถูกระบุโดย: {0}','Named by: {0}'], fd_respondent:['ตอบแบบสอบถาม {0} ครั้ง','Answered the survey {0} time(s)'],
+  fd_work:['ร่วมงาน','Works with'], fd_wishl:['อยากร่วมงาน','Wants to work with'], fd_datal:['ต้องการข้อมูล','Needs data'], fd_sec:['ด้าน{0}','Sector: {0}'], ck_person:['บุคคล','person'], ck_dots:['จุดสีใต้สี่เหลี่ยม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Dots under a square = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
   a_clusters:['กลุ่มตามด้าน','Sector clusters'], c_sector:['ด้าน','Sector'], c_int:['เส้นภายใน','Internal'], c_cross:['เส้นข้ามด้าน','Cross'],
   a_otypes:['ประเภทหน่วยงาน','Organisation types'], a_multi:['หน่วยงานที่ทำงานหลายด้าน (อยู่ระหว่างกลุ่ม)','Organisations across sectors (between clusters)'], nSectors:['{0} ด้าน','{0} sectors'],
   x_clusters:['กลุ่มตามด้าน','Sector clusters'], x_sectors:['ด้าน','Sectors'], x_otype:['ประเภทหน่วยงาน','Org type'], x_level:['ระดับ','Level'], x_area:['พื้นที่','Area'], x_status:['สถานะการยืนยัน','Status'], x_evid:['หลักฐาน','Evidence'], x_members:['หน่วยงาน/บุคคลในกลุ่ม','Members'],
@@ -427,7 +443,9 @@ const SECTORS = [{k:'env',c:'#15803D'},{k:'agri',c:'#B45309'},{k:'econ',c:'#EA58
 const SECK = SECTORS.map(x => x.k);
 const OTYPES = [{k:'gov',c:'#2563EB'},{k:'local',c:'#0EA5E9'},{k:'puborg',c:'#7C3AED'},{k:'academic',c:'#DB2777'},{k:'ngo',c:'#F59E0B'},{k:'community',c:'#16A34A'},{k:'business',c:'#DC2626'},{k:'religious',c:'#92400E'},{k:'intl',c:'#475569'}];
 const OTC = k => (OTYPES.find(o => o.k === k) || {c:'#9CA3AF'}).c;
-const STATUSES = ['confirmed_doc','confirmed_org','pending','outdated'];
+const STATUSES = ['confirmed_doc','confirmed_org','pending','outdated','wish','dataneed'];
+const DASH = d => ({pending:'5 4', wish:'2 5', dataneed:'9 3 2 3'})[d.status] || null;
+const LCOL = d => d.status === 'wish' ? '#2f8f5b' : d.status === 'dataneed' ? '#2b6cb0' : '#7c6f5d';
 const secName = k => T('sec_' + k), otName = k => T('ot_' + (k || '')), stName = k => T('st_' + (k || ''));
 
 /* ---------- state ---------- */
@@ -547,6 +565,7 @@ async function init(){
     S.mode = 'local'; STORE = localStore();
     if (STORE.isEmpty()) await importFromUrl('data.json', true);
     else await refreshSeed();
+    startFeed();
   }
   applyPerms();
   subscribeProjects();
@@ -834,7 +853,7 @@ function renderGraph(){
     .attr('font-size', 17).attr('font-weight', 600).attr('fill', '#9a7b55').text(d => d);
 
   gLinks.selectAll('path.link').data(vis, d => d.id).join('path').attr('class','link')
-    .attr('d', linkPath).attr('stroke-width', d => WW[W(d)]);
+    .attr('d', linkPath).attr('stroke-width', d => WW[W(d)]).attr('stroke-dasharray', DASH);
   gHits.selectAll('path.linkhit').data(vis, d => d.id).join('path').attr('class','linkhit')
     .attr('d', linkPath)
     .on('click', (e,d) => { e.stopPropagation(); select({kind:'link', id:d.id}); })
@@ -975,7 +994,7 @@ function renderCluster(noSim){
   // links
   const lp = l => { const a = P(l.s), b = P(l.t); return 'M' + a.x + ',' + a.y + 'L' + b.x + ',' + b.y; };
   cLinks.selectAll('path.link').data(links, d => d.id).join('path').attr('class', 'link').attr('d', lp)
-    .attr('stroke-width', d => Math.max(0.8, WW[W(d)] * 0.55)).attr('stroke-dasharray', d => d.status === 'pending' ? '5 4' : null);
+    .attr('stroke-width', d => Math.max(0.8, WW[W(d)] * 0.55)).attr('stroke-dasharray', DASH);
   cHits.selectAll('path.linkhit').data(links, d => d.id).join('path').attr('class', 'linkhit').attr('d', lp)
     .on('click', (e, d) => { e.stopPropagation(); select({kind:'link', id:d.id}); })
     .on('mouseenter', (e, d) => showTip(e, linkTip(d))).on('mousemove', moveTip).on('mouseleave', hideTip);
@@ -1025,6 +1044,8 @@ function renderClusterKey(shown){
   $('#keyCluster').innerHTML = '<details' + (wasOpen ? ' open' : '') + '><summary><b>' + esc(T('ck_title')) + '</b></summary>' +
     order.map(k => '<span class="it"><i class="sq" style="background:' + OTC(k) + '"></i>' + esc(otName(k)) + '</span>').join('') +
     '<br><span class="it"><i class="ln"></i>' + esc(T('ck_solid')) + '</span><span class="it"><i class="ln d"></i>' + esc(T('ck_dash')) + '</span>' +
+    (S.links.some(l => l.status === 'wish') ? '<span class="it"><i class="ln w"></i>' + esc(T('ck_wish')) + '</span>' : '') +
+    (S.links.some(l => l.status === 'dataneed') ? '<span class="it"><i class="ln dn"></i>' + esc(T('ck_data')) + '</span>' : '') +
     '<span class="it"><i class="dot person" style="width:9px;height:9px"></i>' + esc(T('ck_person')) + '</span><br><span style="color:var(--muted)">' + esc(T('ck_dots')) + '<br>' + esc(T('ck_issues')) + '</span></details>';
 }
 function setView(v){
@@ -1053,7 +1074,7 @@ function applyHighlight(){
     .style('opacity', d => { if (q) return matches(d, q) ? 1 : 0.18; return !act || act.has(d.id) ? 1 : 0.18; })
     .select('circle.ring-sel').style('display', d => (S.sel && S.sel.kind === 'node' && S.sel.id === d.id) || S.connectFrom === d.id || (q && matches(d, q)) ? null : 'none');
   svg.selectAll('path.link')
-    .attr('stroke', d => d.id === selLink ? '#b45309' : '#7c6f5d')
+    .attr('stroke', d => d.id === selLink ? '#b45309' : LCOL(d))
     .style('opacity', d => {
       if (selLink) return d.id === selLink ? 0.95 : 0.08;
       if (focus) return (d.s === focus || d.t === focus) ? 0.85 : 0.06;
@@ -1436,6 +1457,142 @@ async function refreshSeed(){
   } catch(e){}
 }
 
+
+/* ---------- live survey feed (Google Form → Apps Script JSON) — local mode only ---------- */
+const FEED = (() => {
+  const c = Object.assign({projectId:'nan-forum-2569', refreshSec:30}, window.NAN_FORM_FEED || {});
+  try { const q = new URLSearchParams(location.search).get('feed'); if (q && /^https:\/\//.test(q)) c.url = q; } catch(e){}
+  return c.url ? c : null;
+})();
+let feedLast = null, feedCount = -1, feedFormUrl = '';
+const HASH0 = location.hash;
+const fKey = s => String(s || '').normalize('NFC').toLowerCase().replace(/[\s​.,;:()\[\]{}"'“”‘’\-–—_\/\\|ฯ]+/g, '');
+const fHash = s => { let h = 2166136261; for (const ch of s){ h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+const SEC_KW = {
+  env:['ป่า','น้ำ','ดิน','ไฟป่า','หมอกควัน','pm','ทรัพยากร','สิ่งแวดล้อม','ขยะ','อากาศ','สัตว์ป่า','ลุ่มน้ำ','ภูมิอากาศ','คาร์บอน','ความหลากหลาย','อนุรักษ์'],
+  agri:['เกษตร','ข้าว','ผัก','อินทรีย์','ปศุสัตว์','วัว','โค','ไก่','ประมง','ปลา','พืช','กาแฟ','ไม้ผล','ปุ๋ย','pgs','gap','ฟาร์ม','เมล็ดพันธุ์'],
+  econ:['เศรษฐกิจ','รายได้','ตลาด','ธุรกิจ','วิสาหกิจ','การเงิน','ทุน','อาชีพ','ผลิตภัณฑ์','otop','สหกรณ์','แปรรูป','การค้า'],
+  tourism:['ท่องเที่ยว','โฮมสเตย์','ที่พัก'],
+  culture:['วัฒนธรรม','ประเพณี','ภูมิปัญญา','ผ้า','หัตถกรรม','ศิลป','ประวัติศาสตร์','วัด','ศาสนา','เยาวชน','การศึกษา','โรงเรียน','ชาติพันธุ์','เด็ก'],
+  health:['สุขภาพ','อาหาร','โภชนาการ','สมุนไพร','โรค','อนามัย','สาธารณสุข','ผู้สูงอายุ','โรงพยาบาล','รพ.']
+};
+const kwSectors = txt => { const t = String(txt || '').toLowerCase(); return SECK.filter(k => SEC_KW[k].some(w => t.includes(w))); };
+
+const TH = function(){ const L = LANG; LANG = 'th'; try { return T.apply(null, arguments); } finally { LANG = L; } };
+const EN = function(){ const L = LANG; LANG = 'en'; try { return T.apply(null, arguments); } finally { LANG = L; } };
+function feedToGraph(feed){
+  const T = TH, secName = k => TH('sec_' + k);
+  const nodes = {}, links = {}, now = Date.now();
+  const org = {};           // key -> {name, otype, sectors[], resp:0, by:Set, kw:Set}
+  const touch = name => { const k = fKey(name); if (!k) return null; if (!org[k]) org[k] = {name, otype:'', sectors:[], resp:0, by:new Set(), kw:new Set()}; return k; };
+  const pairs = {};         // kind|a|b -> {kind, a, b, issues:Set, n}
+  const addPair = (kind, a, b, issue) => {
+    if (!a || !b || a === b) return;
+    const [x, y] = kind === 'work' ? [a, b].sort() : [a, b];
+    const id = kind + '|' + x + '|' + y; const p = pairs[id] || (pairs[id] = {kind, a:x, b:y, issues:new Set(), n:0});
+    p.n++; if (issue) p.issues.add(issue);
+  };
+  const persons = [];
+  (feed.responses || []).forEach(r => {
+    const me = touch(r.org); if (!me) return;
+    const o = org[me]; o.resp++;
+    if (r.otype && !o.otype) o.otype = r.otype;
+    (r.sectors || []).forEach(s => { if (SECK.includes(s) && !o.sectors.includes(s)) o.sectors.push(s); });
+    (r.partners || []).forEach(p => { const k = touch(p.org); if (!k) return; org[k].by.add(r.org); kwSectors(p.issue).forEach(s => org[k].kw.add(s)); addPair('work', me, k, p.issue); });
+    (r.future || []).forEach(p => { const k = touch(p.org); if (!k) return; org[k].by.add(r.org); addPair('wish', me, k, p.issue); });
+    (r.data || []).forEach(d => { const k = touch(d.from); if (!k) return; org[k].by.add(r.org); kwSectors(d.what).forEach(s => org[k].kw.add(s)); addPair('dataneed', me, k, d.what); });
+    if (r.name) persons.push({name:r.name, org:me});
+  });
+  const oid = k => 'fo_' + fHash(k);
+  const usedSec = new Set();
+  Object.keys(org).forEach(k => {
+    const o = org[k];
+    const secs = o.sectors.length ? o.sectors.concat([...o.kw].filter(s => !o.sectors.includes(s))) : [...o.kw];
+    if (o.resp) o.sectors.forEach(s => usedSec.add(s));
+    const role = o.resp ? T('fd_respondent', o.resp) + (o.by.size ? ' · ' + T('fd_mentioned', [...o.by].join(', ')) : '')
+                        : T('fd_mentioned', [...o.by].join(', '));
+    nodes[oid(k)] = {name:o.name, name_en:'', type:'org', role, sectors:secs, otype:o.otype,
+      status:o.resp ? 'confirmed_org' : '', evidence:'แบบสอบถามน่านฟอรั่ม', created:now};
+    if (o.resp) o.sectors.forEach(s => { links['fl_' + fHash('sec|' + k + '|' + s)] = {s:oid(k), t:'fs_' + s, w:3, label:T('fd_sec', secName(s)), status:'confirmed_org', created:now}; });
+  });
+  usedSec.forEach(s => { nodes['fs_' + s] = {name:T('fd_sec', secName(s)), name_en:EN('fd_sec', EN('sec_' + s)), type:'issue', sectors:[s], created:now}; });
+  Object.values(pairs).forEach(p => {
+    const iss = [...p.issues].join('; ');
+    const lab = (p.kind === 'work' ? T('fd_work') : p.kind === 'wish' ? T('fd_wishl') : T('fd_datal')) + (iss ? ': ' + iss : '');
+    links['fl_' + fHash(p.kind + '|' + p.a + '|' + p.b)] = {s:oid(p.a), t:oid(p.b), w:p.kind === 'work' ? Math.min(5, 2 + p.n) : 2, label:lab,
+      status:p.kind === 'work' ? 'confirmed_org' : p.kind, evidence:'แบบสอบถามน่านฟอรั่ม', created:now};
+  });
+  persons.forEach(p => {
+    const id = 'fp_' + fHash(fKey(p.name) + '|' + p.org);
+    nodes[id] = {name:p.name, name_en:'', type:'person', role:'', note:T('fd_resp'), status:'confirmed_org', created:now};
+    links['fl_' + fHash('per|' + id)] = {s:id, t:oid(p.org), w:3, label:T('fd_resp'), status:'confirmed_org', created:now};
+  });
+  return {nodes, links};
+}
+
+async function syncFeed(feed){
+  const pid = FEED.projectId, base = 'projects/' + pid;
+  let raw = {}; try { raw = JSON.parse(localStorage.getItem('nannetwork-v2') || '{}') || {}; } catch(e){}
+  const g = feedToGraph(feed);
+  const proj = {name:FEED.name || TH('fd_proj'), name_en:EN('fd_proj'), desc:TH('fd_desc', feed.count || 0), created:(raw[base] && raw[base].created) || 1764000000000};
+  const strip = o => { const c = Object.assign({}, o); delete c.created; delete c.a; delete c.id; return JSON.stringify(c); };
+  const ops = [];
+  if (!raw[base] || strip(raw[base]) !== strip(proj)) ops.push(() => STORE.set(base, proj));
+  const put = (col, id, body) => {
+    const path = base + '/' + col + '/' + id, old = raw[path];
+    const doc = col === 'nodes' ? nodeBody(body) : linkBody(body);
+    if (old){ doc.created = old.created || doc.created; if (old.a != null) doc.a = old.a; }
+    if (!old || strip(old) !== strip(doc)) ops.push(() => STORE.set(path, doc));
+  };
+  Object.entries(g.nodes).forEach(([id, b]) => put('nodes', id, b));
+  Object.entries(g.links).forEach(([id, b]) => put('links', id, b));
+  Object.keys(raw).forEach(k => {
+    const m = k.match(/^projects\/([^/]+)\/(nodes|links)\/(f[olsp]_[a-z0-9]+)$/);
+    if (m && m[1] === pid && !(m[2] === 'nodes' ? g.nodes : g.links)[m[3]]) ops.push(() => STORE.del(k));
+  });
+  for (const op of ops) await op();
+  return ops.length;
+}
+
+function renderFeedChip(err){
+  const c = $('#feedChip'); if (!c) return;
+  c.style.display = '';
+  c.className = 'pill' + (err ? ' err' : '');
+  const t = feedLast ? new Date(feedLast).toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'th-TH', {hour:'2-digit', minute:'2-digit', second:'2-digit'}) : '';
+  c.textContent = '📝 ' + T('fd_chip') + (feedCount >= 0 ? ' · ' + T('fd_n', feedCount) : '') + (t ? ' · ' + t : '');
+  c.title = err ? T('fd_err') : T('fd_title');
+}
+async function pollFeed(){
+  try {
+    const r = await fetch(FEED.url, {cache:'no-store'}); if (!r.ok) throw new Error('HTTP ' + r.status);
+    const feed = await r.json(); if (!feed || !Array.isArray(feed.responses)) throw new Error('bad feed');
+    feedFormUrl = FEED.formUrl || feed.formUrl || '';
+    const prev = feedCount; feedCount = feed.count != null ? feed.count : feed.responses.length;
+    await syncFeed(feed);
+    if (prev < 0 && (HASH0 === '#p-' + FEED.projectId || !HASH0) && S.pid !== FEED.projectId){ openProject(FEED.projectId); renderProjSel(FEED.projectId); }
+    feedLast = Date.now(); renderFeedChip(false);
+    if (prev >= 0 && feedCount > prev) toast(T('fd_new', feedCount - prev));
+  } catch(e){ console.warn('feed', e); renderFeedChip(true); }
+}
+function showQR(){
+  const url = feedFormUrl; if (!url) return;
+  $('#qrT').textContent = T('fd_title'); $('#qrS').textContent = T('fd_scan');
+  $('#qrA').href = url; $('#qrA').textContent = url; $('#qrX').textContent = T('fd_close');
+  const draw = () => { try { const q = qrcode(0, 'M'); q.addData(url); q.make(); $('#qrImg').innerHTML = q.createSvgTag({cellSize:8, margin:2, scalable:true}); } catch(e){ $('#qrImg').textContent = ''; } };
+  if (typeof qrcode === 'function') draw();
+  else { const s = document.createElement('script'); s.src = 'qrcode.min.js'; s.onload = draw; document.head.appendChild(s); }
+  $('#qrOv').style.display = 'flex';
+}
+function startFeed(){
+  if (!FEED || S.mode !== 'local') return;
+  $('#feedChip').onclick = showQR;
+  $('#qrX').onclick = () => { $('#qrOv').style.display = 'none'; };
+  $('#qrOv').onclick = e => { if (e.target.id === 'qrOv') $('#qrOv').style.display = 'none'; };
+  renderFeedChip(false);
+  pollFeed();
+  setInterval(pollFeed, Math.max(10, FEED.refreshSec) * 1000);
+}
+
 /* ---------- downloads ---------- */
 function fileBase(suffix){
   const p = S.projects.find(x => x.id === S.pid);
@@ -1472,7 +1629,7 @@ function buildSvg(){
   const g = node.querySelector('g'); g.removeAttribute('transform');
   node.querySelectorAll('.hits,.temp,circle.ring-sel').forEach(x => x.remove());
   node.querySelectorAll('g.node').forEach(x => x.style.opacity = 1);
-  node.querySelectorAll('path.link').forEach(p => { p.setAttribute('stroke', '#7c6f5d'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-linecap', 'round'); p.style.opacity = 0.5; });
+  node.querySelectorAll('path.link').forEach(p => { if (!p.getAttribute('stroke') || p.getAttribute('stroke') === '#b45309') p.setAttribute('stroke', '#7c6f5d'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-linecap', 'round'); p.style.opacity = 0.5; });
   node.querySelectorAll('text.halo').forEach(t => { t.setAttribute('paint-order', 'stroke'); t.setAttribute('stroke', '#fff'); t.setAttribute('stroke-width', '3.5'); t.setAttribute('stroke-linejoin', 'round'); });
   const st = document.createElementNS('http://www.w3.org/2000/svg', 'style');
   st.textContent = 'text{font-family:"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif}';
