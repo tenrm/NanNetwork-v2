@@ -66,3 +66,26 @@ projects/{pid}               { name, name_en, desc, created }
 projects/{pid}/nodes/{id}    { name, name_en, type: issue|org|person, role, role_en, note, a (มุมบนวง หรือ null), created }
 projects/{pid}/links/{id}    { s, t, w: 1–5, label, created }
 ```
+
+
+## แบบสอบถามน่านฟอรั่ม (Google Form → แผนภาพแบบเรียลไทม์)
+
+ผู้เข้าร่วมประชุมกรอก Google Form แล้วแผนภาพในโปรเจค **"น่านฟอรั่ม – ผลแบบสอบถามเครือข่าย (สด)"** อัปเดตเองทุก 30 วินาที
+
+```
+Google Form ──► Google Sheet (คำตอบ) ──► Apps Script Web app (JSON, ตัดเบอร์/อีเมลออก) ──► NanNetwork-v2 (ดึงทุก 30 วินาที)
+```
+
+1. เข้า https://script.google.com ด้วยบัญชีที่จะเป็นเจ้าของฟอร์ม → **New project** → วางโค้ดจาก `NanForum_FormFeed.gs` → Save
+2. เลือกฟังก์ชัน `setup` → **Run** → อนุญาตสิทธิ์ → ดูลิงก์ฟอร์ม/ชีตใน Execution log
+3. **Deploy → New deployment → Web app** · Execute as: **Me** · Who has access: **Anyone** → คัดลอก URL ที่ลงท้าย `/exec`
+4. ทดสอบทันที: `https://tenrm.github.io/NanNetwork-v2/?feed=<URL /exec>#p-nan-forum-2569` · ใช้ถาวร: ใส่ URL ใน `config.js` (`window.NAN_FORM_FEED`)
+5. ในวันประชุม กดปุ่ม **📝 แบบสอบถาม** มุมขวาบนเพื่อแสดง QR code ให้ผู้เข้าร่วมสแกน
+
+การแปลงคำตอบเป็นแผนภาพ
+- หน่วยงานของผู้ตอบ = โหนดหน่วยงาน (สี = ประเภท, ด้าน = ช่องที่ติ๊ก) และเชื่อมกับประเด็น "ด้าน…"
+- หน่วยงานที่ร่วมงาน = เส้นทึบ (ยิ่งมีหลายคนระบุคู่เดียวกัน เส้นยิ่งหนา) · ด้านของหน่วยงานที่ถูกระบุ เดาจากคำในช่องประเด็น
+- อยากร่วมงานในอนาคต = เส้นจุดสีเขียว · ต้องการข้อมูลจาก = เส้นประสีน้ำเงิน
+- ชื่อผู้ตอบแสดงเฉพาะเมื่อติ๊กยินยอม; เบอร์โทร/อีเมล/LINE ไม่ออกจาก Google Sheet
+- ชื่อหน่วยงานที่พิมพ์ต่างกัน รวมได้ที่ชีต `aliases` · ซ่อนคำตอบทดสอบ/สแปมได้ที่ชีต `hide`
+- ทำงานในโหมดในเครื่อง (GitHub Pages); หน้า Claude artifact ดึงข้อมูลจากเว็บภายนอกไม่ได้
