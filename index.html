@@ -410,8 +410,8 @@ const I18N = {
   ck_solid:['ยืนยันแล้ว','confirmed'], ck_dash:['รอยืนยัน','pending'], ck_wish:['อยากร่วมงาน','wants to work with'], ck_data:['ต้องการข้อมูลจาก','needs data from'],
   fd_chip:['แบบสอบถาม','Survey'], fd_n:['{0} คำตอบ','{0} responses'], fd_new:['มีคำตอบใหม่ {0} รายการ','{0} new response(s)'], fd_err:['ดึงข้อมูลแบบสอบถามไม่สำเร็จ (ลองใหม่อัตโนมัติ)','Could not load survey feed (retrying)'],
   fd_title:['ตอบแบบสอบถามเครือข่าย','Answer the network survey'], fd_open:['เปิดแบบสอบถาม','Open the survey'], fd_scan:['สแกน QR เพื่อตอบแบบสอบถาม','Scan to answer the survey'], fd_close:['ปิด','Close'],
-  fd_proj:['น่านฟอรั่ม – ผลแบบสอบถามเครือข่าย (สด)','Nan Forum – live survey network'], fd_desc:['สร้างอัตโนมัติจากแบบสอบถาม · {0} คำตอบ · ข้อมูลที่ผู้ตอบรายงานเอง · แก้ไขในหน้านี้จะถูกเขียนทับเมื่อมีคำตอบใหม่','Built automatically from the survey · {0} responses · self-reported · edits here are overwritten by new responses'],
-  fd_resp:['ผู้ตอบแบบสอบถาม','Survey respondent'], fd_mentioned:['ถูกระบุโดย: {0}','Named by: {0}'], fd_respondent:['ตอบแบบสอบถาม {0} ครั้ง','Answered the survey {0} time(s)'],
+  fd_proj:['น่านฟอรั่ม – เครือข่ายน่าน (สืบค้น + แบบสอบถามสด)','Nan Forum – Nan network (research + live survey)'], fd_desc:['สร้างอัตโนมัติจากแบบสอบถาม · {0} คำตอบ · ข้อมูลที่ผู้ตอบรายงานเอง · แก้ไขในหน้านี้จะถูกเขียนทับเมื่อมีคำตอบใหม่','Built automatically from the survey · {0} responses · self-reported · edits here are overwritten by new responses'],
+  fd_resp:['ผู้ตอบแบบสอบถาม','Survey respondent'], fd_basedesc:[' · รวมเครือข่ายที่สืบค้นไว้จากโปรเจค "{0}" (เส้นประ = รอยืนยัน)',' · includes the researched network from "{0}" (dashed = pending)'], fd_mentioned:['ถูกระบุโดย: {0}','Named by: {0}'], fd_respondent:['ตอบแบบสอบถาม {0} ครั้ง','Answered the survey {0} time(s)'],
   fd_work:['ร่วมงาน','Works with'], fd_wishl:['อยากร่วมงาน','Wants to work with'], fd_datal:['ต้องการข้อมูล','Needs data'], fd_sec:['ด้าน{0}','Sector: {0}'], ck_person:['บุคคล','person'], ck_dots:['จุดสีใต้สี่เหลี่ยม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Dots under a square = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
   a_clusters:['กลุ่มตามด้าน','Sector clusters'], c_sector:['ด้าน','Sector'], c_int:['เส้นภายใน','Internal'], c_cross:['เส้นข้ามด้าน','Cross'],
   a_otypes:['ประเภทหน่วยงาน','Organisation types'], a_multi:['หน่วยงานที่ทำงานหลายด้าน (อยู่ระหว่างกลุ่ม)','Organisations across sectors (between clusters)'], nSectors:['{0} ด้าน','{0} sectors'],
@@ -496,7 +496,8 @@ function localStore(){
     isEmpty: () => Object.keys(docs).length === 0,
     subCol(path, cb){ const s = {path, cb}; subs.add(s); setTimeout(() => cb(list(path)), 0); return () => subs.delete(s); },
     async set(path, data){ docs[path] = JSON.parse(JSON.stringify(data)); save(); emit(parent(path)); },
-    async del(path){ delete docs[path]; save(); emit(parent(path)); }
+    async del(path){ delete docs[path]; save(); emit(parent(path)); },
+    async setMany(list){ const cols = new Set(); list.forEach(([path, data]) => { if (data == null) delete docs[path]; else docs[path] = JSON.parse(JSON.stringify(data)); cols.add(parent(path)); }); save(); cols.forEach(emit); }
   };
 }
 
@@ -1460,7 +1461,7 @@ async function refreshSeed(){
 
 /* ---------- live survey feed (Google Form → Apps Script JSON) — local mode only ---------- */
 const FEED = (() => {
-  const c = Object.assign({projectId:'nan-forum-2569', refreshSec:30}, window.NAN_FORM_FEED || {});
+  const c = Object.assign({projectId:'nan-forum-2569', refreshSec:30, baseProject:'nan-forest-organic', basePersons:false}, window.NAN_FORM_FEED || {});
   try { const q = new URLSearchParams(location.search).get('feed'); if (q && /^https:\/\//.test(q)) c.url = q; } catch(e){}
   return c.url ? c : null;
 })();
@@ -1480,11 +1481,50 @@ const kwSectors = txt => { const t = String(txt || '').toLowerCase(); return SEC
 
 const TH = function(){ const L = LANG; LANG = 'th'; try { return T.apply(null, arguments); } finally { LANG = L; } };
 const EN = function(){ const L = LANG; LANG = 'en'; try { return T.apply(null, arguments); } finally { LANG = L; } };
-function feedToGraph(feed){
+let feedBase = null;   // {nodes:[], links:[]} from data.json (base project), loaded once
+async function loadFeedBase(){
+  if (feedBase || !FEED.baseProject) return feedBase;
+  try {
+    const r = await fetch('data.json', {cache:'no-store'}); const j = await r.json();
+    const p = (j.projects || []).find(x => x.id === FEED.baseProject);
+    feedBase = p ? {nodes:p.nodes || [], links:p.links || [], name:p.name || ''} : {nodes:[], links:[], name:''};
+  } catch(e){ console.warn('feed base', e); }
+  return feedBase;
+}
+function feedToGraph(feed, baseData){
   const T = TH, secName = k => TH('sec_' + k);
   const nodes = {}, links = {}, now = Date.now();
-  const org = {};           // key -> {name, otype, sectors[], resp:0, by:Set, kw:Set}
-  const touch = name => { const k = fKey(name); if (!k) return null; if (!org[k]) org[k] = {name, otype:'', sectors:[], resp:0, by:new Set(), kw:new Set()}; return k; };
+  const B = baseData || {nodes:[], links:[]};
+  // --- base project (researched network) ---
+  const keepIds = new Set();
+  B.nodes.forEach(n => { if (!TYPES[n.type]) return; if (n.type === 'person' && !FEED.basePersons) return; keepIds.add(n.id); });
+  const bid = id => 'b_' + String(id).replace(/[^A-Za-z0-9_\-]/g, '');
+  const baseOrg = {};   // base id -> node copy
+  B.nodes.forEach(n => { if (!keepIds.has(n.id)) return; const c = Object.assign({}, n); delete c.id; nodes[bid(n.id)] = c; if (n.type === 'org') baseOrg[n.id] = c; });
+  B.links.forEach(l => { if (keepIds.has(l.s) && keepIds.has(l.t)) { const c = Object.assign({}, l); delete c.id; c.s = bid(l.s); c.t = bid(l.t); links[bid(l.id || (l.s + '_' + l.t))] = c; } });
+  // name index for matching survey answers to base orgs (full name, parts split by / · |, with/without (…), name_en)
+  const idx = {}, amb = new Set();
+  const addKey = (k, id) => { if (!k || k.length < 3) return; if (idx[k] && idx[k] !== id) amb.add(k); else idx[k] = id; };
+  Object.entries(baseOrg).forEach(([id, n]) => {
+    [n.name, n.name_en].filter(Boolean).forEach(full => {
+      const parts = [full].concat(String(full).split(/\s*[\/·|]\s*/));
+      parts.forEach(pt => {
+        addKey(fKey(pt), id);
+        addKey(fKey(String(pt).replace(/\([^)]*\)/g, '')), id);
+        (String(pt).match(/\(([^)]*)\)/g) || []).forEach(m => addKey(fKey(m), id));
+      });
+    });
+  });
+  amb.forEach(k => delete idx[k]);
+  // --- survey ---
+  const org = {};           // key -> {name, otype, sectors[], resp:0, by:Set, kw:Set, base:id|null}
+  const touch = name => {
+    let k = fKey(name); if (!k) return null;
+    const b = idx[k] || idx[fKey(String(name).replace(/\([^)]*\)/g, ''))] || null;
+    if (b) k = '#' + b;
+    if (!org[k]) org[k] = {name, otype:'', sectors:[], resp:0, by:new Set(), kw:new Set(), base:b};
+    return k;
+  };
   const pairs = {};         // kind|a|b -> {kind, a, b, issues:Set, n}
   const addPair = (kind, a, b, issue) => {
     if (!a || !b || a === b) return;
@@ -1503,7 +1543,7 @@ function feedToGraph(feed){
     (r.data || []).forEach(d => { const k = touch(d.from); if (!k) return; org[k].by.add(r.org); kwSectors(d.what).forEach(s => org[k].kw.add(s)); addPair('dataneed', me, k, d.what); });
     if (r.name) persons.push({name:r.name, org:me});
   });
-  const oid = k => 'fo_' + fHash(k);
+  const oid = k => org[k] && org[k].base ? bid(org[k].base) : 'fo_' + fHash(k);
   const usedSec = new Set();
   Object.keys(org).forEach(k => {
     const o = org[k];
@@ -1511,7 +1551,14 @@ function feedToGraph(feed){
     if (o.resp) o.sectors.forEach(s => usedSec.add(s));
     const role = o.resp ? T('fd_respondent', o.resp) + (o.by.size ? ' · ' + T('fd_mentioned', [...o.by].join(', ')) : '')
                         : T('fd_mentioned', [...o.by].join(', '));
-    nodes[oid(k)] = {name:o.name, name_en:'', type:'org', role, sectors:secs, otype:o.otype,
+    if (o.base){
+      const bn = nodes[bid(o.base)];
+      bn.role = [bn.role, role].filter(Boolean).join(' · ');
+      bn.sectors = (bn.sectors || []).concat(secs.filter(s => !(bn.sectors || []).includes(s)));
+      if (!bn.otype && o.otype) bn.otype = o.otype;
+      if (o.resp) bn.status = 'confirmed_org';
+      bn.evidence = [bn.evidence, 'แบบสอบถามน่านฟอรั่ม'].filter(Boolean).join('; ');
+    } else nodes[oid(k)] = {name:o.name, name_en:'', type:'org', role, sectors:secs, otype:o.otype,
       status:o.resp ? 'confirmed_org' : '', evidence:'แบบสอบถามน่านฟอรั่ม', created:now};
     if (o.resp) o.sectors.forEach(s => { links['fl_' + fHash('sec|' + k + '|' + s)] = {s:oid(k), t:'fs_' + s, w:3, label:T('fd_sec', secName(s)), status:'confirmed_org', created:now}; });
   });
@@ -1533,24 +1580,27 @@ function feedToGraph(feed){
 async function syncFeed(feed){
   const pid = FEED.projectId, base = 'projects/' + pid;
   let raw = {}; try { raw = JSON.parse(localStorage.getItem('nannetwork-v2') || '{}') || {}; } catch(e){}
-  const g = feedToGraph(feed);
-  const proj = {name:FEED.name || TH('fd_proj'), name_en:EN('fd_proj'), desc:TH('fd_desc', feed.count || 0), created:(raw[base] && raw[base].created) || 1764000000000};
+  const bd = await loadFeedBase();
+  const g = feedToGraph(feed, bd);
+  const proj = {name:FEED.name || TH('fd_proj'), name_en:EN('fd_proj'), desc:TH('fd_desc', feed.count || 0) + (bd && bd.name ? TH('fd_basedesc', bd.name) : ''), created:(raw[base] && raw[base].created) || 1764000000000};
   const strip = o => { const c = Object.assign({}, o); delete c.created; delete c.a; delete c.id; return JSON.stringify(c); };
   const ops = [];
-  if (!raw[base] || strip(raw[base]) !== strip(proj)) ops.push(() => STORE.set(base, proj));
+  if (!raw[base] || strip(raw[base]) !== strip(proj)) ops.push([base, proj]);
   const put = (col, id, body) => {
     const path = base + '/' + col + '/' + id, old = raw[path];
     const doc = col === 'nodes' ? nodeBody(body) : linkBody(body);
     if (old){ doc.created = old.created || doc.created; if (old.a != null) doc.a = old.a; }
-    if (!old || strip(old) !== strip(doc)) ops.push(() => STORE.set(path, doc));
+    if (!old || strip(old) !== strip(doc)) ops.push([path, doc]);
   };
   Object.entries(g.nodes).forEach(([id, b]) => put('nodes', id, b));
   Object.entries(g.links).forEach(([id, b]) => put('links', id, b));
   Object.keys(raw).forEach(k => {
-    const m = k.match(/^projects\/([^/]+)\/(nodes|links)\/(f[olsp]_[a-z0-9]+)$/);
-    if (m && m[1] === pid && !(m[2] === 'nodes' ? g.nodes : g.links)[m[3]]) ops.push(() => STORE.del(k));
+    const m = k.match(/^projects\/([^/]+)\/(nodes|links)\/((?:f[olsp]|b)_[A-Za-z0-9_\-]+)$/);
+    if (m && m[1] === pid && !(m[2] === 'nodes' ? g.nodes : g.links)[m[3]]) ops.push([k, null]);
   });
-  for (const op of ops) await op();
+  if (!ops.length) return 0;
+  if (STORE.setMany) await STORE.setMany(ops);
+  else for (const [path, doc] of ops) await (doc == null ? STORE.del(path) : STORE.set(path, doc));
   return ops.length;
 }
 
