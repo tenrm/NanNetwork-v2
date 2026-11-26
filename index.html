@@ -165,7 +165,7 @@ footer{display:none}
 .ckey summary{cursor:pointer;list-style:revert}
 .ckey{pointer-events:auto}
 .ckey .it{display:inline-flex;align-items:center;gap:4px;margin-right:8px;white-space:nowrap}
-.ckey .sq{display:inline-block;width:10px;height:10px;border-radius:2px}
+.ckey .sq{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ckey .ln{display:inline-block;width:22px;border-top:2px solid #555}
 .ckey .ln.d{border-top-style:dashed}
 .ckey .ln.w{border-top:2px dotted #2f8f5b}
@@ -412,7 +412,7 @@ const I18N = {
   fd_title:['ตอบแบบสอบถามเครือข่าย','Answer the network survey'], fd_open:['เปิดแบบสอบถาม','Open the survey'], fd_scan:['สแกน QR เพื่อตอบแบบสอบถาม','Scan to answer the survey'], fd_close:['ปิด','Close'],
   fd_proj:['น่านฟอรั่ม – เครือข่ายน่าน (สืบค้น + แบบสอบถามสด)','Nan Forum – Nan network (research + live survey)'], fd_desc:['สร้างอัตโนมัติจากแบบสอบถาม · {0} คำตอบ · ข้อมูลที่ผู้ตอบรายงานเอง · แก้ไขในหน้านี้จะถูกเขียนทับเมื่อมีคำตอบใหม่','Built automatically from the survey · {0} responses · self-reported · edits here are overwritten by new responses'],
   fd_resp:['ผู้ตอบแบบสอบถาม','Survey respondent'], fd_basedesc:[' · รวมเครือข่ายที่สืบค้นไว้จากโปรเจค "{0}" (เส้นประ = รอยืนยัน)',' · includes the researched network from "{0}" (dashed = pending)'], fd_mentioned:['ถูกระบุโดย: {0}','Named by: {0}'], fd_respondent:['ตอบแบบสอบถาม {0} ครั้ง','Answered the survey {0} time(s)'],
-  fd_work:['ร่วมงาน','Works with'], fd_wishl:['อยากร่วมงาน','Wants to work with'], fd_datal:['ต้องการข้อมูล','Needs data'], fd_sec:['ด้าน{0}','Sector: {0}'], ck_person:['บุคคล','person'], ck_dots:['จุดสีใต้สี่เหลี่ยม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Dots under a square = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
+  fd_work:['ร่วมงาน','Works with'], fd_wishl:['อยากร่วมงาน','Wants to work with'], fd_datal:['ต้องการข้อมูล','Needs data'], fd_sec:['ด้าน{0}','Sector: {0}'], ck_person:['บุคคล','person'], ck_dots:['วงกลมสี = หน่วยงาน · จุดเล็กใต้วงกลม = ทำงานด้านอื่นด้วย · (+n) = หน่วยงานที่มีด้านนี้เป็นด้านรอง','Coloured circle = organisation · small dots below = also works in other sectors · (+n) = members with this as a secondary sector'], ck_issues:['ประเด็นซ่อนในมุมมองนี้ · ลากจุดเพื่อจัดตำแหน่ง (ไม่บันทึก)','Issues hidden here · drag to rearrange (not saved)'],
   a_clusters:['กลุ่มตามด้าน','Sector clusters'], c_sector:['ด้าน','Sector'], c_int:['เส้นภายใน','Internal'], c_cross:['เส้นข้ามด้าน','Cross'],
   a_otypes:['ประเภทหน่วยงาน','Organisation types'], a_multi:['หน่วยงานที่ทำงานหลายด้าน (อยู่ระหว่างกลุ่ม)','Organisations across sectors (between clusters)'], nSectors:['{0} ด้าน','{0} sectors'],
   x_clusters:['กลุ่มตามด้าน','Sector clusters'], x_sectors:['ด้าน','Sectors'], x_otype:['ประเภทหน่วยงาน','Org type'], x_level:['ระดับ','Level'], x_area:['พื้นที่','Area'], x_status:['สถานะการยืนยัน','Status'], x_evid:['หลักฐาน','Evidence'], x_members:['หน่วยงาน/บุคคลในกลุ่ม','Members'],
@@ -1013,17 +1013,17 @@ function renderCluster(noSim){
     return g;
   });
   ns.attr('transform', d => 'translate(' + P(d.id).x + ',' + P(d.id).y + ')');
-  ns.select('path.body').attr('d', d => { const r = cNodeR(d); return d.type === 'person' ? d3.symbol(d3.symbolCircle, Math.PI * r * r)() : 'M' + (-r) + ',' + (-r) + 'h' + (2*r) + 'v' + (2*r) + 'h' + (-2*r) + 'Z'; })
+  ns.select('path.body').attr('d', d => { const r = cNodeR(d) * (d.type === 'person' ? 1 : 1.1); return d3.symbol(d3.symbolCircle, Math.PI * r * r)(); })
     .attr('fill', d => d.type === 'person' ? TYPES.person.fill : OTC(d.otype))
     .attr('stroke', d => d.type === 'person' ? TYPES.person.stroke : '#ffffff').attr('stroke-width', d => d.type === 'person' ? 1.4 : 1.2)
     .attr('stroke-dasharray', d => d.status === 'pending' ? '2 2' : null);
   ns.each(function(d){
     const r = cNodeR(d), extra = d.type === 'person' ? [] : effSectors(d).slice(1);
     d3.select(this).selectAll('circle.sd').data(extra).join('circle').attr('class', 'sd').attr('r', 3.2)
-      .attr('cx', (k, i) => -r + 3.5 + i * 7.5).attr('cy', r + 5).attr('fill', k => SECTORS.find(x => x.k === k).c).attr('stroke', '#fff').attr('stroke-width', 0.8);
+      .attr('cx', (k, i) => (i - (extra.length - 1) / 2) * 7.5).attr('cy', r * 1.1 + 5).attr('fill', k => SECTORS.find(x => x.k === k).c).attr('stroke', '#fff').attr('stroke-width', 0.8);
   });
-  ns.select('circle.ring-sel').attr('r', d => cNodeR(d) + 5).attr('stroke-dasharray', d => S.connectFrom === d.id ? '4 3' : null);
-  ns.select('text.lbl').attr('x', d => cNodeR(d) + 4).attr('y', 4).attr('font-size', d => d.type === 'person' ? 11 : 13)
+  ns.select('circle.ring-sel').attr('r', d => cNodeR(d) * (d.type === 'person' ? 1 : 1.1) + 5).attr('stroke-dasharray', d => S.connectFrom === d.id ? '4 3' : null);
+  ns.select('text.lbl').attr('x', d => cNodeR(d) * (d.type === 'person' ? 1 : 1.1) + 4).attr('y', 4).attr('font-size', d => d.type === 'person' ? 11 : 13)
     .attr('fill', d => d.type === 'person' ? '#14532d' : '#2d2a26')
     .style('display', d => S.lblMode === 'all' || (S.lblMode === 'org' && d.type !== 'person') ? null : 'none')
     .text(d => { const t = dn(d); return t.length > 30 ? t.slice(0, 29) + '…' : t; });
