@@ -169,6 +169,9 @@ footer{display:none}
 .ckey .ln{display:inline-block;width:22px;border-top:2px solid #555}
 .ckey .ln.d{border-top-style:dashed}
 .ckey .ln.w{border-top:2px dotted #2f8f5b}
+.mapbase text{pointer-events:none}
+.mapv path{vector-effect:non-scaling-stroke}
+.ckey .sq.out{border:1.5px dashed #888;background:#fff!important}
 .ckey .ln.dn{border-top:2px dashed #2b6cb0}
 #feedChip{cursor:pointer;background:#e8f3ec;color:#1f5f3c;border:1px solid #b9dcc6}
 #feedChip.err{background:#fdecea;color:#8a1f11;border-color:#f3c1b8}
@@ -277,9 +280,10 @@ footer{display:none}
 
   <section class="stage" id="stage">
     <svg id="net" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMidYMid meet" role="img"></svg>
-    <div class="viewsw" id="viewSw"><button data-view="ring" class="on" data-t="viewRing"></button><button data-view="cluster" data-t="viewCluster"></button></div>
+    <div class="viewsw" id="viewSw"><button data-view="ring" class="on" data-t="viewRing"></button><button data-view="cluster" data-t="viewCluster"></button><button data-view="map" data-t="viewMap"></button></div>
     <div class="lblsw" id="lblSw"><select id="lblMode"><option value="org" data-t="lblOrg"></option><option value="all" data-t="lblAll"></option><option value="none" data-t="lblNone"></option></select></div>
     <div class="ovl ckey" id="keyCluster"></div>
+    <div class="ovl ckey" id="keyMap" style="display:none"></div>
     <div class="ovl key" id="keyRing"><span><i class="dot issue"></i><span data-t="type_issue"></span></span><span><i class="dot org"></i><span data-t="type_org"></span></span><span><i class="dot person"></i><span data-t="type_person"></span></span></div>
     <div class="zoom"><button class="btn" id="zIn" data-tt="zIn">+</button><button class="btn" id="zOut" data-tt="zOut">−</button><button class="btn" id="zFit" data-tt="zFit">⟲</button></div>
     <div class="banner" id="banner"></div>
@@ -400,7 +404,10 @@ const I18N = {
   g_str:['Strength = ผลรวมระดับความสำคัญของเส้นทั้งหมดที่โหนดนั้นมี','Strength = sum of the importance of all a node\'s links'],
   g_btw:['Betweenness = สัดส่วนของเส้นทางสั้นที่สุดระหว่างคู่โหนดอื่นที่ผ่านโหนดนี้ (0–1)','Betweenness = share of shortest paths between other node pairs that pass through this node (0–1)'],
   g_clo:['Closeness = ค่าเฉลี่ยของ 1/ระยะทางไปยังทุกโหนด (0–1) ยิ่งสูงยิ่งเข้าถึงคนอื่นได้เร็ว','Closeness = mean of 1/distance to every other node (0–1); higher reaches others faster'],
-  viewRing:['วง 3 ชั้น','3 rings'], viewCluster:['6 กลุ่มตามด้าน','6 sector clusters'],
+  viewRing:['วง 3 ชั้น','3 rings'], viewCluster:['6 กลุ่มตามด้าน','6 sector clusters'], viewMap:['แผนที่น่าน','Nan map'],
+  mp_loading:['กำลังโหลดแผนที่…','Loading map…'], mp_fail:['โหลดแผนที่ไม่สำเร็จ','Could not load the map'], mp_out:['นอกจังหวัด / ระดับประเทศ','Outside Nan / national'], mp_title:['แผนที่เครือข่าย','Network map'],
+  mp_prec:['ตำแหน่ง','Location'], mp_p_tam:['ศูนย์กลาง ต.{0} อ.{1} (โดยประมาณ)','Centre of {0} sub-district, {1} (approx.)'], mp_p_amp:['ที่ตั้งอำเภอ{0} (โดยประมาณ)','{0} district seat (approx.)'], mp_p_prov:['ตัวเมืองน่าน (หน่วยงานระดับจังหวัด/ไม่ทราบที่ตั้ง)','Nan town (province-level / location unknown)'], mp_p_out:['นอกจังหวัด หรือไม่ทราบที่ตั้ง','Outside Nan or location unknown'], mp_p_near:['ใกล้หน่วยงานที่สังกัด','Near affiliated organisation'],
+  mp_note:['ตำแหน่ง = ศูนย์กลางตำบล/ที่ตั้งอำเภอโดยประมาณ จากช่อง "พื้นที่" หรือชื่อหน่วยงาน · แก้ช่อง "พื้นที่" (เช่น ต.ดู่ใต้ อ.เมืองน่าน) เพื่อย้ายตำแหน่ง','Location = approx. sub-district centre / district seat from the Area field or the name · edit Area (e.g. ต.ดู่ใต้ อ.เมืองน่าน) to move'], mp_src:['ขอบเขตปกครอง: OpenGISData-Thailand','Boundaries: OpenGISData-Thailand'], mp_laos:['สปป.ลาว','Lao PDR'],
   lblOrg:['แสดงชื่อหน่วยงาน','Org names'], lblAll:['แสดงชื่อทั้งหมด','All names'], lblNone:['ซ่อนชื่อ','Hide names'],
   sec_env:['ทรัพยากรธรรมชาติ','Natural resources'], sec_agri:['การเกษตร','Agriculture'], sec_econ:['ส่งเสริมเศรษฐกิจ','Economy'], sec_tourism:['การท่องเที่ยว','Tourism'], sec_culture:['วัฒนธรรม','Culture'], sec_health:['สุขภาพ','Health'],
   ot_gov:['ราชการ','Government'], ot_local:['อปท.','Local government'], ot_puborg:['องค์การมหาชน','Public organisation'], ot_academic:['สถาบันวิชาการ/วิจัย','Academic / research'], ot_ngo:['มูลนิธิ/ประชาสังคม','Foundation / civil society'], ot_community:['เครือข่าย/กลุ่มชุมชน','Community network / group'], ot_business:['วิสาหกิจ/เอกชน','Enterprise / private'], ot_religious:['วัด/ศาสนา','Religious'], ot_intl:['องค์กรระหว่างประเทศ','International'], ot_:['ไม่ระบุประเภท','Unspecified'],
@@ -547,7 +554,7 @@ function setLang(l){ LANG = l; try { localStorage.setItem('nannetwork-lang', l);
 /* ---------- init ---------- */
 async function init(){
   bindUI(); setupSvg(); applyLang();
-  try { if (localStorage.getItem('nannetwork-v2-view') !== 'ring') setView('cluster'); } catch(e){ setView('cluster'); }
+  try { const v = localStorage.getItem('nannetwork-v2-view'); if (v !== 'ring') setView(v === 'map' ? 'map' : 'cluster'); } catch(e){ setView('cluster'); }
   if (window.claude && typeof window.claude.use === 'function'){
     S.mode = 'claude'; setStatus(T('st_loading'), 'off');
     let db = null;
@@ -782,7 +789,7 @@ function nodeR(n){
 }
 
 /* ---------- SVG ---------- */
-let svg, gZoom, gBand, gLinks, gHits, gNodes, gCenter, tempLine, zoom, gC, cHull, cSecLbl, cLinks, cHits, cNodes;
+let svg, gZoom, gBand, gLinks, gHits, gNodes, gCenter, tempLine, zoom, gC, cHull, cSecLbl, cLinks, cHits, cNodes, gM, mBase, mLinks, mHits, mNodes, mLbl;
 function setupSvg(){
   svg = d3.select('#net');
   gZoom = svg.append('g');
@@ -793,11 +800,13 @@ function setupSvg(){
   gNodes = gZoom.append('g');
   gC = gZoom.append('g').attr('class','cluster').style('display','none');
   cHull = gC.append('g'); cSecLbl = gC.append('g'); cLinks = gC.append('g'); cHits = gC.append('g').attr('class','hits'); cNodes = gC.append('g');
-  zoom = d3.zoom().scaleExtent([0.4, 10]).on('zoom', e => gZoom.attr('transform', e.transform));
+  gM = gZoom.append('g').attr('class','mapv').style('display','none');
+  mBase = gM.append('g').attr('class','mapbase'); mLinks = gM.append('g'); mHits = gM.append('g').attr('class','hits'); mNodes = gM.append('g'); mLbl = gM.append('g');
+  zoom = d3.zoom().scaleExtent([0.4, 10]).on('zoom', e => { gZoom.attr('transform', e.transform); S.zk = e.transform.k; if (S.view === 'map') mapZoomAdjust(); });
   svg.call(zoom).on('dblclick.zoom', null);
-  svg.on('click', e => { if (e.target === svg.node() || e.target.closest('g') === gBand.node() || e.target.closest('.center') || e.target.closest('.hull')){ if (S.connectFrom){ S.connectFrom = null; tempLine.style('display','none'); updateBanner(); } select(null); } });
+  svg.on('click', e => { if (e.target === svg.node() || e.target.closest('g') === gBand.node() || e.target.closest('.center') || e.target.closest('.hull') || e.target.closest('.mapbase')){ if (S.connectFrom){ S.connectFrom = null; tempLine.style('display','none'); updateBanner(); } select(null); } });
   svg.on('mousemove', e => {
-    const PP = S.view === 'cluster' ? CPOS : POS;
+    const PP = S.view === 'cluster' ? CPOS : S.view === 'map' ? MPOS : POS;
     if (!S.connectFrom || !PP[S.connectFrom]) return;
     const [x,y] = d3.pointer(e, gZoom.node()), p = PP[S.connectFrom];
     tempLine.style('display', null).attr('x1', p.x).attr('y1', p.y).attr('x2', x).attr('y2', y);
@@ -843,6 +852,7 @@ function renderBands(){
 }
 function renderGraph(){
   if (S.view === 'cluster'){ renderCluster(); return; }
+  if (S.view === 'map'){ renderMap(); return; }
   computeLayout();
   renderBands();
   const shown = S.vis ? S.nodes.filter(n => S.vis.has(n.id)) : S.nodes;
@@ -1049,15 +1059,202 @@ function renderClusterKey(shown){
     (S.links.some(l => l.status === 'dataneed') ? '<span class="it"><i class="ln dn"></i>' + esc(T('ck_data')) + '</span>' : '') +
     '<span class="it"><i class="dot person" style="width:9px;height:9px"></i>' + esc(T('ck_person')) + '</span><br><span style="color:var(--muted)">' + esc(T('ck_dots')) + '<br>' + esc(T('ck_issues')) + '</span></details>';
 }
+
+/* ---------- Nan map view (network over administrative boundaries) ---------- */
+let NANGEO = null, NANGEO_P = null, MPOS = {}, MGEO = {}, MKEY = '', MPROJ = null;
+function loadNanGeo(){
+  if (NANGEO_P) return NANGEO_P;
+  NANGEO_P = fetch('nan_geo.json').then(r => { if (!r.ok) throw 0; return r.json(); }).then(g => {
+    const tam = g.tambon.features.map(f => ({n:f.properties.tam_th, a:f.properties.amp_th, lat:f.properties.lat, lon:f.properties.lon}));
+    const amp = {}; g.amphoe.features.forEach(f => { amp[f.properties.amp_th] = {lat:f.properties.lat, lon:f.properties.lon}; });
+    NANGEO = Object.assign(g, {tam, amp}); return NANGEO;
+  }).catch(e => { NANGEO_P = null; throw e; });
+  return NANGEO_P;
+}
+// district seats (tambon of the district office) for district-level placement
+const AMP_SEAT = {'เมืองน่าน':'ในเวียง','บ้านหลวง':'ป่าคาหลวง','ภูเพียง':'ม่วงตึ๊ด','เฉลิมพระเกียรติ':'ห้วยโก๋น','บ่อเกลือ':'บ่อเกลือใต้','สองแคว':'นาไร่หลวง',
+  'นาหมื่น':'บ่อแก้ว','สันติสุข':'ดู่พงษ์','เวียงสา':'กลางเวียง','ปัว':'ปัว','ท่าวังผา':'ท่าวังผา','ทุ่งช้าง':'ทุ่งช้าง','เชียงกลาง':'เชียงกลาง','นาน้อย':'นาน้อย','แม่จริม':'แม่จริม'};
+// known locations that are not in the Area field
+const GEO_FIX = [
+  [/ราชมงคล.*น่าน|มทร\.?\s*ล้านนา\s*น่าน|rmutl\s*nan/i, 'ฝายแก้ว', 'ภูเพียง'],
+  [/วิทยาลัยชุมชนน่าน|nan community college/i, 'ดู่ใต้', 'เมืองน่าน']
+];
+const TAM_SKIP = ['พระธาตุ', 'น้ำตก', 'พระพุทธบาท', 'ในเวียง', 'กลางเวียง', 'ไชยสถาน'];
+function geoAmpName(t){ t = String(t || '').trim(); if (NANGEO.amp[t]) return t; if (('เมือง' + t) in NANGEO.amp) return 'เมือง' + t; return null; }
+function geoTam(name, ampHint){
+  const c = NANGEO.tam.filter(x => x.n === name);
+  if (!c.length) return null;
+  return (ampHint && c.find(x => x.a === ampHint)) || c[0];
+}
+function geocodeNode(n){
+  const area = String(n.area || ''), name = String(n.name || '') + ' ' + String(n.name_en || ''), txt = area + ' ' + name;
+  const ampM = [...txt.matchAll(/(?:อ\.|อำเภอ)\s*([^\s,;·\/()]+)/g)].map(m => geoAmpName(m[1].replace(/จังหวัด.*$/, ''))).filter(Boolean);
+  const hint = ampM[0] || null;
+  for (const [re, t, a] of GEO_FIX){ if (re.test(name)){ const x = geoTam(t, a); if (x) return {lat:x.lat, lon:x.lon, prec:'tam', txt:T('mp_p_tam', x.n, x.a)}; } }
+  for (const m of txt.matchAll(/(?:ต\.|ตำบล)\s*([^\s,;·\/()]+)/g)){
+    const x = geoTam(m[1], hint); if (x) return {lat:x.lat, lon:x.lon, prec:'tam', txt:T('mp_p_tam', x.n, x.a)};
+  }
+  const ampOf = a => { const seat = geoTam(AMP_SEAT[a], a); const p = seat || NANGEO.amp[a]; return {lat:p.lat, lon:p.lon, prec:'amp', txt:T('mp_p_amp', a)}; };
+  if (hint) return ampOf(hint);
+  const amps = Object.keys(NANGEO.amp).filter(a => a !== 'เมืองน่าน').sort((a, b) => b.length - a.length);
+  const hit = amps.find(a => name.includes(a));
+  if (hit) return ampOf(hit);
+  const tamHit = NANGEO.tam.filter(x => x.n.length >= 4 && !TAM_SKIP.includes(x.n) && name.includes(x.n)).sort((a, b) => b.n.length - a.n.length)[0];
+  if (tamHit) return {lat:tamHit.lat, lon:tamHit.lon, prec:'tam', txt:T('mp_p_tam', tamHit.n, tamHit.a)};
+  // province level: named after Nan, or a local-type organisation whose area is Nan
+  if (/น่าน|\bnan\b/i.test(name) || (/น่าน/.test(area) && ['community', 'local', 'religious', ''].includes(n.otype || ''))){
+    const x = geoTam('ในเวียง', 'เมืองน่าน'); return {lat:x.lat, lon:x.lon, prec:'prov', txt:T('mp_p_prov')}; }
+  return {prec:'out', txt:T('mp_p_out')};
+}
+const MDRAG = d3.drag()
+  .filter(e => S.tool === 'select' && !e.button)
+  .on('drag', (e, d) => { const [x, y] = d3.pointer(e, gZoom.node()); MPOS[d.id] = {x, y}; d._mv = true; hideTip(); renderMap(true); });
+function renderMap(noSim){
+  if (!NANGEO){
+    mBase.selectAll('*').remove(); mLinks.selectAll('*').remove(); mHits.selectAll('*').remove(); mNodes.selectAll('*').remove(); mLbl.selectAll('*').remove();
+    mBase.append('text').attr('x', 0).attr('y', 0).attr('text-anchor', 'middle').attr('font-size', 20).attr('fill', '#9a8f80').text(T('mp_loading'));
+    svg.attr('viewBox', '-400 -300 800 600');
+    loadNanGeo().then(() => { MKEY = ''; if (S.view === 'map') renderMap(); }).catch(() => { mBase.selectAll('text').text(T('mp_fail')); });
+    return;
+  }
+  const Wm = 900, Hm = 1300;
+  if (!MPROJ) MPROJ = d3.geoMercator().fitExtent([[0, 0], [Wm, Hm]], NANGEO.province);
+  const path = d3.geoPath(MPROJ);
+  // ---- base map ----
+  if (!mBase.select('path.prov').size()){
+    mBase.selectAll('*').remove();
+    mBase.append('g').selectAll('path').data(NANGEO.neighbors.features).join('path').attr('d', path).attr('fill', '#f4f2ee').attr('stroke', '#ddd6cb').attr('stroke-width', 1);
+    mBase.append('g').selectAll('text').data(NANGEO.neighbors.features).join('text').attr('class', 'halo')
+      .attr('transform', f => { const c = path.centroid(f); return 'translate(' + Math.max(-60, Math.min(Wm + 60, c[0])) + ',' + Math.max(-40, Math.min(Hm + 40, c[1])) + ')'; })
+      .attr('text-anchor', 'middle').attr('font-size', 18).attr('fill', '#c3b9aa').text(f => LANG === 'en' ? f.properties.pro_en : f.properties.pro_th);
+    mBase.append('path').attr('class', 'prov').datum(NANGEO.province.features[0]).attr('d', path).attr('fill', '#fbf8f1').attr('stroke', '#8a7d6b').attr('stroke-width', 2.2);
+    mBase.append('g').selectAll('path').data(NANGEO.tambon.features).join('path').attr('d', path).attr('fill', 'none').attr('stroke', '#e6dfd2').attr('stroke-width', 0.7);
+    mBase.append('g').selectAll('path').data(NANGEO.amphoe.features).join('path').attr('d', path).attr('fill', 'none').attr('stroke', '#bcae98').attr('stroke-width', 1.3);
+    mBase.append('g').attr('class', 'amplbl').selectAll('text').data(NANGEO.amphoe.features).join('text').attr('class', 'halo')
+      .attr('transform', f => { const p = MPROJ([f.properties.lon, f.properties.lat]); return 'translate(' + p[0] + ',' + p[1] + ')'; })
+      .attr('text-anchor', 'middle').attr('font-size', 15).attr('font-weight', 600).attr('fill', '#b3a58f')
+      .text(f => LANG === 'en' ? f.properties.amp_en : f.properties.amp_th);
+    const lp = MPROJ([101.33, 18.55]);
+    mBase.append('text').attr('x', Math.min(Wm + 40, lp[0])).attr('y', lp[1]).attr('text-anchor', 'middle').attr('font-size', 18).attr('fill', '#c3b9aa').attr('class', 'mp-laos').text(T('mp_laos'));
+    mBase.append('text').attr('class', 'mp-src').attr('x', Wm).attr('y', Hm + 30).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', '#a59b8d').text(T('mp_src'));
+    mBase.append('g').attr('class', 'outbox');
+  } else {
+    mBase.select('g.amplbl').selectAll('text').text(f => LANG === 'en' ? f.properties.amp_en : f.properties.amp_th);
+    mBase.select('text.mp-laos').text(T('mp_laos')); mBase.select('text.mp-src').text(T('mp_src'));
+  }
+  // ---- data ----
+  S.vis = visibleSet();
+  const shown = S.nodes.filter(n => n.type !== 'issue' && (!S.vis || S.vis.has(n.id)));
+  const ids = new Set(shown.map(n => n.id));
+  const links = S.links.filter(l => ids.has(l.s) && ids.has(l.t) && l.s !== l.t && W(l) >= S.minW);
+  MGEO = {};
+  shown.filter(n => n.type === 'org').forEach(n => { MGEO[n.id] = geocodeNode(n); });
+  const outs = shown.filter(n => n.type === 'org' && MGEO[n.id].prec === 'out').sort((a, b) => (M.str[b.id] || 0) - (M.str[a.id] || 0));
+  const cols = outs.length > 24 ? 2 : 1, rowH = 34, colW = 210, ox = -60 - cols * colW, oy = 60;
+  const outPos = {}; outs.forEach((n, i) => { outPos[n.id] = {x: ox + (i % cols) * colW + 14, y: oy + Math.floor(i / cols) * rowH}; });
+  const key = shown.map(n => n.id + ':' + (n.area || '') + ':' + n.name).join('|') + '#' + links.map(l => l.id).join(',') + '#' + S.sizeBy;
+  if (!noSim && key !== MKEY){
+    MKEY = key;
+    const sn = shown.map(n => {
+      const g = MGEO[n.id], r = cNodeR(n);
+      if (n.type === 'person') return {id:n.id, type:'person', r, person:true};
+      if (g.prec === 'out') return {id:n.id, type:n.type, r, fx:outPos[n.id].x, fy:outPos[n.id].y};
+      const p = MPROJ([g.lon, g.lat]);
+      return {id:n.id, type:n.type, r, tx:p[0], ty:p[1], prec:g.prec, x:p[0] + hashJ(n.id, 1) * 30, y:p[1] + hashJ(n.id, 2) * 30};
+    });
+    const byId = {}; sn.forEach(d => byId[d.id] = d);
+    // persons follow their first linked organisation
+    sn.filter(d => d.person).forEach(d => {
+      const l = links.find(l => (l.s === d.id && byId[l.t] && !byId[l.t].person) || (l.t === d.id && byId[l.s] && !byId[l.s].person));
+      const o = l ? byId[l.s === d.id ? l.t : l.s] : null;
+      MGEO[d.id] = {prec:'near', txt:T('mp_p_near')};
+      const bx = o ? (o.fx != null ? o.fx : o.tx) : Wm / 2, by = o ? (o.fy != null ? o.fy : o.ty) : Hm / 2;
+      d.tx = bx; d.ty = by; d.x = bx + hashJ(d.id, 3) * 20; d.y = by + hashJ(d.id, 4) * 20;
+    });
+    const sim = d3.forceSimulation(sn)
+      .force('x', d3.forceX(d => d.tx).strength(d => d.person ? 0.15 : d.prec === 'prov' ? 0.05 : 0.45))
+      .force('y', d3.forceY(d => d.ty).strength(d => d.person ? 0.15 : d.prec === 'prov' ? 0.05 : 0.45))
+      .force('collide', d3.forceCollide(d => d.r * 1.1 + (d.person ? 3 : 9)).iterations(4))
+      .stop();
+    for (let i = 0; i < 260; i++) sim.tick();
+    sn.forEach(d => MPOS[d.id] = {x:d.fx != null ? d.fx : d.x, y:d.fy != null ? d.fy : d.y});
+  }
+  const P = id => MPOS[id] || {x:0, y:0};
+  // outside box
+  const ob = mBase.select('g.outbox'); ob.selectAll('*').remove();
+  if (outs.length){
+    const h = Math.ceil(outs.length / cols) * rowH + 40;
+    ob.append('rect').attr('x', ox - 6).attr('y', oy - 48).attr('width', cols * colW + 8).attr('height', h + 8).attr('rx', 12)
+      .attr('fill', '#f7f5f1').attr('stroke', '#cfc6b8').attr('stroke-dasharray', '5 4');
+    ob.append('text').attr('x', ox + 8).attr('y', oy - 22).attr('font-size', 15).attr('font-weight', 700).attr('fill', '#8a7d6b').text(T('mp_out'));
+  }
+  // links: gentle arcs so overlapping lines separate
+  const lp = l => { const a = P(l.s), b = P(l.t), dx = b.x - a.x, dy = b.y - a.y, k = 0.12 + (hashJ(l.id, 5) + 0.5) * 0.1;
+    return 'M' + a.x + ',' + a.y + 'Q' + ((a.x + b.x) / 2 - dy * k) + ',' + ((a.y + b.y) / 2 + dx * k) + ' ' + b.x + ',' + b.y; };
+  mLinks.selectAll('path.link').data(links, d => d.id).join('path').attr('class', 'link').attr('d', lp)
+    .attr('stroke-width', d => Math.max(0.8, WW[W(d)] * 0.55)).attr('stroke-dasharray', DASH);
+  mHits.selectAll('path.linkhit').data(links, d => d.id).join('path').attr('class', 'linkhit').attr('d', lp)
+    .on('click', (e, d) => { e.stopPropagation(); select({kind:'link', id:d.id}); })
+    .on('mouseenter', (e, d) => showTip(e, linkTip(d))).on('mousemove', moveTip).on('mouseleave', hideTip);
+  const ns = mNodes.selectAll('g.node').data(shown, d => d.id).join(enter => {
+    const g = enter.append('g').attr('class', 'node');
+    g.append('circle').attr('class', 'ring-sel').attr('fill', 'none').attr('stroke', '#3d3a35').attr('stroke-width', 2.2);
+    g.append('circle').attr('class', 'body');
+    g.append('text').attr('class', 'lbl halo');
+    g.call(MDRAG);
+    g.on('click', (e, d) => { if (d._mv){ d._mv = false; return; } e.stopPropagation(); onNodeClick(d); })
+     .on('mouseenter', (e, d) => { S.hover = d.id; applyHighlight(); showTip(e, nodeTip(d)); })
+     .on('mousemove', moveTip)
+     .on('mouseleave', () => { S.hover = null; applyHighlight(); hideTip(); });
+    return g;
+  });
+  const R = d => cNodeR(d) * (d.type === 'person' ? 0.9 : 1.1);
+  mapZoomAdjust();
+  ns.select('circle.body').attr('r', R)
+    .attr('fill', d => d.type === 'person' ? TYPES.person.fill : OTC(d.otype))
+    .attr('stroke', d => d.type === 'person' ? TYPES.person.stroke : '#fff').attr('stroke-width', d => d.type === 'person' ? 1.4 : 1.4)
+    .attr('stroke-dasharray', d => d.status === 'pending' ? '2 2' : null);
+  ns.select('circle.ring-sel').attr('r', d => R(d) + 5).attr('stroke-dasharray', d => S.connectFrom === d.id ? '4 3' : null);
+  ns.select('text.lbl').attr('x', d => R(d) + 4).attr('y', 4).attr('font-size', d => d.type === 'person' ? 10.5 : 12)
+    .attr('fill', d => d.type === 'person' ? '#14532d' : '#2d2a26')
+    .style('display', d => S.lblMode === 'all' || (S.lblMode === 'org' && d.type !== 'person') ? null : 'none')
+    .text(d => { const t = dn(d); return t.length > 28 ? t.slice(0, 27) + '…' : t; });
+  // view box: map + outside box
+  const x0 = outs.length ? ox - 20 : -80, vb = [Math.floor(x0), -70, Math.ceil(Wm + 120 - x0), Hm + 120];
+  if (!noSim){ S.vb = vb; svg.attr('viewBox', vb.join(' ')); }
+  if (S.connectFrom && MPOS[S.connectFrom]){ const p = MPOS[S.connectFrom]; tempLine.attr('x1', p.x).attr('y1', p.y); }
+  renderMapKey(shown);
+  applyHighlight();
+}
+// map view keeps nodes and labels the same size on screen while zooming (dense areas spread out)
+function mapZoomAdjust(kk){
+  const k = kk || S.zk || 1, P = id => MPOS[id] || {x:0, y:0};
+  mNodes.selectAll('g.node').attr('transform', d => 'translate(' + P(d.id).x + ',' + P(d.id).y + ') scale(' + (1 / Math.sqrt(k)) + ')');
+  mBase.select('g.amplbl').selectAll('text').attr('transform', f => { const p = MPROJ([f.properties.lon, f.properties.lat]); return 'translate(' + p[0] + ',' + p[1] + ') scale(' + (1 / Math.sqrt(k)) + ')'; });
+}
+function renderMapKey(shown){
+  const used = [...new Set(shown.filter(n => n.type === 'org').map(n => n.otype || ''))];
+  const order = OTYPES.map(o => o.k).concat(['']).filter(k => used.includes(k));
+  const wasOpen = !$('#keyMap details') || $('#keyMap details').open;
+  $('#keyMap').innerHTML = '<details' + (wasOpen ? ' open' : '') + '><summary><b>' + esc(T('ck_title').split('·')[0]) + '</b></summary>' +
+    order.map(k => '<span class="it"><i class="sq" style="background:' + OTC(k) + '"></i>' + esc(otName(k)) + '</span>').join('') +
+    '<br><span class="it"><i class="ln"></i>' + esc(T('ck_solid')) + '</span><span class="it"><i class="ln d"></i>' + esc(T('ck_dash')) + '</span>' +
+    (S.links.some(l => l.status === 'wish') ? '<span class="it"><i class="ln w"></i>' + esc(T('ck_wish')) + '</span>' : '') +
+    (S.links.some(l => l.status === 'dataneed') ? '<span class="it"><i class="ln dn"></i>' + esc(T('ck_data')) + '</span>' : '') +
+    '<span class="it"><i class="dot person" style="width:9px;height:9px"></i>' + esc(T('ck_person')) + '</span><br><span style="color:var(--muted)">' + esc(T('mp_note')) + '</span></details>';
+}
+
 function setView(v){
   S.view = v;
   document.querySelectorAll('#viewSw button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
-  const c = v === 'cluster';
-  [gBand, gCenter, gLinks, gHits, gNodes].forEach(g => g.style('display', c ? 'none' : null));
+  const c = v === 'cluster', m = v === 'map';
+  [gBand, gCenter, gLinks, gHits, gNodes].forEach(g => g.style('display', (c || m) ? 'none' : null));
   gC.style('display', c ? null : 'none');
-  $('#keyRing').style.display = c ? 'none' : '';
+  gM.style('display', m ? null : 'none');
+  $('#keyRing').style.display = (c || m) ? 'none' : '';
   $('#keyCluster').style.display = c ? 'block' : 'none';
-  $('#lblSw').style.display = c ? 'block' : 'none';
+  $('#keyMap').style.display = m ? 'block' : 'none';
+  $('#lblSw').style.display = (c || m) ? 'block' : 'none';
   const sw = $('#viewSw').getBoundingClientRect(); $('#lblSw').style.left = (sw.width + 20) + 'px';
   curVB = null; zoomFit(true); hideTip();
   try { localStorage.setItem('nannetwork-v2-view', v); } catch(e){}
@@ -1087,6 +1284,7 @@ function applyHighlight(){
 /* ---------- tooltip ---------- */
 function nodeTip(d){
   let h = '<b>' + esc(dn(d)) + '</b><br><span style="opacity:.75">' + T('nodeMeta', tl(d.type), M.deg[d.id]||0, M.str[d.id]||0) + '</span>';
+  if (S.view === 'map' && MGEO[d.id]) h += '<br><span style="opacity:.75">📍 ' + esc(MGEO[d.id].txt) + '</span>';
   const role = dr(d);
   if (d.type === 'org' && role) h += '<br>' + T('tipRole') + ': ' + esc(role.length > 140 ? role.slice(0,140) + '…' : role);
   const secs = effSectors(d);
@@ -1666,10 +1864,12 @@ async function saveFile(name, blob){
 function needData(){ if (!S.pid || !S.nodes.length){ toast(T('noProjData')); return false; } return true; }
 // Standalone SVG of the current diagram with title + legend (used by PNG, SVG and the report)
 function buildSvg(){
+  if (S.view === 'map' && MPROJ) mapZoomAdjust(1);
   const node = $('#net').cloneNode(true);
+  if (S.view === 'map' && MPROJ) mapZoomAdjust();
   node.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   let V = S.vb || [-600, -600, 1200, 1200];
-  if (S.view === 'cluster') V = [V[0] - V[2] * 0.22, V[1] - V[3] * 0.16, V[2] * 1.22, V[3] * 1.16]; // room for title + legend
+  if (S.view !== 'ring') V = [V[0] - V[2] * 0.22, V[1] - V[3] * 0.16, V[2] * 1.22, V[3] * 1.16]; // room for title + legend
   const vb = -V[0], size = 2 * vb;
   const X0 = V[0], Y0 = V[1];
   node.setAttribute('viewBox', V.join(' '));
@@ -1692,10 +1892,10 @@ function buildSvg(){
   const focusTxt = S.focus.size ? S.nodes.filter(n => S.focus.has(n.id)).map(dn).join(', ') : '';
   let hdr = '<text x="' + (X0 + 24*k) + '" y="' + (Y0 + 40*k) + '" font-size="' + (24*k) + '" font-weight="700" fill="#2d2a26">' + esc(pn(p)) + '</text>' +
     '<text x="' + (X0 + 24*k) + '" y="' + (Y0 + 64*k) + '" font-size="' + (13*k) + '" fill="#7a7268">Nan Network · ' + new Date().toLocaleDateString(LANG === 'en' ? 'en-GB' : 'th-TH') + (focusTxt ? ' · ' + esc(T('focusTitle')) + ': ' + esc(focusTxt) : '') + '</text>';
-  if (S.view === 'cluster'){
+  if (S.view !== 'ring'){
     const used = [...new Set(S.nodes.filter(n => n.type === 'org' && (!S.vis || S.vis.has(n.id))).map(n => n.otype || ''))];
     OTYPES.map(o => o.k).concat(['']).filter(t => used.includes(t)).forEach((t,i) => { const y = Y0 + (92 + i*20)*k;
-      hdr += '<rect x="' + (X0 + 26*k) + '" y="' + (y - 10*k) + '" width="' + (11*k) + '" height="' + (11*k) + '" fill="' + OTC(t) + '"/>' +
+      hdr += '<circle cx="' + (X0 + 31.5*k) + '" cy="' + (y - 4.5*k) + '" r="' + (6*k) + '" fill="' + OTC(t) + '"/>' +
         '<text x="' + (X0 + 44*k) + '" y="' + y + '" font-size="' + (12.5*k) + '" fill="#2d2a26">' + esc(otName(t)) + '</text>'; });
   } else {
   ORDER.forEach((t,i) => { const y = Y0 + (92 + i*22)*k;
@@ -1711,7 +1911,7 @@ function buildSvg(){
 function exportSvg(){ if (!needData()) return; saveFile(fileBase('diagram') + '.svg', new Blob([buildSvg()], {type:'image/svg+xml'})); }
 function exportPng(){
   if (!needData()) return;
-  const img = new Image(), px = 2400, V0 = S.vb || [0, 0, 1, 1], V = S.view === 'cluster' ? [0, 0, V0[2] * 1.22, V0[3] * 1.16] : V0, py = Math.round(px * V[3] / V[2]);
+  const img = new Image(), px = 2400, V0 = S.vb || [0, 0, 1, 1], V = S.view !== 'ring' ? [0, 0, V0[2] * 1.22, V0[3] * 1.16] : V0, py = Math.round(px * V[3] / V[2]);
   img.onload = () => {
     const c = document.createElement('canvas'); c.width = px; c.height = py;
     const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, px, py); ctx.drawImage(img, 0, 0, px, py);
