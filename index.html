@@ -98,6 +98,30 @@ label>input,label>textarea,label>select{margin-top:3px;color:var(--ink);font-siz
 .muted{color:var(--muted)}
 .det-head{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
 .det-title{font-size:18px;font-weight:600;margin:4px 0 2px;word-break:break-word}
+.sres{display:none;border:1px solid var(--line);border-radius:10px;background:#fff;margin:4px 0 8px;max-height:300px;overflow:auto;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.sres .it{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;cursor:pointer;font-size:13px;border-bottom:1px solid #f3efe8}
+.sres .it:last-child{border-bottom:0}
+.sres .it:hover,.sres .it.on{background:#f7f2e8}
+.sres .it .dot{margin-top:4px;flex:none}
+.sres .it small{display:block;color:var(--muted);font-size:11.5px}
+.sres .none{padding:8px 10px;color:var(--muted);font-size:13px}
+.info{background:#fffdf8;border:1px solid #efe6d6;border-radius:12px;padding:10px 12px;margin:8px 0 12px;font-size:13.5px;line-height:1.5}
+.info .tag{display:inline-block;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px;margin:0 4px 4px 0}
+.info .sc{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px;margin:0 4px 4px 0;border:1px solid}
+.info .irole{margin:6px 0 8px;white-space:pre-wrap}
+.info dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:6px 0}
+.info dt{color:var(--muted);font-size:12.5px}
+.info dd{margin:0;word-break:break-word}
+.info h5{margin:10px 0 4px;font-size:13px}
+.info ul{margin:0;padding-left:18px}
+.info li{margin:3px 0}
+.info li .muted{font-size:12px}
+.info .cl{list-style:none;padding:0}
+.info .cl li{display:flex;gap:6px;align-items:flex-start}
+.info .cl li .dot{margin-top:5px;flex:none}
+.info .cl em{color:var(--muted);font-style:normal;font-size:12.5px}
+details.editbox{margin-top:6px}
+details.editbox>summary{cursor:pointer;font-size:13px;color:var(--muted);padding:4px 0}
 h4{font-size:13px;margin:16px 0 6px}
 ul.conn{list-style:none;margin:0;padding:0}
 ul.conn li{display:grid;grid-template-columns:14px 1fr 70px 16px 20px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid #f0ebe3;font-size:13px}
@@ -229,7 +253,8 @@ footer{display:none}
 
     <div class="sec">
       <h3 data-t="searchTitle"></h3>
-      <input type="search" id="search" data-tp="searchPh">
+      <input type="search" id="search" data-tp="searchPh" autocomplete="off">
+      <div id="searchRes" class="sres"></div>
       <label><span data-t="minW"></span> <b id="minWv">1</b></label>
       <input type="range" id="minW" min="1" max="5" value="1" style="width:100%">
       <label data-t="sizeBy"></label>
@@ -412,6 +437,7 @@ const I18N = {
   sec_env:['ทรัพยากรธรรมชาติ','Natural resources'], sec_agri:['การเกษตร','Agriculture'], sec_econ:['ส่งเสริมเศรษฐกิจ','Economy'], sec_tourism:['การท่องเที่ยว','Tourism'], sec_culture:['วัฒนธรรม','Culture'], sec_health:['สุขภาพ','Health'],
   ot_gov:['ราชการ','Government'], ot_local:['อปท.','Local government'], ot_puborg:['องค์การมหาชน','Public organisation'], ot_academic:['สถาบันวิชาการ/วิจัย','Academic / research'], ot_ngo:['มูลนิธิ/ประชาสังคม','Foundation / civil society'], ot_community:['เครือข่าย/กลุ่มชุมชน','Community network / group'], ot_business:['วิสาหกิจ/เอกชน','Enterprise / private'], ot_religious:['วัด/ศาสนา','Religious'], ot_intl:['องค์กรระหว่างประเทศ','International'], ot_:['ไม่ระบุประเภท','Unspecified'],
   st_confirmed_doc:['ยืนยันจากเอกสาร','Confirmed by document'], st_confirmed_org:['ยืนยันโดยหน่วยงาน','Confirmed by organisation'], st_pending:['รอยืนยัน','Pending'], st_outdated:['ข้อมูลอาจเก่า','May be outdated'], st_wish:['อยากร่วมงานในอนาคต','Wants to work with (future)'], st_dataneed:['ต้องการข้อมูลจาก','Needs data from'], st_:['ไม่ระบุ','Not set'],
+  if_src:['แหล่งข้อมูล','Sources'], if_conn:['เชื่อมกับ ({0})','Linked with ({0})'], if_area:['พื้นที่','Area'], if_loc:['ตำแหน่งบนแผนที่','Map location'], if_level:['ระดับ','Level'], if_status:['สถานะ','Status'], if_note:['หมายเหตุ','Notes'], if_edit:['แก้ไขข้อมูล','Edit'], if_none:['ไม่พบชื่อที่ตรงกัน','No matching names'], if_more:['และอีก {0} รายการ','and {0} more'],
   sectorsLbl:['ด้าน (เลือกได้หลายด้าน)','Sectors (multi-select)'], otypeLbl:['ประเภทหน่วยงาน','Organisation type'], levelLbl:['ระดับการทำงาน','Level'], areaLbl:['พื้นที่','Area'], statusLbl:['สถานะการยืนยัน','Verification status'], evidLbl:['หลักฐาน (รหัส/ลิงก์)','Evidence (ID / link)'],
   noSector:['ไม่ระบุด้าน','No sector'], ck_title:['สี = ประเภทหน่วยงาน · วงประ = ด้าน','Colour = organisation type · dotted outline = sector'],
   ck_solid:['ยืนยันแล้ว','confirmed'], ck_dash:['รอยืนยัน','pending'], ck_wish:['อยากร่วมงาน','wants to work with'], ck_data:['ต้องการข้อมูลจาก','needs data from'],
@@ -577,6 +603,7 @@ async function init(){
   }
   applyPerms();
   subscribeProjects();
+  if (S.mode === 'local') loadDataJson().then(j => { if (j && j.sources){ SOURCES = j.sources; renderPanels(true); } });
 }
 
 let FB = null;
@@ -1440,6 +1467,33 @@ function renderRoles(){
     setTimeout(() => { const r = $(LANG === 'en' ? '#d-role-en' : '#d-role'); if (r && S.canWrite){ r.focus(); r.setSelectionRange(r.value.length, r.value.length); } }, 30);
   });
 }
+function evidHtml(ev){
+  const parts = String(ev || '').split(/\s*;\s*/).filter(Boolean);
+  return parts.map(p => {
+    const s = SOURCES[p];
+    if (!s){ return /^https?:\/\//.test(p) ? '<li><a href="' + esc(p) + '" target="_blank" rel="noopener">' + esc(p) + '</a></li>' : '<li>' + esc(p) + '</li>'; }
+    const urls = String(s.url || '').split(/\s*;\s*/).filter(u => /^https?:\/\//.test(u));
+    return '<li><b>' + esc(p) + '</b> ' + (urls[0] ? '<a href="' + esc(urls[0]) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' : esc(s.title)) +
+      urls.slice(1).map((u, i) => ' <a href="' + esc(u) + '" target="_blank" rel="noopener">[' + (i + 2) + ']</a>').join('') +
+      '<br><span class="muted">' + esc([s.publisher, s.date, s.read].filter(Boolean).join(' · ')) + '</span>' + (s.supports ? '<br><span class="muted">↳ ' + esc(s.supports) + '</span>' : '') + '</li>';
+  }).join('');
+}
+function infoCard(n, conns){
+  const secs = effSectors(n), role = dr(n);
+  const loc = (MGEO[n.id] && MGEO[n.id].txt) || '';
+  const rows = [[T('if_area'), n.area], [T('if_loc'), loc], [T('if_level'), n.level], [T('if_status'), n.status ? stName(n.status) : ''], [T('if_note'), n.note]].filter(r => r[1]);
+  const ev = evidHtml(n.evidence);
+  return '<div class="info">' +
+    (n.type === 'org' && n.otype ? '<span class="tag" style="background:' + OTC(n.otype) + '">' + esc(otName(n.otype)) + '</span>' : '') +
+    secs.map(k => { const c = (SECTORS.find(x => x.k === k) || {}).c || '#999'; return '<span class="sc" style="color:' + c + ';border-color:' + c + '">' + esc(secName(k)) + '</span>'; }).join('') +
+    (role ? '<p class="irole">' + esc(role) + '</p>' : '') +
+    (rows.length ? '<dl>' + rows.map(r => '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>').join('') + '</dl>' : '') +
+    (ev ? '<h5>' + T('if_src') + '</h5><ul>' + ev + '</ul>' : '') +
+    '<h5>' + T('if_conn', conns.length) + '</h5>' +
+    (conns.length ? '<ul class="cl">' + conns.map(c => '<li><span class="dot ' + c.o.type + '"></span><span><a href="#" data-n="' + esc(c.o.id) + '">' + esc(dn(c.o)) + '</a>' +
+      (c.l.label ? ' <em>— ' + esc(c.l.label) + '</em>' : '') + (c.l.status ? ' <em>(' + esc(stName(c.l.status)) + ')</em>' : '') + '</span></li>').join('') + '</ul>' : '<p class="muted" style="font-size:13px">' + T('noConn') + '</p>') +
+    '</div>';
+}
 function renderDetail(){
   const el = $('#tab-detail');
   const ro = S.canWrite ? '' : ' disabled';
@@ -1449,6 +1503,7 @@ function renderDetail(){
     const a = nodeById(l.s), b = nodeById(l.t);
     el.innerHTML = '<div class="det-head">' + T('linkTitle') + '</div>' +
       '<div class="det-title"><span class="dot ' + (a?a.type:'') + '"></span> <a href="#" data-n="' + esc(l.s) + '">' + esc(dn(a)) + '</a> — <span class="dot ' + (b?b.type:'') + '"></span> <a href="#" data-n="' + esc(l.t) + '">' + esc(dn(b)) + '</a></div>' +
+      ((l.label || l.evidence) ? '<div class="info">' + (l.label ? '<p class="irole">' + esc(l.label) + '</p>' : '') + (l.status ? '<dl><dt>' + T('if_status') + '</dt><dd>' + esc(stName(l.status)) + '</dd></dl>' : '') + (l.evidence ? '<h5>' + T('if_src') + '</h5><ul>' + evidHtml(l.evidence) + '</ul>' : '') + '</div>' : '') +
       '<label>' + T('importance') + ': <b id="lwv">' + W(l) + ' · ' + wl(W(l)) + '</b></label>' +
       '<input type="range" id="lw" min="1" max="5" step="1" value="' + W(l) + '" style="width:100%"' + ro + '>' +
       '<label>' + T('relation') + '<textarea id="ll" rows="3" placeholder="' + esc(T('relationPh')) + '"' + ro + '>' + esc(l.label) + '</textarea></label>' +
@@ -1479,6 +1534,8 @@ function renderDetail(){
     '<div class="det-head"><span class="dot ' + n.type + '"></span>' + T('nodeMeta', tl(n.type), M.deg[n.id]||0, M.str[n.id]||0) + '</div>' +
     '<div class="det-title">' + esc(dn(n)) + '</div>' +
     (n.type === 'issue' ? '<div class="row" style="margin-top:4px"><button class="btn sm" id="d-focus">' + (S.focus.size === 1 && S.focus.has(n.id) ? T('showAll') : T('focusThis')) + '</button></div>' : '') +
+    infoCard(n, conns) +
+    '<details class="editbox"' + (S.editOpen ? ' open' : '') + (S.canWrite ? '' : ' style="display:none"') + '><summary>✎ ' + T('if_edit') + '</summary>' +
     (n.type === 'org' ? (LANG === 'en' ? roleEn + roleTh : roleTh + roleEn) : '') +
     nameFields +
     '<label>' + T('ringType') + '<select id="d-type"' + ro + '>' + ORDER.map(t => '<option value="' + t + '"' + (t === n.type ? ' selected' : '') + '>' + tl(t) + '</option>').join('') + '</select></label>' +
@@ -1493,7 +1550,9 @@ function renderDetail(){
     (S.canWrite ? '<div class="row"><button class="btn primary" id="d-save">' + T('save') + '</button><button class="btn danger" id="d-del">' + T('del') + '</button></div>' : '') +
     '<h4>' + T('connections', conns.length) + '</h4>' +
     (conns.length ? '<ul class="conn">' + conns.map(c => '<li data-l="' + esc(c.l.id) + '"><span class="dot ' + c.o.type + '"></span><a href="#" data-n="' + esc(c.o.id) + '" title="' + esc(c.l.label || dn(c.o)) + '">' + esc(dn(c.o)) + '</a><input type="range" class="cw" min="1" max="5" value="' + W(c.l) + '" title="' + esc(T('importance')) + '"' + ro + '><span class="wv">' + W(c.l) + '</span>' + (S.canWrite ? '<button class="x" title="' + esc(T('delLinkT')) + '">×</button>' : '<span></span>') + '</li>').join('') + '</ul>' : '<p class="muted" style="font-size:13px">' + T('noConn') + '</p>') +
-    (S.canWrite && opts ? '<div class="addlink"><select id="d-target">' + opts + '</select><select id="d-w">' + [1,2,3,4,5].map(w => '<option value="' + w + '"' + (w === 3 ? ' selected' : '') + '>' + w + '</option>').join('') + '</select><button class="btn" id="d-link">' + T('linkBtn') + '</button></div><p class="hint">' + T('linkHint') + '</p>' : '');
+    (S.canWrite && opts ? '<div class="addlink"><select id="d-target">' + opts + '</select><select id="d-w">' + [1,2,3,4,5].map(w => '<option value="' + w + '"' + (w === 3 ? ' selected' : '') + '>' + w + '</option>').join('') + '</select><button class="btn" id="d-link">' + T('linkBtn') + '</button></div><p class="hint">' + T('linkHint') + '</p>' : '') +
+    '</details>';
+  const eb = el.querySelector('details.editbox'); if (eb) eb.ontoggle = () => { S.editOpen = eb.open; };
   el.querySelectorAll('a[data-n]').forEach(x => x.onclick = e => { e.preventDefault(); select({kind:'node', id:x.dataset.n}); });
   const df = $('#d-focus'); if (df) df.onclick = () => focusOnly(n.id);
   if (!S.canWrite) return;
@@ -1522,6 +1581,36 @@ function renderDetail(){
     const t = $('#d-target').value; if (!t) return;
     saveLink({id:newId('l'), s:n.id, t, w:+$('#d-w').value, label:'', created:Date.now()});
   };
+}
+function searchHits(q){
+  q = q.trim().toLowerCase(); if (!q) return [];
+  const score = n => { const a = (n.name || '').toLowerCase(), b = (n.name_en || '').toLowerCase();
+    if (a === q || b === q) return 0; if (a.startsWith(q) || b.startsWith(q)) return 1; if (a.includes(q) || b.includes(q)) return 2;
+    if ((n.role || '').toLowerCase().includes(q) || (n.area || '').toLowerCase().includes(q) || (n.note || '').toLowerCase().includes(q)) return 3; return 9; };
+  return S.nodes.map(n => ({n, s:score(n)})).filter(x => x.s < 9).sort((a, b) => a.s - b.s || ORDER.indexOf(a.n.type) - ORDER.indexOf(b.n.type) || cmpName(a.n, b.n)).map(x => x.n);
+}
+function renderSearchRes(){
+  const box = $('#searchRes'), q = S.search.trim();
+  if (!q){ box.style.display = 'none'; return; }
+  const hits = searchHits(q), top = hits.slice(0, 8);
+  box.innerHTML = top.length ? top.map((n, i) => '<div class="it' + (i === 0 ? ' on' : '') + '" data-id="' + esc(n.id) + '"><span class="dot ' + n.type + '"></span><span>' + esc(dn(n)) +
+      '<small>' + esc([tl(n.type), n.type === 'org' && n.otype ? otName(n.otype) : '', n.area || ''].filter(Boolean).join(' · ')) + '</small></span></div>').join('') +
+      (hits.length > top.length ? '<div class="none">' + T('if_more', hits.length - top.length) + '</div>' : '')
+    : '<div class="none">' + T('if_none') + '</div>';
+  box.style.display = 'block';
+  box.querySelectorAll('.it').forEach(x => x.onmousedown = e => { e.preventDefault(); pickSearch(x.dataset.id); });
+  // a single match opens its details straight away
+  if (hits.length === 1 && q.length >= 2 && !(S.sel && S.sel.kind === 'node' && S.sel.id === hits[0].id)) select({kind:'node', id:hits[0].id});
+}
+function pickSearch(id){
+  $('#searchRes').style.display = 'none';
+  select({kind:'node', id});
+  centerOn(id);
+}
+function centerOn(id){
+  const PP = S.view === 'cluster' ? CPOS : S.view === 'map' ? MPOS : POS, p = PP[id]; if (!p || !svg) return;
+  const vb = (svg.attr('viewBox') || '0 0 1 1').split(/[\s,]+/).map(Number), cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2, k = 1.8;
+  svg.transition().duration(450).call(zoom.transform, d3.zoomIdentity.translate(cx - k * p.x, cy - k * p.y).scale(k));
 }
 function armDelete(btn, fn){
   if (!btn) return;
@@ -1679,11 +1768,13 @@ const kwSectors = txt => { const t = String(txt || '').toLowerCase(); return SEC
 
 const TH = function(){ const L = LANG; LANG = 'th'; try { return T.apply(null, arguments); } finally { LANG = L; } };
 const EN = function(){ const L = LANG; LANG = 'en'; try { return T.apply(null, arguments); } finally { LANG = L; } };
+let DJ_P = null, SOURCES = {};
+function loadDataJson(){ if (!DJ_P) DJ_P = fetch('data.json', {cache:'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null); return DJ_P; }
 let feedBase = null;   // {nodes:[], links:[]} from data.json (base project), loaded once
 async function loadFeedBase(){
   if (feedBase || !FEED.baseProject) return feedBase;
   try {
-    const r = await fetch('data.json', {cache:'no-store'}); const j = await r.json();
+    const j = await loadDataJson(); if (!j) throw new Error('no data.json');
     const p = (j.projects || []).find(x => x.id === FEED.baseProject);
     feedBase = p ? {nodes:p.nodes || [], links:p.links || [], name:p.name || ''} : {nodes:[], links:[], name:''};
   } catch(e){ console.warn('feed base', e); }
@@ -2040,7 +2131,16 @@ function bindUI(){
   $('#addName').addEventListener('keydown', e => { if (e.key === 'Enter') addNode(); });
   $('#toolSelect').onclick = () => setTool('select');
   $('#toolConnect').onclick = () => setTool(S.tool === 'connect' ? 'select' : 'connect');
-  $('#search').oninput = e => { S.search = e.target.value; applyHighlight(); };
+  $('#search').oninput = e => { S.search = e.target.value; applyHighlight(); renderSearchRes(); };
+  $('#search').onkeydown = e => {
+    const items = [...document.querySelectorAll('#searchRes .it')]; if (!items.length) return;
+    let i = items.findIndex(x => x.classList.contains('on'));
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); i = e.key === 'ArrowDown' ? Math.min(items.length - 1, i + 1) : Math.max(0, i - 1); items.forEach((x, j) => x.classList.toggle('on', j === i)); }
+    else if (e.key === 'Enter'){ e.preventDefault(); pickSearch((items[i] || items[0]).dataset.id); }
+    else if (e.key === 'Escape'){ $('#searchRes').style.display = 'none'; }
+  };
+  $('#search').onfocus = () => renderSearchRes();
+  $('#search').onblur = () => setTimeout(() => { $('#searchRes').style.display = 'none'; }, 200);
   $('#minW').oninput = e => { S.minW = +e.target.value; $('#minWv').textContent = S.minW; renderGraph(); };
   $('#sizeBy').onchange = e => { S.sizeBy = e.target.value; renderGraph(); };
   $('#autoLayout').onclick = async () => {
